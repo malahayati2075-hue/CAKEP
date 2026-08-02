@@ -3,442 +3,548 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator Laporan HD WA</title>
+    <title>Laporan HD On Point</title>
     <style>
         :root {
-            --sunny-yellow: #ffecd2;
-            --sunny-orange: #fcb69f;
-            --sunset-pink: #ff9a9e;
-            --sunset-purple: #fad0c4;
+            --bg-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            --card-bg: #ffffff;
+            --primary: #ff7e5f;
+            --secondary: #4ecdc4;
             --wa-green: #25D366;
-            --wa-dark-green: #128C7E;
-            --text-dark: #2c3e50;
-            --text-light: #ffffff;
+            --wa-dark: #128C7E;
+            --text-dark: #2d3436;
+            --text-muted: #636e72;
+            --input-border: #dfe6e9;
+            --input-focus: #ff7e5f;
         }
-        
+
         * {
             box-sizing: border-box;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(120deg, var(--sunny-yellow) 0%, var(--sunny-orange) 50%, var(--sunset-pink) 100%);
+            background: var(--bg-gradient);
             min-height: 100vh;
             color: var(--text-dark);
+            padding-bottom: 40px;
         }
 
         .container {
-            max-width: 600px;
-            margin: auto;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            min-height: 100vh;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
+            max-width: 700px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            min-height: 95vh;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-radius: 20px;
             overflow: hidden;
+            padding-bottom: 30px;
         }
 
-        /* Navigasi Atas */
-        .header-nav {
-            background: white;
-            padding: 15px;
+        .nav-header {
             display: flex;
-            justify-content: space-around;
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 100;
         }
-        .nav-btn {
+        .tab-btn {
+            flex: 1;
             background: transparent;
             border: none;
-            color: #888;
-            padding: 8px 15px;
-            border-radius: 20px;
+            padding: 12px;
+            font-size: 1rem;
             font-weight: bold;
+            color: var(--text-muted);
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
+            border-radius: 10px;
+            transition: all 0.3s;
         }
-        .nav-btn.active {
-            background: linear-gradient(45deg, var(--sunset-pink), var(--sunny-orange));
-            color: white;
-            box-shadow: 0 4px 10px rgba(255, 154, 158, 0.4);
+        .tab-btn.active {
+            background: linear-gradient(45deg, var(--primary), #feb47b);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(255, 126, 95, 0.3);
         }
 
-        /* Konten Halaman */
-        .page {
-            padding: 20px;
-            flex: 1;
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
+        .page { padding: 25px; display: none; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         h1 {
+            font-size: 1.5rem;
             text-align: center;
-            font-size: 1.4rem;
-            margin-top: 0;
-            color: var(--text-dark);
+            margin: 0 0 20px 0;
+            background: linear-gradient(45deg, var(--primary), #feb47b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
+
         h2 {
             font-size: 1.1rem;
             margin-top: 25px;
-            color: var(--wa-dark-green);
-            border-left: 4px solid var(--sunset-pink);
+            color: var(--wa-dark);
+            border-left: 5px solid var(--primary);
             padding-left: 10px;
         }
 
         label {
             display: block;
             font-weight: 600;
-            margin-top: 15px;
+            margin-top: 12px;
             font-size: 0.85rem;
-            color: #555;
         }
-        input[type="text"], textarea {
+
+        input[type="text"], input[type="date"], textarea, select {
             width: 100%;
             padding: 12px;
             margin-top: 5px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-family: inherit;
-            background: #fff;
-            transition: border 0.3s;
+            border: 1.5px solid var(--input-border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #f8f9fa;
+            transition: all 0.2s;
         }
-        input[type="text"]:focus, textarea:focus {
-            border-color: var(--sunset-pink);
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--input-focus);
+            background: #fff;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(255, 154, 158, 0.2);
+            box-shadow: 0 0 0 3px rgba(255, 126, 95, 0.15);
         }
-        textarea { min-height: 80px; resize: vertical; }
+        textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
 
-        /* Tombol */
-        .btn {
-            border: none;
-            padding: 14px;
-            width: 100%;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            margin-top: 25px;
-            cursor: pointer;
-            transition: transform 0.1s, box-shadow 0.2s;
-        }
-        .btn:active { transform: scale(0.98); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
         
-        .btn-save {
-            background: linear-gradient(45deg, #f6d365, #fda085);
-            color: white;
-            box-shadow: 0 4px 10px rgba(252, 182, 159, 0.4);
-        }
-        .btn-next {
-            background: linear-gradient(45deg, var(--sunset-pink), var(--sunset-purple));
-            color: white;
-            box-shadow: 0 4px 10px rgba(255, 154, 158, 0.4);
-        }
-        .btn-send {
-            background: linear-gradient(45deg, var(--wa-green), var(--wa-dark-green));
-            color: white;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-            font-size: 1.1rem;
-        }
-        .btn-prev {
+        /* Kotak Anggota Tim */
+        .member-card {
+            border: 1.5px solid var(--input-border);
+            border-radius: 12px;
+            padding: 12px;
             background: #fff;
-            color: #888;
-            border: 1px solid #ddd;
-            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        
+        /* Stepper Bed Pasien */
+        .bed-range {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .small-stepper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            padding: 8px;
+            border-radius: 10px;
+        }
+        .small-stepper .stepper-label { font-size: 0.75rem; font-weight: bold; margin-bottom: 6px; color: var(--text-muted); }
+        .small-stepper .stepper-controls { display: flex; align-items: center; gap: 6px; }
+        .small-stepper .stepper-btn {
+            width: 28px; height: 28px; border: none; background: var(--primary);
+            color: #fff; border-radius: 50%; font-size: 1rem; font-weight: bold;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .small-stepper .stepper-input {
+            width: 40px; text-align: center; border: 1px solid #ddd;
+            border-radius: 6px; padding: 4px 0; font-size: 0.9rem; font-weight: bold; background: #fff;
         }
 
-        .save-status {
-            display: none;
-            background: #e8fff0;
-            color: var(--wa-dark-green);
+        /* Stepper Sisa Alat Besar */
+        .stepper-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
             padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            margin-top: 15px;
-            font-weight: bold;
-            border: 1px solid #b8f5d0;
+            border-radius: 12px;
+        }
+        .stepper-label { font-size: 0.85rem; font-weight: bold; margin-bottom: 8px; color: var(--text-muted); }
+        .stepper-controls { display: flex; align-items: center; gap: 8px; }
+        .stepper-btn {
+            width: 32px; height: 32px; border: none; background: var(--primary);
+            color: #fff; border-radius: 50%; font-size: 1.2rem; font-weight: bold;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .stepper-input {
+            width: 45px; text-align: center; border: 1px solid #ddd;
+            border-radius: 8px; padding: 6px 0; font-size: 1rem; font-weight: bold; background: #fff;
         }
 
-        .output-box {
-            background: #fff;
+        .job-box {
+            border: 1.5px solid #e0e0e0;
+            border-radius: 12px;
             padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            font-family: 'Courier New', monospace;
-            display: none;
-            border: 1px solid #eee;
-            font-size: 0.85rem;
+            margin-top: 15px;
+            background: #fafafa;
         }
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+        .check-item {
+            display: flex; align-items: center; background: #fff;
+            border: 1px solid #ddd; padding: 5px 10px; border-radius: 20px;
+            font-size: 0.8rem; cursor: pointer;
+        }
+        .check-item input { width: auto; margin-right: 5px; }
 
-        .required-asterisk { color: var(--sunset-pink); }
-        
-        .hide-on-save {
-            transition: opacity 0.3s;
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 30px; }
+        .btn {
+            border: none; padding: 16px; border-radius: 12px; font-size: 1rem;
+            font-weight: bold; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; gap: 8px;
         }
-        .hide-on-save.saved {
-            opacity: 0.5;
-            pointer-events: none;
+        .btn-wa { background: var(--wa-green); color: #fff; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
+        .btn-pdf { background: #fff; color: var(--primary); border: 1.5px solid var(--primary); }
+        .btn-reset { background: #ffeaea; color: #d63031; margin-top: 10px; width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+        .print-area { display: none; padding: 40px; }
+        @media print {
+            body { background: #fff; }
+            .container { display: none; }
+            .print-area { display: block; }
+            .print-area pre { white-space: pre-wrap; font-family: monospace; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header-nav">
-        <button class="nav-btn active" onclick="showPage(1)">1. Tim 1</button>
-        <button class="nav-btn" onclick="showPage(2)">2. Tim 2</button>
-        <button class="nav-btn" onclick="showPage(3)">3. Generate</button>
+    <div class="nav-header">
+        <button class="tab-btn active" onclick="switchTab(1)">1. Laporan On Point</button>
+        <button class="tab-btn" onclick="switchTab(2)">2. Job Desk</button>
     </div>
 
-    <!-- ================= HALAMAN 1: TIM 1 ================= -->
-    <div id="page1" class="page active">
-        <h1>🌅 Data Tim 1</h1>
-        <div id="tim1Content" class="hide-on-save">
-            <h2>Header Laporan</h2>
-            <label>Judul Laporan:</label>
-            <input type="text" id="judul" value="HD MALAHAYATI ON POINT">
-            <label>Hari & Shift:</label>
-            <input type="text" id="hariShift" value="Sabtu shift 1,">
-            <label>Tanggal:</label>
-            <input type="text" id="tanggal" value="/01-08-2026">
-
-            <h2>Job Desk Tim 1</h2>
-            <label>Petugas Tim 1 (Pisahkan dengan koma):</label>
-            <input type="text" id="petugasTim1" value="Agustiar, novian //*JOB DISK TIM 2 shift 2* (01-08-2026)">
-            <label>Deskripsi Tugas:</label>
-            <textarea id="tugasTim1">*Maria* 25 - 29
-❄️kendali DL
-❄️spreadsheet
-❄️Laporan
-
-*Rosdi* 30 - 31b
-❄️simrs
-❄️verif box
-✅cek syok order
-
-*Dikerjakan bersama*
-🌏Bersih3 ruangan
-🌍Priming</textarea>
-            <label>Petugas Lanjutan:</label>
-            <input type="text" id="petugasTim1Lanjut" value="3. indah, 4. linda, 5. yanita">
-
-            <h2>Laporan Pasien Tim 1</h2>
-            <label>Jumlah Pasien:</label>
-            <input type="text" id="jmlPasienTim1" value="11 orang">
-            <label>Daftar Pasien (1 nama/baris):</label>
-            <textarea id="listPasienTim1">1. Kahar /aman stabil
-2. Suwarni /aman stabil
-3. Mujiono /aman stabil</textarea>
-            <label>Pasien Ruangan:</label>
-            <textarea id="pasienRuangTim1">1. Tn. Arif / R. Dahlia
-Td : 154/86 mmHg
-Uf : 2, Qb : 220</textarea>
-            <label>Masalah Tim 1:</label>
-            <input type="text" id="masalahTim1" value="- bu khomsatun BPJS bermasalah">
-            <label>Pasien Tidak Datang:</label>
-            <textarea id="tidakDatangTim1">1. Waris / Sudah HD kmrin</textarea>
-            <label>Sisa HF 13 / HF 15 / GD Stik:</label>
-            <input type="text" id="sisaTim1" value="HF13: 54 (15) | HF15: 2 (1) | GD: 0">
-            <label>Sisa Bed Kosong:</label>
-            <input type="text" id="bedTim1" value="1 ( bed 44)">
-        </div>
-
-        <button class="btn btn-save" onclick="saveData(1)">💾 Simpan Data Tim 1</button>
-        <div id="statusTim1" class="save-status">✅ Data Tim 1 Tersimpan!</div>
-        <button class="btn btn-next" onclick="showPage(2)" style="margin-top: 15px;">Lanjut ke Tim 2 &rarr;</button>
-    </div>
-
-    <!-- ================= HALAMAN 2: TIM 2 ================= -->
-    <div id="page2" class="page">
-        <h1>🌇 Data Tim 2</h1>
-        <button class="btn btn-prev" onclick="showPage(1)">&larr; Kembali ke Tim 1</button>
+    <!-- SLIDE 1: LAPORAN ON POINT -->
+    <div id="slide1" class="page active">
+        <h1>🏥 Laporan On Point</h1>
         
-        <div id="tim2Content" class="hide-on-save">
-            <h2>Job Desk Tim 2</h2>
-            <label>Petugas Tim 2:</label>
-            <input type="text" id="petugasTim2" value="1.Fahrur, 2.Fifi, 3.Mia, 4.Bakhtiar">
-
-            <h2>Laporan Pasien Tim 2</h2>
-            <label>Jumlah Pasien Rawat Jalan:</label>
-            <input type="text" id="jmlPasienTim2" value="12 orang">
-            <label>Daftar Pasien RJ:</label>
-            <textarea id="listPasienTim2">1. Mansur /aman stabil
-2. Agus/aman stabil
-3. M.yunus/aman stabil</textarea>
-            <label>Pasien Ruangan:</label>
-            <textarea id="pasienRuangTim2">1.Yenifer/R.Semeru
-Tensi 180/86, Uf 1.5, Qb 200
-2.Wagimun/R.Ciliwung
-Tensi 195/78, Uf 1lt, Qb 200</textarea>
-            <label>Masalah Tim 2:</label>
-            <input type="text" id="masalahTim2" value="orang">
-            <label>Pasien Tidak Datang:</label>
-            <textarea id="tidakDatangTim2">1.Hoi mrs
-2.Masrifah ijin</textarea>
-            <label>Sisa HF 13 / HF 15:</label>
-            <input type="text" id="sisaTim2" value="HF13: 78 (10) | HF15: 6 (2)">
-            <label>Sisa Bed Kosong:</label>
-            <input type="text" id="bedTim2" value="shift 2 ( 31a-b )">
+        <div class="grid-3">
+            <div>
+                <label>Tanggal</label>
+                <input type="date" id="tanggal1">
+            </div>
+            <div>
+                <label>Shift</label>
+                <select id="shift1">
+                    <option value="1">Shift 1</option>
+                    <option value="2">Shift 2</option>
+                </select>
+            </div>
+            <div>
+                <label>Tim</label>
+                <select id="tim1">
+                    <option value="1">Tim 1</option>
+                    <option value="2">Tim 2</option>
+                </select>
+            </div>
         </div>
 
-        <button class="btn btn-save" onclick="saveData(2)">💾 Simpan Data Tim 2</button>
-        <div id="statusTim2" class="save-status">✅ Data Tim 2 Tersimpan!</div>
-        <button class="btn btn-next" onclick="showPage(3)" style="margin-top: 15px;">Siap Generate &rarr;</button>
-    </div>
+        <h2>Anggota Tim & Pembagian Bed</h2>
+        <div class="grid-2" id="memberContainer">
+            <!-- Anggota akan di-generate oleh JS -->
+        </div>
 
-    <!-- ================= HALAMAN 3: GENERATE ================= -->
-    <div id="page3" class="page">
-        <h1>🚀 Generate & Kirim</h1>
-        <button class="btn btn-prev" onclick="showPage(2)">&larr; Kembali ke Tim 2</button>
+        <h2>Daftar Pasien</h2>
+        <label>Pasien Rawat Jalan (Bisa Paste dari Excel)</label>
+        <textarea id="pasienRJ" placeholder="Nama Pasien 1&#10;Nama Pasien 2"></textarea>
+        
+        <label>Pasien Ruangan (Bisa Paste dari Excel)</label>
+        <textarea id="pasienRuang" placeholder="Nama Pasien / Ruangan&#10;Nama Pasien / Ruangan"></textarea>
+
+        <h2>Masalah</h2>
+        <div class="grid-2">
+            <div>
+                <label>Masalah Pasien</label>
+                <textarea id="masalahPasien" style="min-height: 80px;"></textarea>
+            </div>
+            <div>
+                <label>Masalah Mesin / Alat</label>
+                <textarea id="masalahMesin" style="min-height: 80px;"></textarea>
+            </div>
+        </div>
+
+        <h2>Sisa Alat (Dialyzer)</h2>
+        <div class="grid-2" id="dialyzerContainer">
+            <!-- Stepper Dialyzer akan di-generate oleh JS -->
+        </div>
+
+        <label>BOR / Sisa Bed Kosong</label>
+        <input type="text" id="sisaBed" placeholder="Contoh: 1 bed (bed 44)">
 
         <h2>Identitas Pengirim</h2>
-        <label>Nama Pengirim <span class="required-asterisk">*</span> (Wajib Diisi):</label>
-        <input type="text" id="namaPengirim" placeholder="Contoh: Dns. Agustiar" required>
+        <input type="text" id="pengirim" placeholder="Nama Anda (Wajib diisi)">
 
-        <p style="font-size: 0.85rem; color: #666; margin-top: 15px; text-align: justify;">
-            Pastikan Data Tim 1 dan Tim 2 sudah disimpan. Isi nama Anda, lalu klik tombol di bawah. Sistem akan menyalin laporan dan membuka Grup WhatsApp otomatis. Anda tinggal menempel (paste) di grup.
-        </p>
+        <div class="btn-group">
+            <button class="btn btn-wa" onclick="kirimWA()">🚀 Kirim ke WA</button>
+            <button class="btn btn-pdf" onclick="cetakPDF()">🖨️ Cetak PDF</button>
+        </div>
+        <button class="btn-reset" onclick="resetData()">🧹 Reset Semua Data</button>
+    </div>
 
-        <button class="btn btn-send" onclick="sendToWhatsApp()">🚀 Generate & Kirim ke WA</button>
-        
-        <div class="output-box" id="outputBox">
-            <div id="outputText"></div>
+    <!-- SLIDE 2: PETUGAS & JOB DESK -->
+    <div id="slide2" class="page">
+        <h1>📝 Job Desk Petugas</h1>
+
+        <div class="grid-3">
+            <div>
+                <label>Tanggal</label>
+                <input type="date" id="tanggal2">
+            </div>
+            <div>
+                <label>Shift</label>
+                <select id="shift2">
+                    <option value="1">Shift 1</option>
+                    <option value="2">Shift 2</option>
+                </select>
+            </div>
+            <div>
+                <label>Tim</label>
+                <select id="tim2">
+                    <option value="1">Tim 1</option>
+                    <option value="2">Tim 2</option>
+                </select>
+            </div>
+        </div>
+
+        <h2>Deskripsi Tugas Perawat</h2>
+        <div id="perawatContainer"></div>
+
+        <h2>Deskripsi Tugas Padatkarya</h2>
+        <div class="job-box">
+            <input type="text" id="namaPadatkarya" placeholder="Nama Padatkarya">
+            <div class="checkbox-group">
+                <label class="check-item"><input type="checkbox" value="menyalakan AC 16 derajat"> ❄️ menyalakan AC 16 derajat</label>
+                <label class="check-item"><input type="checkbox" value="restock bahan habis pakai"> ❄️ restock bahan habis pakai</label>
+                <label class="check-item"><input type="checkbox" value="verbed tim 1"> ❄️ verbed tim 1</label>
+            </div>
+        </div>
+
+        <h2>Rencana Tindakan</h2>
+        <textarea id="rencanaTindakan" placeholder="Tulis rencana tindakan di sini..."></textarea>
+
+        <div class="btn-group" style="margin-top: 40px;">
+            <button class="btn btn-wa" onclick="kirimWA()">🚀 Kirim ke WA</button>
+            <button class="btn btn-pdf" onclick="cetakPDF()">🖨️ Cetak PDF</button>
         </div>
     </div>
 </div>
 
-<script>
-let isTim1Saved = false;
-let isTim2Saved = false;
+<div class="print-area" id="printArea">
+    <h1 style="text-align: center;">LAPORAN HEMODIALISA</h1>
+    <pre id="printContent"></pre>
+</div>
 
-function showPage(pageNum) {
+<script>
+// Generate Kotak Anggota Tim & Bed Stepper
+const memberContainer = document.getElementById('memberContainer');
+let memberHTML = '';
+for(let i=1; i<=6; i++) {
+    memberHTML += `
+    <div class="member-card">
+        <input type="text" id="agt${i}" placeholder="Anggota ${i}">
+        <div class="bed-range">
+            <div class="small-stepper">
+                <span class="stepper-label">Dari</span>
+                <div class="stepper-controls">
+                    <button class="stepper-btn" onclick="adjustBed('bed${i}_start', -1)">-</button>
+                    <input type="number" id="bed${i}_start" value="0" class="stepper-input">
+                    <button class="stepper-btn" onclick="adjustBed('bed${i}_start', 1)">+</button>
+                </div>
+            </div>
+            <div class="small-stepper">
+                <span class="stepper-label">Sampai</span>
+                <div class="stepper-controls">
+                    <button class="stepper-btn" onclick="adjustBed('bed${i}_end', -1)">-</button>
+                    <input type="number" id="bed${i}_end" value="0" class="stepper-input">
+                    <button class="stepper-btn" onclick="adjustBed('bed${i}_end', 1)">+</button>
+                </div>
+            </div>
+        </div>
+    </div>`;
+}
+memberContainer.innerHTML = memberHTML;
+
+// Generate Kotak Dialyzer
+const dialyzerContainer = document.getElementById('dialyzerContainer');
+let dialyzerHTML = '';
+[70, 90, 110, 130, 150, 170].forEach(size => {
+    dialyzerHTML += `
+    <div class="stepper-item">
+        <span class="stepper-label">HF ${size}</span>
+        <div class="stepper-controls">
+            <button class="stepper-btn" onclick="adjustHF('hf${size}', -1)">-</button>
+            <input type="number" id="hf${size}" value="0" class="stepper-input">
+            <button class="stepper-btn" onclick="adjustHF('hf${size}', 1)">+</button>
+        </div>
+    </div>`;
+});
+dialyzerContainer.innerHTML = dialyzerHTML;
+
+// Generate Job Desk Perawat
+const jobList = [
+    "kendali DL", "spreadsheet", "Laporan", "simrs", "verif box", 
+    "perawatan mesin", "DL lock", "persiapan priming", "scan upload", 
+    "kendali obat", "verif monitoring", "cek stok Order", "HF"
+];
+const perawatContainer = document.getElementById('perawatContainer');
+let perawatHTML = '';
+for (let i = 1; i <= 5; i++) {
+    perawatHTML += `<div class="job-box">
+        <input type="text" id="perawat${i}" placeholder="Nama Perawat ${i}">
+        <div class="checkbox-group">`;
+    jobList.forEach(job => {
+        perawatHTML += `<label class="check-item"><input type="checkbox" value="${job}" class="job-perawat-${i}"> ❄️ ${job}</label>`;
+    });
+    perawatHTML += `</div></div>`;
+}
+perawatContainer.innerHTML = perawatHTML;
+
+function switchTab(tab) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    
-    document.getElementById('page' + pageNum).classList.add('active');
-    document.querySelectorAll('.nav-btn')[pageNum - 1].classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('slide' + tab).classList.add('active');
+    document.querySelectorAll('.tab-btn')[tab - 1].classList.add('active');
     window.scrollTo(0, 0);
 }
 
-function saveData(teamNum) {
-    let contentId = `tim${teamNum}Content`;
-    let statusId = `statusTim${teamNum}`;
-    
-    document.getElementById(contentId).classList.add('saved');
-    document.getElementById(statusId).style.display = 'block';
-    
-    if(teamNum === 1) isTim1Saved = true;
-    if(teamNum === 2) isTim2Saved = true;
-    
-    // Auto scroll ke status
-    setTimeout(() => {
-        document.getElementById(statusId).scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
+function adjustBed(id, delta) {
+    let el = document.getElementById(id);
+    let newVal = (parseInt(el.value) || 0) + delta;
+    if (newVal < 0) newVal = 0;
+    el.value = newVal;
 }
 
-function getValue(id) {
+function adjustHF(id, delta) {
+    let el = document.getElementById(id);
+    let newVal = (parseInt(el.value) || 0) + delta;
+    if (newVal < 0) newVal = 0;
+    el.value = newVal;
+}
+
+function formatPaste(text) {
+    if (!text) return "-";
+    return text.split('\n')
+        .map(line => line.trim().replace(/\t+/g, ' ').replace(/\s+/g, ' '))
+        .filter(line => line.length > 0)
+        .join('\n');
+}
+
+function getVal(id) {
     let el = document.getElementById(id);
     return el ? el.value.trim() : "";
 }
 
-function formatList(text) {
-    if (!text) return "-";
-    return text.split('\n').map(line => line.trim()).join('\n');
+function formatDate(dateStr) {
+    if (!dateStr) return "-";
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
 }
 
-function generateReport() {
+function buildReport() {
     let txt = "";
-    let pengirim = getValue('namaPengirim');
     
-    // Header
-    txt += `_${getValue('judul')}_\n`;
-    txt += `_*${getValue('hariShift')} ${getValue('tanggal')}*_\n\n`;
+    txt += `_HD MALAHAYATI ON POINT_\n`;
+    txt += `_*${formatDate(getVal('tanggal1'))} | Shift ${getVal('shift1')} | Tim ${getVal('tim1')}*_\n`;
+    txt += `──────────────────\n\n`;
 
-    // TIM 1
-    txt += `*Tim 1*  : \n`;
-    txt += `🪼 Petugas :\n`;
-    let ptg1 = getValue('petugasTim1').split(',');
-    ptg1.forEach((p, i) => { txt += `${i+1}. ${p.trim()}\n`; });
-
-    txt += `\n${getValue('tugasTim1')}\n`;
-    let ptg1Lanjut = getValue('petugasTim1Lanjut').split(',');
-    ptg1Lanjut.forEach(p => { txt += `${p.trim()}\n`; });
-
-    txt += `\n*Tim 1*  :  \n`;
-    txt += `🪼 Jumlah Pasien : ${getValue('jmlPasienTim1')}\n`;
-    txt += `${formatList(getValue('listPasienTim1'))}\n\n`;
-    txt += `🪼 Pasien Ruangan : \n${formatList(getValue('pasienRuangTim1'))}\n\n`;
-    txt += `🪼 Masalah : \n${formatList(getValue('masalahTim1'))}\n`;
-    txt += `🪼 Pro MRS : -\n🪼 Kendala Tim 1: -\n`;
-    txt += `🪼 Pasien tidak datang : \n${formatList(getValue('tidakDatangTim1'))}\n`;
-    txt += `🪼 Px RJ tranfusi : -\n🪼 Px RJ pasang DL : -\n`;
-    txt += `🪼 Sisa : ${getValue('sisaTim1')}\n`;
-    txt += `🪼 Sisa Bed Kosong : ${getValue('bedTim1')}\n\n`;
-
-    // TIM 2
-    txt += `*Tim 2* :\n`;
-    txt += `🦀 Petugas: \n${formatList(getValue('petugasTim2'))}\n\n`;
-    txt += `🦀 Jumlah pasien rawat jalan :${getValue('jmlPasienTim2')} \n`;
-    txt += `${formatList(getValue('listPasienTim2'))}\n\n`;
+    txt += `*Tim ${getVal('tim1')}* : \n🪼 Petugas: \n`;
+    for(let i=1; i<=6; i++) {
+        let nm = getVal('agt'+i);
+        if(nm) {
+            let bStart = getVal('bed'+i+'_start');
+            let bEnd = getVal('bed'+i+'_end');
+            let bedStr = "";
+            if(bStart !== "0" && bEnd !== "0" && bStart !== "" && bEnd !== "") {
+                bedStr = `(Bed ${bStart} - ${bEnd})`;
+            }
+            txt += `${i}. ${nm} ${bedStr}\n`;
+        }
+    }
     
-    let jmlRuang2 = getValue('pasienRuangTim2').split('\n').filter(l => l.match(/^\d+\./)).length;
-    txt += `🦀 Pasien Ruangan : ${jmlRuang2} orang \n\n`;
-    txt += `${formatList(getValue('pasienRuangTim2'))}\n\n`;
+    txt += `\n🪼 Daftar Pasien RJ: \n${formatPaste(getVal('pasienRJ'))}\n\n`;
+    txt += `🪼 Pasien Ruangan: \n${formatPaste(getVal('pasienRuang'))}\n\n`;
 
-    txt += `🦀 Masalah :  ${getValue('masalahTim2')}  \n`;
-    txt += `🦀 Pro MRS : -\n🦀 Kendala Tim 2: -\n`;
-    txt += `🦀 Pasien tidak datang :  \n${formatList(getValue('tidakDatangTim2'))}\n`;
-    txt += `🦀 Px RJ tranfusi : -\n🦀 Px RJ Pasang DL : -\n`;
-    txt += `🦀 Sisa : ${getValue('sisaTim2')}\n`;
-    txt += `🦀 Sisa Bed Kosong ${getValue('bedTim2')}\n\n`;
+    txt += `🪼 Masalah Pasien: \n${formatPaste(getVal('masalahPasien'))}\n`;
+    txt += `🪼 Masalah Mesin/Alat: \n${formatPaste(getVal('masalahMesin'))}\n\n`;
 
-    // Footer Pengirim
+    txt += `🪼 Sisa HF/Dialyzer:\n`;
+    txt += `70: ${getVal('hf70') || '0'} | 90: ${getVal('hf90') || '0'} | 110: ${getVal('hf110') || '0'}\n`;
+    txt += `130: ${getVal('hf130') || '0'} | 150: ${getVal('hf150') || '0'} | 170: ${getVal('hf170') || '0'}\n`;
+    txt += `🪼 BOR / Sisa Bed Kosong: ${getVal('sisaBed')}\n`;
+    txt += `──────────────────\n\n`;
+
+    txt += `*JOB DESK PETUGAS*\n`;
+    txt += `_*${formatDate(getVal('tanggal2'))} | Shift ${getVal('shift2')} | Tim ${getVal('tim2')}*_\n\n`;
+
+    for(let i=1; i<=5; i++) {
+        let nama = getVal('perawat'+i);
+        if(nama) {
+            let jobs = Array.from(document.querySelectorAll('.job-perawat-'+i+':checked')).map(c => c.value).join(', ');
+            txt += `*${nama}* : ${jobs || '-'}\n`;
+        }
+    }
+
+    let namaPadat = getVal('namaPadatkarya');
+    if(namaPadat) {
+        let jobsPadat = Array.from(document.querySelectorAll('#slide2 .job-box .check-item input:checked')).map(c => c.value).join(', ');
+        txt += `*${namaPadat}* : ${jobsPadat || '-'}\n`;
+    }
+
+    if(getVal('rencanaTindakan')) {
+        txt += `\n*Rencana Tindakan:*\n${formatPaste(getVal('rencanaTindakan'))}\n`;
+    }
+
     txt += `──────────────────\n`;
-    txt += `Laporan dikirim oleh:\n*${pengirim}*`;
+    txt += `Dikirim oleh: *${getVal('pengirim')}*`;
 
-    document.getElementById('outputText').innerText = txt;
     return txt;
 }
 
-function sendToWhatsApp() {
-    if(!isTim1Saved || !isTim2Saved) {
-        alert("⚠️ Peringatan!\nPastikan Anda sudah menekan tombol 'Simpan Data' di Tim 1 dan Tim 2 sebelum generate.");
+function kirimWA() {
+    if(getVal('pengirim') === "") {
+        alert("❌ Nama Pengirim wajib diisi di Slide 1!");
+        switchTab(1);
+        document.getElementById('pengirim').focus();
         return;
     }
 
-    let pengirim = getValue('namaPengirim');
-    if(pengirim === "") {
-        alert("❌ Nama Pengirim wajib diisi!");
-        document.getElementById('namaPengirim').focus();
+    const txt = buildReport();
+    const waUrl = "https://wa.me/?text=" + encodeURIComponent(txt);
+    window.open(waUrl, '_blank');
+}
+
+function cetakPDF() {
+    if(getVal('pengirim') === "") {
+        alert("❌ Nama Pengirim wajib diisi di Slide 1!");
+        switchTab(1);
         return;
     }
+    document.getElementById('printContent').innerText = buildReport();
+    window.print();
+}
 
-    const txt = generateReport();
-    
-    navigator.clipboard.writeText(txt).then(() => {
-        document.getElementById('outputBox').style.display = 'block';
-        alert("✅ Laporan berhasil disalin ke clipboard!\n\nAnda akan diarahkan ke Grup WA. Silakan PASTE (tempel) di kolom chat.");
-        window.location.href = "https://chat.whatsapp.com/GQpvI4D3X8FBU4dsgqWx8I";
-    }).catch(err => {
-        alert("Gagal salin otomatis. Silakan salin teks manual di kotak bawah.");
-        document.getElementById('outputBox').style.display = 'block';
-    });
+function resetData() {
+    if(confirm("Yakin mereset SEMUA data di kedua slide?")) {
+        document.querySelectorAll('input[type="text"], textarea, input[type="date"], input[type="number"]').forEach(el => {
+            el.value = "";
+            if(el.type === 'number') el.value = 0;
+        });
+        document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+        document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+        switchTab(1);
+    }
 }
 </script>
-
 </body>
 </html>
