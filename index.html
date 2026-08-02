@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan HD On Point</title>
+    <title>GALAW - Generator Laporan HD</title>
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            --card-bg: #ffffff;
-            --primary: #ff7e5f;
-            --secondary: #4ecdc4;
+            --sunny-orange: #ff7e5f;
+            --sunny-peach: #feb47b;
+            --leaf-green: #56ab2f;
+            --leaf-dark: #2d6e1e;
             --wa-green: #25D366;
             --wa-dark: #128C7E;
             --text-dark: #2d3436;
             --text-muted: #636e72;
             --input-border: #dfe6e9;
-            --input-focus: #ff7e5f;
+            --bg-gradient: linear-gradient(135deg, #fff1eb 0%, #ace0f9 100%);
+            --card-bg: #ffffff;
         }
 
         * {
@@ -44,52 +45,67 @@
             padding-bottom: 30px;
         }
 
+        /* Header Galaw */
+        .app-header {
+            background: linear-gradient(45deg, var(--sunny-orange), var(--leaf-green));
+            padding: 20px;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .app-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        .app-header p {
+            margin: 5px 0 0 0;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
         .nav-header {
             display: flex;
-            background: rgba(255,255,255,0.9);
-            padding: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            background: #f1f2f6;
+            padding: 8px;
+            gap: 5px;
         }
         .tab-btn {
             flex: 1;
             background: transparent;
             border: none;
-            padding: 12px;
-            font-size: 1rem;
+            padding: 10px 5px;
+            font-size: 0.8rem;
             font-weight: bold;
             color: var(--text-muted);
             cursor: pointer;
             border-radius: 10px;
             transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
         }
         .tab-btn.active {
-            background: linear-gradient(45deg, var(--primary), #feb47b);
-            color: #fff;
-            box-shadow: 0 4px 10px rgba(255, 126, 95, 0.3);
+            background: #fff;
+            color: var(--leaf-green);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .page { padding: 25px; display: none; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        h1 {
-            font-size: 1.5rem;
-            text-align: center;
-            margin: 0 0 20px 0;
-            background: linear-gradient(45deg, var(--primary), #feb47b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
         h2 {
             font-size: 1.1rem;
             margin-top: 25px;
-            color: var(--wa-dark);
-            border-left: 5px solid var(--primary);
+            color: var(--leaf-dark);
+            border-left: 5px solid var(--sunny-orange);
             padding-left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         label {
@@ -110,17 +126,16 @@
             transition: all 0.2s;
         }
         input:focus, textarea:focus, select:focus {
-            border-color: var(--input-focus);
+            border-color: var(--leaf-green);
             background: #fff;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(255, 126, 95, 0.15);
+            box-shadow: 0 0 0 3px rgba(86, 171, 47, 0.15);
         }
         textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
         
-        /* Kotak Anggota Tim */
         .member-card {
             border: 1.5px solid var(--input-border);
             border-radius: 12px;
@@ -128,73 +143,42 @@
             background: #fff;
             margin-bottom: 10px;
         }
-        
-        /* Stepper Bed Pasien */
-        .bed-range {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-top: 10px;
-        }
+        .bed-range { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; }
         .small-stepper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: #f8f9fa;
-            border: 1px solid #e0e0e0;
-            padding: 8px;
-            border-radius: 10px;
+            flex: 1; display: flex; flex-direction: column; align-items: center;
+            background: #f8f9fa; border: 1px solid #e0e0e0; padding: 8px; border-radius: 10px;
         }
         .small-stepper .stepper-label { font-size: 0.75rem; font-weight: bold; margin-bottom: 6px; color: var(--text-muted); }
         .small-stepper .stepper-controls { display: flex; align-items: center; gap: 6px; }
-        .small-stepper .stepper-btn {
-            width: 28px; height: 28px; border: none; background: var(--primary);
+        .stepper-btn {
+            width: 28px; height: 28px; border: none; background: var(--sunny-orange);
             color: #fff; border-radius: 50%; font-size: 1rem; font-weight: bold;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
-        .small-stepper .stepper-input {
+        .stepper-input {
             width: 40px; text-align: center; border: 1px solid #ddd;
             border-radius: 6px; padding: 4px 0; font-size: 0.9rem; font-weight: bold; background: #fff;
         }
 
-        /* Stepper Sisa Alat Besar */
         .stepper-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: #f8f9fa;
-            border: 1px solid #e0e0e0;
-            padding: 10px;
-            border-radius: 12px;
+            display: flex; flex-direction: column; align-items: center;
+            background: #f8f9fa; border: 1px solid #e0e0e0; padding: 10px; border-radius: 12px;
         }
-        .stepper-label { font-size: 0.85rem; font-weight: bold; margin-bottom: 8px; color: var(--text-muted); }
-        .stepper-controls { display: flex; align-items: center; gap: 8px; }
-        .stepper-btn {
-            width: 32px; height: 32px; border: none; background: var(--primary);
-            color: #fff; border-radius: 50%; font-size: 1.2rem; font-weight: bold;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
-        .stepper-input {
-            width: 45px; text-align: center; border: 1px solid #ddd;
-            border-radius: 8px; padding: 6px 0; font-size: 1rem; font-weight: bold; background: #fff;
-        }
+        .stepper-item .stepper-btn { background: var(--leaf-green); width: 32px; height: 32px; font-size: 1.2rem; }
+        .stepper-item .stepper-input { width: 45px; padding: 6px 0; font-size: 1rem; }
 
         .job-box {
-            border: 1.5px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 15px;
-            background: #fafafa;
+            border: 1.5px solid #e0e0e0; border-radius: 12px; padding: 15px;
+            margin-top: 15px; background: #fafafa;
         }
         .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
         .check-item {
-            display: flex; align-items: center; background: #fff;
-            border: 1px solid #ddd; padding: 5px 10px; border-radius: 20px;
-            font-size: 0.8rem; cursor: pointer;
+            display: flex; align-items: center; background: #fff; border: 1px solid #ddd;
+            padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; cursor: pointer;
         }
         .check-item input { width: auto; margin-right: 5px; }
 
+        /* Tombol */
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 30px; }
         .btn {
             border: none; padding: 16px; border-radius: 12px; font-size: 1rem;
@@ -202,8 +186,42 @@
             justify-content: center; gap: 8px;
         }
         .btn-wa { background: var(--wa-green); color: #fff; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
-        .btn-pdf { background: #fff; color: var(--primary); border: 1.5px solid var(--primary); }
+        .btn-pdf { background: #fff; color: var(--leaf-dark); border: 1.5px solid var(--leaf-green); }
         .btn-reset { background: #ffeaea; color: #d63031; margin-top: 10px; width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+        /* Slide 3 Styling */
+        .patient-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .action-btn {
+            background: #f1f2f6;
+            border: 1px solid #dfe6e9;
+            color: var(--text-dark);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .action-btn:hover { background: #e0e0e0; }
+        .action-btn.custom {
+            background: #fff0e6;
+            color: var(--sunny-orange);
+            border-color: var(--sunny-peach);
+        }
 
         .print-area { display: none; padding: 40px; }
         @media print {
@@ -217,14 +235,20 @@
 <body>
 
 <div class="container">
+    <div class="app-header">
+        <h1>🩺 GALAW</h1>
+        <p>Generator Laporan Hemodialisis - WhatsApp</p>
+    </div>
+
     <div class="nav-header">
-        <button class="tab-btn active" onclick="switchTab(1)">1. Laporan On Point</button>
-        <button class="tab-btn" onclick="switchTab(2)">2. Job Desk</button>
+        <button class="tab-btn active" onclick="switchTab(1)">🏥<br>Laporan</button>
+        <button class="tab-btn" onclick="switchTab(2)">📝<br>Job Desk</button>
+        <button class="tab-btn" onclick="switchTab(3)">📅<br>Tindakan</button>
     </div>
 
     <!-- SLIDE 1: LAPORAN ON POINT -->
     <div id="slide1" class="page active">
-        <h1>🏥 Laporan On Point</h1>
+        <h2>📋 Laporan On Point</h2>
         
         <div class="grid-3">
             <div>
@@ -247,19 +271,17 @@
             </div>
         </div>
 
-        <h2>Anggota Tim & Pembagian Bed</h2>
-        <div class="grid-2" id="memberContainer">
-            <!-- Anggota akan di-generate oleh JS -->
-        </div>
+        <h2>👥 Anggota Tim & Bed</h2>
+        <div class="grid-2" id="memberContainer"></div>
 
-        <h2>Daftar Pasien</h2>
-        <label>Pasien Rawat Jalan (Bisa Paste dari Excel)</label>
+        <h2>🛌 Daftar Pasien</h2>
+        <label>Pasien Rawat Jalan (Paste dari Excel)</label>
         <textarea id="pasienRJ" placeholder="Nama Pasien 1&#10;Nama Pasien 2"></textarea>
         
-        <label>Pasien Ruangan (Bisa Paste dari Excel)</label>
+        <label>Pasien Ruangan (Paste dari Excel)</label>
         <textarea id="pasienRuang" placeholder="Nama Pasien / Ruangan&#10;Nama Pasien / Ruangan"></textarea>
 
-        <h2>Masalah</h2>
+        <h2>⚠️ Masalah</h2>
         <div class="grid-2">
             <div>
                 <label>Masalah Pasien</label>
@@ -271,27 +293,25 @@
             </div>
         </div>
 
-        <h2>Sisa Alat (Dialyzer)</h2>
-        <div class="grid-2" id="dialyzerContainer">
-            <!-- Stepper Dialyzer akan di-generate oleh JS -->
-        </div>
+        <h2>🩸 Sisa Alat (Dialyzer)</h2>
+        <div class="grid-2" id="dialyzerContainer"></div>
 
         <label>BOR / Sisa Bed Kosong</label>
         <input type="text" id="sisaBed" placeholder="Contoh: 1 bed (bed 44)">
 
-        <h2>Identitas Pengirim</h2>
-        <input type="text" id="pengirim" placeholder="Nama Anda (Wajib diisi)">
+        <h2>👨‍⚕️ Pengirim</h2>
+        <input type="text" id="pengirim1" placeholder="Nama Anda (Wajib diisi)">
 
         <div class="btn-group">
-            <button class="btn btn-wa" onclick="kirimWA()">🚀 Kirim ke WA</button>
-            <button class="btn btn-pdf" onclick="cetakPDF()">🖨️ Cetak PDF</button>
+            <button class="btn btn-wa" onclick="kirimWA(1)">🚀 Kirim Laporan</button>
+            <button class="btn btn-pdf" onclick="cetakPDF(1)">🖨️ Cetak PDF</button>
         </div>
         <button class="btn-reset" onclick="resetData()">🧹 Reset Semua Data</button>
     </div>
 
-    <!-- SLIDE 2: PETUGAS & JOB DESK -->
+    <!-- SLIDE 2: JOB DESK -->
     <div id="slide2" class="page">
-        <h1>📝 Job Desk Petugas</h1>
+        <h2>📝 Job Desk Petugas</h2>
 
         <div class="grid-3">
             <div>
@@ -314,10 +334,10 @@
             </div>
         </div>
 
-        <h2>Deskripsi Tugas Perawat</h2>
+        <h2>🧑‍⚕️ Tugas Perawat</h2>
         <div id="perawatContainer"></div>
 
-        <h2>Deskripsi Tugas Padatkarya</h2>
+        <h2>🧹 Tugas Padatkarya</h2>
         <div class="job-box">
             <input type="text" id="namaPadatkarya" placeholder="Nama Padatkarya">
             <div class="checkbox-group">
@@ -327,12 +347,42 @@
             </div>
         </div>
 
-        <h2>Rencana Tindakan</h2>
+        <h2>📋 Rencana Tindakan</h2>
         <textarea id="rencanaTindakan" placeholder="Tulis rencana tindakan di sini..."></textarea>
 
+        <h2>👨‍⚕️ Pengirim</h2>
+        <input type="text" id="pengirim2" placeholder="Nama Anda (Wajib diisi)">
+
         <div class="btn-group" style="margin-top: 40px;">
-            <button class="btn btn-wa" onclick="kirimWA()">🚀 Kirim ke WA</button>
-            <button class="btn btn-pdf" onclick="cetakPDF()">🖨️ Cetak PDF</button>
+            <button class="btn btn-wa" onclick="kirimWA(2)">🚀 Kirim Job Desk</button>
+            <button class="btn btn-pdf" onclick="cetakPDF(2)">🖨️ Cetak PDF</button>
+        </div>
+    </div>
+
+    <!-- SLIDE 3: PERENCANAAN TINDAKAN PASIEN -->
+    <div id="slide3" class="page">
+        <h2>📅 Perencanaan Tindakan Pasien</h2>
+        
+        <div class="grid-2">
+            <div>
+                <label>Tanggal</label>
+                <input type="date" id="tanggal3">
+            </div>
+            <div>
+                <label>Pengirim</label>
+                <input type="text" id="pengirim3" placeholder="Nama Anda">
+            </div>
+        </div>
+
+        <div id="patientPlanContainer" style="margin-top: 20px;">
+            <!-- Kartu Pasien akan di-generate oleh JS -->
+        </div>
+        
+        <button class="btn btn-pdf" style="background: var(--leaf-green); color: #fff; border: none; margin-top: 10px;" onclick="tambahPasien()">➕ Tambah Pasien Baru</button>
+
+        <div class="btn-group">
+            <button class="btn btn-wa" onclick="kirimWA(3)">🚀 Kirim Rencana</button>
+            <button class="btn btn-pdf" onclick="cetakPDF(3)">🖨️ Cetak PDF</button>
         </div>
     </div>
 </div>
@@ -343,7 +393,7 @@
 </div>
 
 <script>
-// Generate Kotak Anggota Tim & Bed Stepper
+// Inisialisasi Anggota Tim
 const memberContainer = document.getElementById('memberContainer');
 let memberHTML = '';
 for(let i=1; i<=6; i++) {
@@ -354,17 +404,17 @@ for(let i=1; i<=6; i++) {
             <div class="small-stepper">
                 <span class="stepper-label">Dari</span>
                 <div class="stepper-controls">
-                    <button class="stepper-btn" onclick="adjustBed('bed${i}_start', -1)">-</button>
+                    <button class="stepper-btn" onclick="adjustVal('bed${i}_start', -1)">-</button>
                     <input type="number" id="bed${i}_start" value="0" class="stepper-input">
-                    <button class="stepper-btn" onclick="adjustBed('bed${i}_start', 1)">+</button>
+                    <button class="stepper-btn" onclick="adjustVal('bed${i}_start', 1)">+</button>
                 </div>
             </div>
             <div class="small-stepper">
                 <span class="stepper-label">Sampai</span>
                 <div class="stepper-controls">
-                    <button class="stepper-btn" onclick="adjustBed('bed${i}_end', -1)">-</button>
+                    <button class="stepper-btn" onclick="adjustVal('bed${i}_end', -1)">-</button>
                     <input type="number" id="bed${i}_end" value="0" class="stepper-input">
-                    <button class="stepper-btn" onclick="adjustBed('bed${i}_end', 1)">+</button>
+                    <button class="stepper-btn" onclick="adjustVal('bed${i}_end', 1)">+</button>
                 </div>
             </div>
         </div>
@@ -372,28 +422,24 @@ for(let i=1; i<=6; i++) {
 }
 memberContainer.innerHTML = memberHTML;
 
-// Generate Kotak Dialyzer
+// Inisialisasi Dialyzer
 const dialyzerContainer = document.getElementById('dialyzerContainer');
 let dialyzerHTML = '';
 [70, 90, 110, 130, 150, 170].forEach(size => {
     dialyzerHTML += `
     <div class="stepper-item">
-        <span class="stepper-label">HF ${size}</span>
+        <span class="stepper-label" style="font-size:0.85rem; font-weight:bold; margin-bottom:8px;">HF ${size}</span>
         <div class="stepper-controls">
-            <button class="stepper-btn" onclick="adjustHF('hf${size}', -1)">-</button>
-            <input type="number" id="hf${size}" value="0" class="stepper-input">
-            <button class="stepper-btn" onclick="adjustHF('hf${size}', 1)">+</button>
+            <button class="stepper-btn" onclick="adjustVal('hf${size}', -1)">-</button>
+            <input type="number" id="hf${size}" value="0" class="stepper-input" style="width:45px; padding:6px 0; font-size:1rem;">
+            <button class="stepper-btn" onclick="adjustVal('hf${size}', 1)">+</button>
         </div>
     </div>`;
 });
 dialyzerContainer.innerHTML = dialyzerHTML;
 
-// Generate Job Desk Perawat
-const jobList = [
-    "kendali DL", "spreadsheet", "Laporan", "simrs", "verif box", 
-    "perawatan mesin", "DL lock", "persiapan priming", "scan upload", 
-    "kendali obat", "verif monitoring", "cek stok Order", "HF"
-];
+// Inisialisasi Job Desk Perawat
+const jobList = ["kendali DL", "spreadsheet", "Laporan", "simrs", "verif box", "perawatan mesin", "DL lock", "persiapan priming", "scan upload", "kendali obat", "verif monitoring", "cek stok Order", "HF"];
 const perawatContainer = document.getElementById('perawatContainer');
 let perawatHTML = '';
 for (let i = 1; i <= 5; i++) {
@@ -407,6 +453,61 @@ for (let i = 1; i <= 5; i++) {
 }
 perawatContainer.innerHTML = perawatHTML;
 
+// Inisialisasi Slide 3 - Tindakan Pasien
+let patientCount = 0;
+const tindakanOptions = [
+    "ODC BTKV", "Poli Bedah TKV", "Poli Jantung", "Poli Urologi", 
+    "Radiologi", "Poli Saraf", "Transfusi", "Laborat", "Poli Anak", "Poli Kandungan", "Poli Mata"
+];
+
+function tambahPasien() {
+    patientCount++;
+    const container = document.getElementById('patientPlanContainer');
+    const card = document.createElement('div');
+    card.className = 'patient-card';
+    card.id = `patientCard-${patientCount}`;
+    
+    let optionsHTML = '';
+    tindakanOptions.forEach((opt, index) => {
+        optionsHTML += `<div class="action-btn" onclick="addTindakan(${patientCount}, '${opt}')">${index+1}. ${opt}</div>`;
+    });
+    // Tombol Manual
+    optionsHTML += `<div class="action-btn custom" onclick="addTindakanManual(${patientCount})">11. Isi Manual...</div>`;
+
+    card.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <input type="text" id="namaPasienPlan-${patientCount}" placeholder="Nama Pasien" style="flex:1; margin-right:10px;">
+            <button class="stepper-btn" style="background:#d63031; width:30px; height:30px;" onclick="hapusPasien(${patientCount})">✕</button>
+        </div>
+        <div class="action-grid">
+            ${optionsHTML}
+        </div>
+        <textarea id="rencanaPasien-${patientCount}" placeholder="Rencana tindakan akan muncul di sini..." style="margin-top:10px;" readonly></textarea>
+    `;
+    container.appendChild(card);
+}
+
+function addTindakan(id, text) {
+    let el = document.getElementById(`rencanaPasien-${id}`);
+    if(el.value.includes(text)) return; // Cegah dobel
+    el.value += (el.value ? ", " : "") + text;
+}
+
+function addTindakanManual(id) {
+    let customText = prompt("Masukkan rencana tindakan manual:");
+    if(customText) {
+        addTindakan(id, customText);
+    }
+}
+
+function hapusPasien(id) {
+    document.getElementById(`patientCard-${id}`).remove();
+}
+
+// Generate 1 kartu pasien otomatis saat pertama kali buka halaman 3
+tambahPasien();
+
+// Fungsi Navigasi
 function switchTab(tab) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -415,14 +516,7 @@ function switchTab(tab) {
     window.scrollTo(0, 0);
 }
 
-function adjustBed(id, delta) {
-    let el = document.getElementById(id);
-    let newVal = (parseInt(el.value) || 0) + delta;
-    if (newVal < 0) newVal = 0;
-    el.value = newVal;
-}
-
-function adjustHF(id, delta) {
+function adjustVal(id, delta) {
     let el = document.getElementById(id);
     let newVal = (parseInt(el.value) || 0) + delta;
     if (newVal < 0) newVal = 0;
@@ -431,10 +525,7 @@ function adjustHF(id, delta) {
 
 function formatPaste(text) {
     if (!text) return "-";
-    return text.split('\n')
-        .map(line => line.trim().replace(/\t+/g, ' ').replace(/\s+/g, ' '))
-        .filter(line => line.length > 0)
-        .join('\n');
+    return text.split('\n').map(line => line.trim().replace(/\t+/g, ' ').replace(/\s+/g, ' ')).filter(line => line.length > 0).join('\n');
 }
 
 function getVal(id) {
@@ -445,103 +536,124 @@ function getVal(id) {
 function formatDate(dateStr) {
     if (!dateStr) return "-";
     const date = new Date(dateStr);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
+    return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
 }
 
-function buildReport() {
+// Build Report Per Halaman
+function buildReport(slideNum) {
     let txt = "";
     
-    txt += `_HD MALAHAYATI ON POINT_\n`;
-    txt += `_*${formatDate(getVal('tanggal1'))} | Shift ${getVal('shift1')} | Tim ${getVal('tim1')}*_\n`;
-    txt += `──────────────────\n\n`;
-
-    txt += `*Tim ${getVal('tim1')}* : \n🪼 Petugas: \n`;
-    for(let i=1; i<=6; i++) {
-        let nm = getVal('agt'+i);
-        if(nm) {
-            let bStart = getVal('bed'+i+'_start');
-            let bEnd = getVal('bed'+i+'_end');
-            let bedStr = "";
-            if(bStart !== "0" && bEnd !== "0" && bStart !== "" && bEnd !== "") {
-                bedStr = `(Bed ${bStart} - ${bEnd})`;
+    if(slideNum === 1) {
+        txt += `_LAPORAN ON POINT HD_\n`;
+        txt += `_*${formatDate(getVal('tanggal1'))} | Shift ${getVal('shift1')} | Tim ${getVal('tim1')}*_\n`;
+        txt += `──────────────────\n\n`;
+        txt += `*Tim ${getVal('tim1')}* : \n🪼 Petugas: \n`;
+        for(let i=1; i<=6; i++) {
+            let nm = getVal('agt'+i);
+            if(nm) {
+                let bS = getVal('bed'+i+'_start');
+                let bE = getVal('bed'+i+'_end');
+                let bedStr = (bS !== "0" && bE !== "0" && bS !== "" && bE !== "") ? `(Bed ${bS} - ${bE})` : "";
+                txt += `${i}. ${nm} ${bedStr}\n`;
             }
-            txt += `${i}. ${nm} ${bedStr}\n`;
         }
-    }
+        txt += `\n🪼 Daftar Pasien RJ: \n${formatPaste(getVal('pasienRJ'))}\n\n`;
+        txt += `🪼 Pasien Ruangan: \n${formatPaste(getVal('pasienRuang'))}\n\n`;
+        txt += `🪼 Masalah Pasien: \n${formatPaste(getVal('masalahPasien'))}\n`;
+        txt += `🪼 Masalah Mesin/Alat: \n${formatPaste(getVal('masalahMesin'))}\n\n`;
+        txt += `🪼 Sisa HF/Dialyzer:\n`;
+        txt += `70: ${getVal('hf70') || '0'} | 90: ${getVal('hf90') || '0'} | 110: ${getVal('hf110') || '0'}\n`;
+        txt += `130: ${getVal('hf130') || '0'} | 150: ${getVal('hf150') || '0'} | 170: ${getVal('hf170') || '0'}\n`;
+        txt += `🪼 BOR / Sisa Bed Kosong: ${getVal('sisaBed')}\n`;
+        txt += `──────────────────\n`;
+        txt += `Dikirim oleh: *${getVal('pengirim1')}*`;
+    } 
     
-    txt += `\n🪼 Daftar Pasien RJ: \n${formatPaste(getVal('pasienRJ'))}\n\n`;
-    txt += `🪼 Pasien Ruangan: \n${formatPaste(getVal('pasienRuang'))}\n\n`;
-
-    txt += `🪼 Masalah Pasien: \n${formatPaste(getVal('masalahPasien'))}\n`;
-    txt += `🪼 Masalah Mesin/Alat: \n${formatPaste(getVal('masalahMesin'))}\n\n`;
-
-    txt += `🪼 Sisa HF/Dialyzer:\n`;
-    txt += `70: ${getVal('hf70') || '0'} | 90: ${getVal('hf90') || '0'} | 110: ${getVal('hf110') || '0'}\n`;
-    txt += `130: ${getVal('hf130') || '0'} | 150: ${getVal('hf150') || '0'} | 170: ${getVal('hf170') || '0'}\n`;
-    txt += `🪼 BOR / Sisa Bed Kosong: ${getVal('sisaBed')}\n`;
-    txt += `──────────────────\n\n`;
-
-    txt += `*JOB DESK PETUGAS*\n`;
-    txt += `_*${formatDate(getVal('tanggal2'))} | Shift ${getVal('shift2')} | Tim ${getVal('tim2')}*_\n\n`;
-
-    for(let i=1; i<=5; i++) {
-        let nama = getVal('perawat'+i);
-        if(nama) {
-            let jobs = Array.from(document.querySelectorAll('.job-perawat-'+i+':checked')).map(c => c.value).join(', ');
-            txt += `*${nama}* : ${jobs || '-'}\n`;
+    else if(slideNum === 2) {
+        txt += `_JOB DESK PETUGAS HD_\n`;
+        txt += `_*${formatDate(getVal('tanggal2'))} | Shift ${getVal('shift2')} | Tim ${getVal('tim2')}*_\n`;
+        txt += `──────────────────\n\n`;
+        for(let i=1; i<=5; i++) {
+            let nama = getVal('perawat'+i);
+            if(nama) {
+                let jobs = Array.from(document.querySelectorAll('.job-perawat-'+i+':checked')).map(c => c.value).join(', ');
+                txt += `*${nama}* : ${jobs || '-'}\n`;
+            }
         }
+        let namaPadat = getVal('namaPadatkarya');
+        if(namaPadat) {
+            let jobsPadat = Array.from(document.querySelectorAll('#slide2 .job-box .check-item input:checked')).map(c => c.value).join(', ');
+            txt += `*${namaPadat}* : ${jobsPadat || '-'}\n`;
+        }
+        if(getVal('rencanaTindakan')) {
+            txt += `\n*Rencana Tindakan Umum:*\n${formatPaste(getVal('rencanaTindakan'))}\n`;
+        }
+        txt += `──────────────────\n`;
+        txt += `Dikirim oleh: *${getVal('pengirim2')}*`;
+    } 
+    
+    else if(slideNum === 3) {
+        txt += `_PERENCANAAN TINDAKAN PASIEN HD_\n`;
+        txt += `_*Tanggal: ${formatDate(getVal('tanggal3'))}*_\n`;
+        txt += `──────────────────\n\n`;
+        
+        let adaPasien = false;
+        for(let i=1; i<=patientCount; i++) {
+            let card = document.getElementById(`patientCard-${i}`);
+            if(card) {
+                let nama = getVal(`namaPasienPlan-${i}`);
+                let rencana = getVal(`rencanaPasien-${i}`);
+                if(nama) {
+                    adaPasien = true;
+                    txt += `*Pasien:* ${nama}\n*Rencana:* ${rencana || '-'}\n\n`;
+                }
+            }
+        }
+        if(!adaPasien) txt += "Tidak ada pasien yang diinput.\n";
+        txt += `──────────────────\n`;
+        txt += `Dikirim oleh: *${getVal('pengirim3')}*`;
     }
-
-    let namaPadat = getVal('namaPadatkarya');
-    if(namaPadat) {
-        let jobsPadat = Array.from(document.querySelectorAll('#slide2 .job-box .check-item input:checked')).map(c => c.value).join(', ');
-        txt += `*${namaPadat}* : ${jobsPadat || '-'}\n`;
-    }
-
-    if(getVal('rencanaTindakan')) {
-        txt += `\n*Rencana Tindakan:*\n${formatPaste(getVal('rencanaTindakan'))}\n`;
-    }
-
-    txt += `──────────────────\n`;
-    txt += `Dikirim oleh: *${getVal('pengirim')}*`;
 
     return txt;
 }
 
-function kirimWA() {
-    if(getVal('pengirim') === "") {
-        alert("❌ Nama Pengirim wajib diisi di Slide 1!");
-        switchTab(1);
-        document.getElementById('pengirim').focus();
+function kirimWA(slideNum) {
+    if(getVal(`pengirim${slideNum}`) === "") {
+        alert("❌ Nama Pengirim wajib diisi!");
+        switchTab(slideNum);
+        document.getElementById(`pengirim${slideNum}`).focus();
         return;
     }
 
-    const txt = buildReport();
+    const txt = buildReport(slideNum);
     const waUrl = "https://wa.me/?text=" + encodeURIComponent(txt);
     window.open(waUrl, '_blank');
 }
 
-function cetakPDF() {
-    if(getVal('pengirim') === "") {
-        alert("❌ Nama Pengirim wajib diisi di Slide 1!");
-        switchTab(1);
+function cetakPDF(slideNum) {
+    if(getVal(`pengirim${slideNum}`) === "") {
+        alert("❌ Nama Pengirim wajib diisi!");
+        switchTab(slideNum);
         return;
     }
-    document.getElementById('printContent').innerText = buildReport();
+    document.getElementById('printContent').innerText = buildReport(slideNum);
     window.print();
 }
 
 function resetData() {
-    if(confirm("Yakin mereset SEMUA data di kedua slide?")) {
+    if(confirm("Yakin mereset SEMUA data di semua halaman?")) {
         document.querySelectorAll('input[type="text"], textarea, input[type="date"], input[type="number"]').forEach(el => {
             el.value = "";
             if(el.type === 'number') el.value = 0;
         });
         document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
         document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+        
+        // Bersihkan kartu pasien di halaman 3
+        document.getElementById('patientPlanContainer').innerHTML = "";
+        patientCount = 0;
+        tambahPasien(); // Buat 1 kartu kosong
+        
         switchTab(1);
     }
 }
