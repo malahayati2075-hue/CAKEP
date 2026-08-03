@@ -17,6 +17,8 @@
             --text-muted: #64748b;
             --border-color: #e2e8f0;
             --input-bg: #f8fafc;
+            --wa-dark: #075E54;
+            --wa-green: #25D366;
         }
 
         * {
@@ -45,29 +47,59 @@
             border: 1px solid rgba(255,255,255,0.8);
         }
 
-        /* Header Galaw */
+        /* Header Galaw - Natural & WA Themed */
         .app-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            padding: 25px 20px;
+            background: linear-gradient(135deg, var(--wa-dark) 0%, var(--primary) 60%, var(--wa-green) 120%);
+            padding: 35px 20px;
             text-align: center;
             color: #fff;
             position: relative;
+            overflow: hidden;
+        }
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(37, 211, 102, 0.4);
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: 0;
+        }
+        .app-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(13, 148, 136, 0.6);
+            border-radius: 50%;
+            filter: blur(50px);
+            z-index: 0;
         }
         .app-header h1 {
             margin: 0;
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 800;
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
         .app-header p {
             margin: 5px 0 0 0;
             font-size: 0.85rem;
-            opacity: 0.9;
+            opacity: 0.95;
             font-weight: 500;
+            position: relative;
+            z-index: 1;
         }
 
         /* Navigasi Tab */
@@ -391,7 +423,7 @@
 
         <div class="section-title">
             <div class="icon-box"><i class="fa-solid fa-user-nurse"></i></div>
-            <h2>Tugas Perawat</h2>
+            <h2>Tugas Perawat & Bed</h2>
         </div>
         <div id="perawatContainer"></div>
 
@@ -520,7 +552,7 @@
 </div>
 
 <script>
-// Generate Anggota Tim
+// Generate Anggota Tim (Slide 1)
 const memberContainer = document.getElementById('memberContainer');
 let memberHTML = '';
 for(let i=1; i<=6; i++) {
@@ -549,7 +581,7 @@ for(let i=1; i<=6; i++) {
 }
 memberContainer.innerHTML = memberHTML;
 
-// Generate Dialyzer
+// Generate Dialyzer (Slide 1)
 const dialyzerContainer = document.getElementById('dialyzerContainer');
 let dialyzerHTML = '';
 [70, 90, 110, 130, 150, 170].forEach(size => {
@@ -565,13 +597,31 @@ let dialyzerHTML = '';
 });
 dialyzerContainer.innerHTML = dialyzerHTML;
 
-// Generate Job Desk Perawat
+// Generate Job Desk Perawat (Slide 2) + Bed Stepper
 const jobList = ["kendali DL", "spreadsheet", "Laporan", "simrs", "verif box", "perawatan mesin", "DL lock", "persiapan priming", "scan upload", "kendali obat", "verif monitoring", "cek stok Order", "HF"];
 const perawatContainer = document.getElementById('perawatContainer');
 let perawatHTML = '';
 for (let i = 1; i <= 5; i++) {
     perawatHTML += `<div class="job-box">
         <input type="text" id="perawat${i}" placeholder="Nama Perawat ${i}">
+        <div class="bed-range">
+            <div class="small-stepper">
+                <span class="stepper-label">Bed Dari</span>
+                <div class="stepper-controls">
+                    <button class="stepper-btn" onclick="adjustVal('p_bed${i}_start', -1)">-</button>
+                    <input type="number" id="p_bed${i}_start" value="0" class="stepper-input">
+                    <button class="stepper-btn" onclick="adjustVal('p_bed${i}_start', 1)">+</button>
+                </div>
+            </div>
+            <div class="small-stepper">
+                <span class="stepper-label">Bed Sampai</span>
+                <div class="stepper-controls">
+                    <button class="stepper-btn" onclick="adjustVal('p_bed${i}_end', -1)">-</button>
+                    <input type="number" id="p_bed${i}_end" value="0" class="stepper-input">
+                    <button class="stepper-btn" onclick="adjustVal('p_bed${i}_end', 1)">+</button>
+                </div>
+            </div>
+        </div>
         <div class="checkbox-group">`;
     jobList.forEach(job => {
         perawatHTML += `<label class="check-item"><input type="checkbox" value="${job}" class="job-perawat-${i}"> ${job}</label>`;
@@ -717,8 +767,12 @@ function buildReport(slideNum) {
         for(let i=1; i<=5; i++) {
             let nama = getVal('perawat'+i);
             if(nama) {
+                let bS = getVal('p_bed'+i+'_start');
+                let bE = getVal('p_bed'+i+'_end');
+                let bedStr = (bS !== "0" && bE !== "0" && bS !== "" && bE !== "") ? ` (Bed ${bS} - ${bE})` : "";
+                
                 let jobs = Array.from(document.querySelectorAll('.job-perawat-'+i+':checked')).map(c => c.value).join(', ');
-                txt += `*${nama}* : ${jobs || '-'}\n`;
+                txt += `*${nama}${bedStr}* : ${jobs || '-'}\n`;
             }
         }
         let namaPadat = getVal('namaPadatkarya');
