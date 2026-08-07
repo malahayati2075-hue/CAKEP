@@ -51,7 +51,7 @@
         .app-header {
             position: relative;
             min-height: 280px;
-            background-image: url('headergalaw.png');
+            background-image: url('headerGALA-W.png');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -282,8 +282,10 @@
         </div>
         <label>Pasien Rawat Jalan (Bisa Paste dari Excel)</label>
         <textarea id="pasienRJ" placeholder="Nama Pasien 1&#10;Nama Pasien 2"></textarea>
-        <label>Pasien Ruangan (Bisa Paste dari Excel)</label>
-        <textarea id="pasienRuang" placeholder="Nama Pasien / Ruangan&#10;Nama Pasien / Ruangan"></textarea>
+        
+        <label>Pasien Ruangan (Rawat Inap)</label>
+        <div id="ruanganContainer" style="margin-top: 15px;"></div>
+        <button class="btn-add" onclick="tambahPasienRuang()"><i class="fa-solid fa-circle-plus"></i> Tambah Pasien Ruangan</button>
 
         <div class="section-title">
             <div class="icon-box" style="background:#fff1f2; color:var(--accent);">⚠️</div>
@@ -472,7 +474,26 @@ for (let i = 1; i <= 5; i++) {
 }
 perawatContainer.innerHTML = perawatHTML;
 
-// Slide 3 Logic
+// Slide 1 Logic: Pasien Ruangan (Rawat Inap)
+let ruanganCount = 0;
+function tambahPasienRuang() {
+    ruanganCount++;
+    const container = document.getElementById('ruanganContainer');
+    const card = document.createElement('div');
+    card.className = 'patient-card'; card.id = `ruanganCard-${ruanganCount}`;
+    card.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <input type="text" id="namaPasienRuang-${ruanganCount}" placeholder="Nama / No RM / Ruangan" style="flex:1; margin-right:10px;">
+            <button class="delete-pasien" onclick="hapusPasienRuang(${ruanganCount})"><i class="fa-solid fa-circle-xmark"></i></button>
+        </div>
+        <textarea id="detailPasienRuang-${ruanganCount}" placeholder="Masukkan data kondisi pasien di sini (KU, TD, UF, QD, QB, Heparin, Lab, dll)..." style="min-height: 120px;"></textarea>
+    `;
+    container.appendChild(card);
+}
+function hapusPasienRuang(id) { document.getElementById(`ruanganCard-${id}`).remove(); }
+tambahPasienRuang();
+
+// Slide 3 Logic: Kartu Tindakan
 let patientCount = 0;
 const tindakanOptions = ["ODC BTKV", "Poli Bedah TKV", "Poli Jantung", "Poli Urologi", "Radiologi", "Poli Saraf", "Transfusi", "Laborat", "Poli Anak", "Poli Kandungan", "Poli Mata"];
 
@@ -518,18 +539,21 @@ function adjustVal(id, delta) {
     if (newVal < 0) newVal = 0; el.value = newVal;
 }
 
-// Format Bullet untuk text biasa
 function formatPaste(text) {
     if (!text) return "-";
-    return text.split('\n').map(line => `• ${line.trim().replace(/\t+/g, ' ').replace(/\s+/g, ' ')}`).filter(line => line.length > 3).join('\n');
+    return text.split('\n').map(line => `▪️ ${line.trim().replace(/\t+/g, ' ').replace(/\s+/g, ' ')}`).filter(line => line.length > 3).join('\n');
 }
 
-// Format Penomoran untuk Daftar Pasien/Orang
-function formatPasteNumbered(text) {
+function formatPatientList(text) {
     if (!text) return "-";
-    let lines = text.split('\n').map(line => line.trim().replace(/\t+/g, ' ').replace(/\s+/g, ' ')).filter(line => line.length > 0);
-    if(lines.length === 0) return "-";
-    return lines.map((line, index) => `${index + 1}. ${line}`).join('\n');
+    let lines = text.split('\n')
+                    .map(line => line.trim().replace(/\t+/g, ' ').replace(/\s+/g, ' '))
+                    .filter(line => line.length > 0);
+    if (lines.length === 0) return "-";
+    return lines.map((line, index) => {
+        let cleanedLine = line.replace(/^\s*\d+[\.\)\-\,]\s*/, '');
+        return `${index + 1}. ${cleanedLine}`;
+    }).join('\n');
 }
 
 function getVal(id) { let el = document.getElementById(id); return el ? el.value.trim() : ""; }
@@ -552,30 +576,69 @@ function buildReport(slideNum) {
         let staffCount = 0;
         for(let i=1; i<=6; i++) {
             let nm = getVal('agt'+i);
-            if(nm) { staffCount++; txt += ` ${staffCount}. ${nm}\n`; }
+            if(nm) { staffCount++; txt += `${staffCount}. ${nm}\n`; }
         }
         txt += `└ _Total Anggota: ${staffCount}_\n\n`;
+        txt += `───────────────────\n\n`;
         
         txt += `🧑‍🤝‍🧑 *DAFTAR PASIEN*\n`;
-        let rjText = formatPasteNumbered(getVal('pasienRJ'));
+        let rjText = formatPatientList(getVal('pasienRJ'));
         let rjCount = (getVal('pasienRJ') ? getVal('pasienRJ').split('\n').filter(l => l.trim().length > 0).length : 0);
         txt += `🏥 *Rawat Jalan:*\n${rjText}\n\n`;
         
-        let ruangText = formatPasteNumbered(getVal('pasienRuang'));
-        let ruangCount = (getVal('pasienRuang') ? getVal('pasienRuang').split('\n').filter(l => l.trim().length > 0).length : 0);
-        txt += `🚪 *Ruangan:*\n${ruangText}\n`;
+        let ruangCount = 0;
+        let ruangIdx = 1;
+        let ruangText = "";
+        for(let i=1; i<=ruanganCount; i++) {
+            let card = document.getElementById(`ruanganCard-${i}`);
+            if(card) {
+                let nama = getVal(`namaPasienRuang-${i}`);
+                let detail = getVal(`detailPasienRuang-${i}`);
+                if(nama) {
+                    ruangCount++;
+                    ruangText += `${ruangIdx}. *${nama}*\n`;
+                    if(detail) {
+                        detail.split('\n').filter(l => l.trim().length > 0).forEach(l => {
+                            ruangText += `   ▸ ${l.trim().replace(/^\s*\d+[\.\)\-\,]\s*/, '')}\n`;
+                        });
+                    } else {
+                        ruangText += `   ▸ -\n`;
+                    }
+                    ruangText += `\n`;
+                    ruangIdx++;
+                }
+            }
+        }
+        if(ruangCount === 0) ruangText = "-\n";
+        txt += `🚪 *Ruangan:*\n${ruangText}`;
         txt += `└ _Total Pasien: ${rjCount + ruangCount}_\n\n`;
+        txt += `───────────────────\n\n`;
         
         txt += `⚠️ *MASALAH*\n`;
-        txt += `🤒 *Pasien:* ${formatPaste(getVal('masalahPasien'))}\n`;
-        txt += `🔧 *Mesin/Alat:* ${formatPaste(getVal('masalahMesin'))}\n\n`;
+        let mPasien = getVal('masalahPasien');
+        txt += `▪️ ${'Pasien'.padEnd(12)} : \n`;
+        if(mPasien) {
+            mPasien.split('\n').filter(l => l.trim().length > 0).forEach(l => txt += `   ▸ ${l.trim()}\n`);
+        } else { txt += `   ▸ -\n`; }
+        
+        let mMesin = getVal('masalahMesin');
+        txt += `▪️ ${'Mesin/Alat'.padEnd(12)} : \n`;
+        if(mMesin) {
+            mMesin.split('\n').filter(l => l.trim().length > 0).forEach(l => txt += `   ▸ ${l.trim()}\n`);
+        } else { txt += `   ▸ -\n`; }
+        txt += `\n───────────────────\n\n`;
         
         txt += `📦 *SISA ALAT & INVENTARIS*\n`;
         txt += `💧 *HF/Dialyzer:*\n`;
-        txt += ` ▫️ 70: ${getVal('hf70') || '0'} | 90: ${getVal('hf90') || '0'} | 110: ${getVal('hf110') || '0'}\n`;
-        txt += ` ▫️ 130: ${getVal('hf130') || '0'} | 150: ${getVal('hf150') || '0'} | 170: ${getVal('hf170') || '0'}\n`;
-        txt += `💉 *Sisa GD Stick:* ${getVal('gdStick') || '-'}\n`;
-        txt += `🛏️ *BOR / Sisa Bed:* ${getVal('sisaBed') || '-'}\n`;
+        txt += `▪️ ${'HF 70'.padEnd(12)} : ${getVal('hf70') || '0'}\n`;
+        txt += `▪️ ${'HF 90'.padEnd(12)} : ${getVal('hf90') || '0'}\n`;
+        txt += `▪️ ${'HF 110'.padEnd(12)} : ${getVal('hf110') || '0'}\n`;
+        txt += `▪️ ${'HF 130'.padEnd(12)} : ${getVal('hf130') || '0'}\n`;
+        txt += `▪️ ${'HF 150'.padEnd(12)} : ${getVal('hf150') || '0'}\n`;
+        txt += `▪️ ${'HF 170'.padEnd(12)} : ${getVal('hf170') || '0'}\n`;
+        txt += `\n`;
+        txt += `▪️ ${'GD Stick'.padEnd(12)} : ${getVal('gdStick') || '-'}\n`;
+        txt += `▪️ ${'Sisa Bed'.padEnd(12)} : ${getVal('sisaBed') || '-'}\n`;
         txt += `\n═══════════════════\n`;
         txt += `📤 Dikirim oleh: *${getVal('pengirim1')}*`;
     } 
@@ -592,19 +655,35 @@ function buildReport(slideNum) {
                 staffCount++;
                 let bS = getVal('p_bed'+i+'_start'); let bE = getVal('p_bed'+i+'_end');
                 let bedStr = (bS !== "0" && bE !== "0" && bS !== "" && bE !== "") ? ` (Bed ${bS}-${bE})` : "";
-                let jobs = Array.from(document.querySelectorAll(`#perawatBox-${i} .check-item input:checked`)).map(c => c.value).join(', ');
-                txt += ` ${staffCount}. *${nama}${bedStr}* : ${jobs || '-'}\n`;
+                
+                txt += `${staffCount}. *${nama}${bedStr}* : \n`;
+                
+                let jobs = Array.from(document.querySelectorAll(`#perawatBox-${i} .check-item input:checked`)).map(c => c.value);
+                if(jobs.length > 0) {
+                    jobs.forEach(job => { txt += `   ▪️ ${job}\n`; });
+                } else {
+                    txt += `   ▪️ -\n`;
+                }
             }
         }
+        txt += `\n───────────────────\n\n`;
         
-        txt += `\n🧹 *TUGAS PADATKARYA*\n`;
+        txt += `🧹 *TUGAS PADATKARYA*\n`;
         let namaPadat = getVal('namaPadatkarya');
         if(namaPadat) {
             staffCount++;
-            let jobsPadat = Array.from(document.querySelectorAll('#padatkaryaBox .check-item input:checked')).map(c => c.value).join(', ');
-            txt += ` ${staffCount}. *${namaPadat}* : ${jobsPadat || '-'}\n`;
-        } else { txt += ` -\n`; }
+            txt += `${staffCount}. *${namaPadat}* : \n`;
+            let jobsPadat = Array.from(document.querySelectorAll('#padatkaryaBox .check-item input:checked')).map(c => c.value);
+            if(jobsPadat.length > 0) {
+                jobsPadat.forEach(job => txt += `   ▪️ ${job}\n`);
+            } else {
+                txt += `   ▪️ -\n`;
+            }
+        } else { 
+            txt += `1. -\n`; 
+        }
         txt += `└ _Total Petugas: ${staffCount}_\n\n`;
+        txt += `───────────────────\n\n`;
         
         if(getVal('rencanaTindakan')) {
             txt += `💡 *RENCANA TINDAKAN UMUM*\n${formatPaste(getVal('rencanaTindakan'))}\n\n`;
@@ -625,7 +704,15 @@ function buildReport(slideNum) {
                 if(nama) {
                     adaPasien = true;
                     txt += `${idx}. *${nama}*\n`;
-                    txt += `   📝 Rencana: ${rencana || '-'}\n\n`;
+                    txt += `   📝 Rencana: \n`;
+                    if(rencana) {
+                        rencana.split(',').map(r => r.trim()).filter(r => r.length > 0).forEach(r => {
+                            txt += `   ▪️ ${r}\n`;
+                        });
+                    } else {
+                        txt += `   ▪️ -\n`;
+                    }
+                    txt += `\n`;
                     idx++;
                 }
             }
@@ -642,11 +729,17 @@ function buildReport(slideNum) {
         txt += `═══════════════════\n\n`;
         
         txt += `1️⃣ *TIM 1 (Shift 1):*\n${formatPaste(getVal('bedKosongT1S1'))}\n\n`;
+        txt += `───────────────────\n\n`;
         txt += `2️⃣ *TIM 1 (Shift 2):*\n${formatPaste(getVal('bedKosongT1S2'))}\n\n`;
+        txt += `───────────────────\n\n`;
         txt += `3️⃣ *TIM 2 (Shift 1):*\n${formatPaste(getVal('bedKosongT2S1'))}\n\n`;
+        txt += `───────────────────\n\n`;
         txt += `4️⃣ *TIM 2 (Shift 2):*\n${formatPaste(getVal('bedKosongT2S2'))}\n\n`;
         
-        if(getVal('keteranganBed')) { txt += `📝 *Keterangan:*\n${formatPaste(getVal('keteranganBed'))}\n\n`; }
+        if(getVal('keteranganBed')) { 
+            txt += `───────────────────\n\n`;
+            txt += `📝 *Keterangan:*\n${formatPaste(getVal('keteranganBed'))}\n\n`; 
+        }
         txt += `═══════════════════\n`;
         txt += `📤 Dikirim oleh: *${getVal('pengirim4')}*`;
     }
@@ -678,8 +771,14 @@ function resetData() {
         });
         document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
         document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+        
+        document.getElementById('ruanganContainer').innerHTML = "";
+        ruanganCount = 0; tambahPasienRuang();
+
         document.getElementById('patientPlanContainer').innerHTML = "";
-        patientCount = 0; tambahPasien(); switchTab(1);
+        patientCount = 0; tambahPasien();
+        
+        switchTab(1);
     }
 }
 </script>
