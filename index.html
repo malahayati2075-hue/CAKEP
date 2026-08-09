@@ -140,10 +140,10 @@
         }
         .tab-btn.active::before { background: linear-gradient(to bottom, rgba(13,148,136,0.85), rgba(13,148,136,0.95)); }
         
-        .tab-bg-1 { background-image: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=200&q=80'); } /* Laporan */
-        .tab-bg-2 { background-image: url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=200&q=80'); } /* Shibuya */
-        .tab-bg-3 { background-image: url('https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=200&q=80'); } /* Tindakan (Kamar Operasi) */
-        .tab-bg-4 { background-image: url('https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=200&q=80'); } /* Malang */
+        .tab-bg-1 { background-image: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=200&q=80'); } 
+        .tab-bg-2 { background-image: url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=200&q=80'); } 
+        .tab-bg-3 { background-image: url('https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=200&q=80'); } 
+        .tab-bg-4 { background-image: url('https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=200&q=80'); } 
 
         .page { padding: 30px; display: none; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
@@ -390,7 +390,7 @@
             <button class="btn btn-wa" onclick="kirimWA(1)"><i class="fa-brands fa-whatsapp"></i> Kirim WA</button>
             <button class="btn btn-pdf" onclick="cetakPDF(1)"><i class="fa-solid fa-print"></i> Cetak PDF</button>
         </div>
-        <button class="btn-reset" onclick="resetData()"><i class="fa-solid fa-trash-can"></i> Reset Semua Data</button>
+        <button class="btn-reset" onclick="resetPage(1)"><i class="fa-solid fa-trash-can"></i> Reset Halaman Ini</button>
     </div>
 
     <div id="slide2" class="page">
@@ -439,6 +439,7 @@
             <button class="btn btn-wa" onclick="kirimWA(2)"><i class="fa-brands fa-whatsapp"></i> Kirim WA</button>
             <button class="btn btn-pdf" onclick="cetakPDF(2)"><i class="fa-solid fa-print"></i> Cetak PDF</button>
         </div>
+        <button class="btn-reset" onclick="resetPage(2)"><i class="fa-solid fa-trash-can"></i> Reset Halaman Ini</button>
     </div>
 
     <div id="slide3" class="page">
@@ -456,6 +457,7 @@
             <button class="btn btn-wa" onclick="kirimWA(3)"><i class="fa-brands fa-whatsapp"></i> Kirim Rencana WA</button>
             <button class="btn btn-pdf" onclick="cetakPDF(3)"><i class="fa-solid fa-print"></i> Cetak PDF</button>
         </div>
+        <button class="btn-reset" onclick="resetPage(3)"><i class="fa-solid fa-trash-can"></i> Reset Halaman Ini</button>
     </div>
 
     <div id="slide4" class="page">
@@ -489,6 +491,7 @@
             <button class="btn btn-wa" onclick="kirimWA(4)"><i class="fa-brands fa-whatsapp"></i> Kirim WA</button>
             <button class="btn btn-pdf" onclick="cetakPDF(4)"><i class="fa-solid fa-print"></i> Cetak PDF</button>
         </div>
+        <button class="btn-reset" onclick="resetPage(4)"><i class="fa-solid fa-trash-can"></i> Reset Halaman Ini</button>
     </div>
 </div>
 
@@ -838,21 +841,23 @@ function cetakPDF(slideNum) {
     window.print();
 }
 
-function resetData() {
-    if(confirm("Yakin mereset SEMUA data di semua halaman?")) {
-        document.querySelectorAll('input[type="text"], textarea, input[type="date"], input[type="number"]').forEach(el => {
+function resetPage(slideNum) {
+    if(confirm("Yakin mereset data di halaman ini saja?")) {
+        const slide = document.getElementById('slide' + slideNum);
+        slide.querySelectorAll('input[type="text"], textarea, input[type="date"], input[type="number"]').forEach(el => {
             el.value = ""; if(el.type === 'number') el.value = 0;
         });
-        document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
-        document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+        slide.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+        slide.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
         
-        document.getElementById('ruanganContainer').innerHTML = "";
-        ruanganCount = 0; tambahPasienRuang();
-
-        document.getElementById('patientPlanContainer').innerHTML = "";
-        patientCount = 0; tambahPasien();
-        
-        switchTab(1);
+        if(slideNum === 1) {
+            document.getElementById('ruanganContainer').innerHTML = "";
+            ruanganCount = 0; tambahPasienRuang();
+        } else if(slideNum === 3) {
+            document.getElementById('patientPlanContainer').innerHTML = "";
+            patientCount = 0; tambahPasien();
+        }
+        alert("Halaman telah direset.");
     }
 }
 </script>
