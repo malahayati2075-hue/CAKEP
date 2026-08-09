@@ -89,6 +89,7 @@
             text-align: right; font-size: 0.7rem; line-height: 1.5;
             background: rgba(255,255,255,0.15); padding: 8px 12px;
             border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); max-width: 200px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 2px 4px rgba(0,0,0,0.1);
         }
         .prayer-times .loc { font-weight: 700; color: #fff; margin-bottom: 2px; display: block; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 2px; }
         .prayer-times span { font-weight: 700; color: #ffe53b; }
@@ -114,24 +115,75 @@
             border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 10;
             box-shadow: 0 4px 10px rgba(0,0,0,0.02);
         }
+        
+        /* Tombol Navigasi dengan Gambar Realistis */
         .tab-btn {
-            flex: 1; background: var(--input-bg); border: none; padding: 12px 5px;
-            font-size: 0.75rem; font-weight: 700; color: var(--text-muted); cursor: pointer;
+            flex: 1; padding: 12px 5px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
             border-radius: 12px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex; flex-direction: column; align-items: center; gap: 6px;
+            position: relative; overflow: hidden;
+            color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            background-size: cover; background-position: center;
         }
+        .tab-btn::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.45); z-index: 0; transition: background 0.3s;
+        }
+        .tab-btn:hover::before { background: rgba(0,0,0,0.25); }
+        .tab-btn i, .tab-btn span { position: relative; z-index: 1; }
         .tab-btn i { font-size: 1.3rem; font-style: normal; }
-        .tab-btn.active { background: var(--primary); color: #fff; box-shadow: 0 6px 15px rgba(13, 148, 136, 0.3); transform: translateY(-3px); }
+        .tab-btn.active {
+            color: #fff; border: 1px solid #fff;
+            box-shadow: 0 6px 15px rgba(13, 148, 136, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+        }
+        .tab-btn.active::before { background: linear-gradient(to bottom, rgba(13,148,136,0.85), rgba(13,148,136,0.95)); }
+        
+        .tab-bg-1 { background-image: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=200&q=80'); } /* Laporan */
+        .tab-bg-2 { background-image: url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=200&q=80'); } /* Shibuya */
+        .tab-bg-3 { background-image: url('https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=200&q=80'); } /* Tindakan (Kamar Operasi) */
+        .tab-bg-4 { background-image: url('https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=200&q=80'); } /* Malang */
 
         .page { padding: 30px; display: none; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        .section-title { display: flex; align-items: center; gap: 12px; margin-top: 30px; margin-bottom: 15px; }
+        .section-title { 
+            display: flex; align-items: center; gap: 12px; margin-top: 30px; margin-bottom: 15px;
+            border-bottom: 2px solid #cbd5e1;
+            box-shadow: 0 2px 0 #fff, 0 4px 6px -2px rgba(0,0,0,0.05);
+            padding-bottom: 10px;
+        }
+        
+        /* Section Title Utama di tiap Slide diberi Background Realistis */
+        .main-title {
+            padding: 30px 25px; border-radius: 18px; margin-top: 0; border: none;
+            background-size: cover; background-position: center; position: relative; overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15), inset 0 2px 2px rgba(255,255,255,0.1), inset 0 -2px 2px rgba(0,0,0,0.1);
+            display: flex; align-items: center; gap: 15px;
+        }
+        .main-title::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to right, rgba(7,94,84,0.85), rgba(7,94,84,0.5)); z-index: 0;
+        }
+        .main-title .icon-box {
+            position: relative; z-index: 1; background: rgba(255,255,255,0.2);
+            color: #fff; border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .main-title h2 { position: relative; z-index: 1; color: #fff; font-size: 1.3rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        
+        .main-laporan { background-image: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80'); }
+        .main-jobdesk { background-image: url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=800&q=80'); }
+        .main-tindakan { background-image: url('https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80'); }
+        .main-bed { background-image: url('https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=800&q=80'); }
+
         .section-title .icon-box {
             width: 45px; height: 45px; background: #ccfbf1; color: var(--primary);
             border-radius: 14px; display: flex; align-items: center; justify-content: center;
-            font-size: 1.4rem; box-shadow: 0 4px 8px rgba(13, 148, 136, 0.15);
+            font-size: 1.4rem; border: 1px solid #fff;
+            box-shadow: 0 4px 8px rgba(13, 148, 136, 0.2), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -2px 0 rgba(0,0,0,0.05);
         }
         .section-title h2 { font-size: 1.1rem; margin: 0; color: var(--text-main); font-weight: 800; }
 
@@ -141,10 +193,11 @@
             width: 100%; padding: 14px; border: 1.5px solid var(--border-color);
             border-radius: 12px; font-size: 0.95rem; background: var(--input-bg);
             transition: all 0.2s ease-in-out; font-family: inherit; color: var(--text-main);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03), inset 0 -1px 0 rgba(255,255,255,0.8);
         }
         input:focus, textarea:focus, select:focus {
             border-color: var(--primary-light); background: #fff; outline: none;
-            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1);
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1), inset 0 1px 2px rgba(0,0,0,0.02);
         }
         textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
 
@@ -153,11 +206,12 @@
         
         .member-card, .job-box, .patient-card {
             border: 1.5px solid var(--border-color); border-radius: 16px; padding: 15px;
-            background: #fff; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            background: #fff; margin-bottom: 12px; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            box-shadow: inset 0 2px 2px rgba(255,255,255,1), inset 0 -2px 2px rgba(203,213,225,0.4), 0 4px 10px rgba(0,0,0,0.05);
         }
         .member-card:hover, .job-box:hover, .patient-card:hover {
-            transform: translateY(-2px); border-color: var(--primary-light); box-shadow: 0 8px 16px rgba(13, 148, 136, 0.1);
+            transform: translateY(-2px); border-color: var(--primary-light); 
+            box-shadow: inset 0 2px 2px rgba(255,255,255,1), inset 0 -2px 2px rgba(13,148,136,0.2), 0 8px 16px rgba(13, 148, 136, 0.15);
         }
         .member-card { background: var(--input-bg); }
         .member-card:hover { background: #fff; }
@@ -166,6 +220,7 @@
         .small-stepper {
             flex: 1; display: flex; flex-direction: column; align-items: center;
             background: #fff; border: 1px solid #e2e8f0; padding: 8px; border-radius: 12px;
+            box-shadow: inset 0 2px 2px rgba(255,255,255,1), inset 0 -2px 2px rgba(203,213,225,0.4), 0 2px 6px rgba(0,0,0,0.04);
         }
         .small-stepper .stepper-label { font-size: 0.75rem; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
         .small-stepper .stepper-controls { display: flex; align-items: center; gap: 8px; }
@@ -173,25 +228,28 @@
             width: 30px; height: 30px; border: none; background: var(--primary); color: #fff;
             border-radius: 8px; font-size: 0.9rem; font-weight: bold; cursor: pointer;
             display: flex; align-items: center; justify-content: center; transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 3px 0 #0f766e, 0 4px 5px rgba(0,0,0,0.1);
         }
         .stepper-btn:hover { background: var(--primary-light); }
-        .stepper-btn:active { transform: scale(0.9); }
+        .stepper-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #0f766e, 0 2px 3px rgba(0,0,0,0.1); }
         .stepper-input { width: 45px; text-align: center; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 0; font-size: 0.95rem; font-weight: 600; background: #fff; }
 
         .stepper-item {
             display: flex; flex-direction: column; align-items: center;
             background: #fff; border: 1px solid var(--border-color); padding: 12px; border-radius: 14px; transition: all 0.2s;
+            box-shadow: inset 0 2px 2px rgba(255,255,255,1), inset 0 -2px 2px rgba(203,213,225,0.4), 0 2px 6px rgba(0,0,0,0.04);
         }
-        .stepper-item:hover { border-color: var(--secondary); }
-        .stepper-item .stepper-btn { background: var(--secondary); width: 32px; height: 32px; font-size: 1rem; }
+        .stepper-item:hover { border-color: var(--secondary); box-shadow: 0 4px 10px rgba(2, 132, 199, 0.1); }
+        .stepper-item .stepper-btn { background: var(--secondary); width: 32px; height: 32px; font-size: 1rem; box-shadow: 0 3px 0 #075985, 0 4px 5px rgba(0,0,0,0.1); }
         .stepper-item .stepper-btn:hover { background: #0284c7; }
 
         .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
         .check-item {
             display: flex; align-items: center; background: var(--input-bg); border: 1px solid var(--border-color);
             padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: 500; transition: all 0.2s;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,1), inset 0 -1px 1px rgba(203,213,225,0.3), 0 1px 2px rgba(0,0,0,0.02);
         }
-        .check-item:hover { background: #e0f2fe; border-color: var(--secondary); color: var(--secondary); }
+        .check-item:hover { background: #e0f2fe; border-color: var(--secondary); color: var(--secondary); box-shadow: 0 2px 5px rgba(2, 132, 199, 0.1); }
         .check-item input { width: auto; margin-right: 6px; accent-color: var(--primary); }
 
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 35px; }
@@ -200,28 +258,44 @@
             cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .btn:active { transform: scale(0.98); }
-        .btn-wa { background: var(--primary); color: #fff; box-shadow: 0 6px 18px rgba(13, 148, 136, 0.3); }
-        .btn-wa:hover { background: var(--primary-light); box-shadow: 0 8px 22px rgba(13, 148, 136, 0.4); transform: translateY(-2px); }
-        .btn-pdf { background: #fff; color: var(--secondary); border: 1.5px solid var(--secondary); }
-        .btn-pdf:hover { background: #f0f9ff; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15); }
-        .btn-add { background: #f0f9ff; color: var(--secondary); border: 1.5px dashed var(--secondary); margin-bottom: 15px; width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;}
-        .btn-add:hover { background: #e0f2fe; }
         
-        .btn-reset { background: #fff1f2; color: var(--accent); margin-top: 15px; width: 100%; padding: 12px; border: 1px solid #fecdd3; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .btn-reset:hover { background: #ffe4e6; }
+        .btn-wa {
+            color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            background-size: cover; background-position: center;
+            box-shadow: 0 6px 0 #0f766e, 0 10px 15px rgba(0,0,0,0.2);
+        }
+        .btn-wa:hover { box-shadow: 0 8px 0 #0f766e, 0 12px 20px rgba(0,0,0,0.25); transform: translateY(-2px); }
+        .btn-wa:active { transform: translateY(4px); box-shadow: 0 2px 0 #0f766e, 0 4px 8px rgba(0,0,0,0.2); }
+
+        #slide1 .btn-wa { background-image: linear-gradient(135deg, rgba(13,148,136,0.85), rgba(13,148,136,0.7)), url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=400&q=80'); }
+        #slide2 .btn-wa { background-image: linear-gradient(135deg, rgba(13,148,136,0.85), rgba(13,148,136,0.7)), url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=400&q=80'); }
+        #slide3 .btn-wa { background-image: linear-gradient(135deg, rgba(13,148,136,0.85), rgba(13,148,136,0.7)), url('https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=400&q=80'); }
+        #slide4 .btn-wa { background-image: linear-gradient(135deg, rgba(13,148,136,0.85), rgba(13,148,136,0.7)), url('https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=400&q=80'); }
+
+        .btn-pdf { background: #fff; color: var(--secondary); border: 1.5px solid var(--secondary); box-shadow: 0 4px 0 #bae6fd, 0 6px 10px rgba(0,0,0,0.05); }
+        .btn-pdf:hover { background: #f0f9ff; box-shadow: 0 6px 0 #bae6fd, 0 8px 15px rgba(2, 132, 199, 0.15); transform: translateY(-2px); }
+        .btn-pdf:active { transform: translateY(2px); box-shadow: 0 2px 0 #bae6fd; }
+
+        .btn-add { background: #f0f9ff; color: var(--secondary); border: 1.5px dashed var(--secondary); margin-bottom: 15px; width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.03);}
+        .btn-add:hover { background: #e0f2fe; box-shadow: 0 4px 8px rgba(2,132,199,0.1); }
+        
+        .btn-reset { background: #fff1f2; color: var(--accent); margin-top: 15px; width: 100%; padding: 12px; border: 1px solid #fecdd3; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 3px 0 #fecdd3; }
+        .btn-reset:hover { background: #ffe4e6; box-shadow: 0 4px 0 #fecdd3; }
+        .btn-reset:active { transform: translateY(2px); box-shadow: 0 1px 0 #fecdd3; }
 
         .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
         .action-btn {
             background: #f8fafc; border: 1px solid var(--border-color); color: var(--text-main);
             padding: 10px; border-radius: 10px; font-size: 0.8rem; cursor: pointer; text-align: center; font-weight: 600; transition: all 0.2s;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,1), inset 0 -1px 1px rgba(203,213,225,0.3), 0 2px 3px rgba(0,0,0,0.03);
         }
-        .action-btn:hover { background: #e0f2fe; border-color: var(--secondary); color: var(--secondary); transform: scale(1.02); }
+        .action-btn:hover { background: #e0f2fe; border-color: var(--secondary); color: var(--secondary); transform: scale(1.02); box-shadow: 0 4px 8px rgba(2,132,199,0.15); }
 
         .delete-pasien { color: var(--accent); background: transparent; border: none; font-size: 1.2rem; cursor: pointer; transition: transform 0.2s; }
         .delete-pasien:hover { transform: scale(1.2); }
         
         .rencana-tools { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
-        .btn-clear-rencana { background: #fff1f2; color: var(--accent); border: 1px solid #fecdd3; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+        .btn-clear-rencana { background: #fff1f2; color: var(--accent); border: 1px solid #fecdd3; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; box-shadow: 0 2px 0 #fecdd3; }
 
         .print-area { display: none; padding: 40px; }
         @media print {
@@ -253,14 +327,14 @@
     </div>
 
     <div class="nav-header">
-        <button class="tab-btn active" onclick="switchTab(1)"><i>📋</i><span>Laporan</span></button>
-        <button class="tab-btn" onclick="switchTab(2)"><i>👥</i><span>Job Desk</span></button>
-        <button class="tab-btn" onclick="switchTab(3)"><i>✅</i><span>Tindakan</span></button>
-        <button class="tab-btn" onclick="switchTab(4)"><i>🛏️</i><span>Bed Kosong</span></button>
+        <button class="tab-btn active tab-bg-1" onclick="switchTab(1)"><i>📋</i><span>Laporan</span></button>
+        <button class="tab-btn tab-bg-2" onclick="switchTab(2)"><i>👥</i><span>Job Desk</span></button>
+        <button class="tab-btn tab-bg-3" onclick="switchTab(3)"><i>✅</i><span>Tindakan</span></button>
+        <button class="tab-btn tab-bg-4" onclick="switchTab(4)"><i>🛏️</i><span>Bed Kosong</span></button>
     </div>
 
     <div id="slide1" class="page active">
-        <div class="section-title">
+        <div class="section-title main-title main-laporan">
             <div class="icon-box">📝</div>
             <h2>Laporan On Point</h2>
         </div>
@@ -288,7 +362,7 @@
         <button class="btn-add" onclick="tambahPasienRuang()"><i class="fa-solid fa-circle-plus"></i> Tambah Pasien Ruangan</button>
 
         <div class="section-title">
-            <div class="icon-box" style="background:#fff1f2; color:var(--accent);">⚠️</div>
+            <div class="icon-box" style="background:#fff1f2; color:var(--accent); box-shadow: 0 4px 8px rgba(244, 63, 94, 0.2), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -2px 0 rgba(0,0,0,0.05);">⚠️</div>
             <h2>Masalah</h2>
         </div>
         <div class="grid-2">
@@ -320,7 +394,7 @@
     </div>
 
     <div id="slide2" class="page">
-        <div class="section-title">
+        <div class="section-title main-title main-jobdesk">
             <div class="icon-box">📌</div>
             <h2>Job Desk Petugas</h2>
         </div>
@@ -368,7 +442,7 @@
     </div>
 
     <div id="slide3" class="page">
-        <div class="section-title">
+        <div class="section-title main-title main-tindakan">
             <div class="icon-box">🗓️</div>
             <h2>Perencanaan Tindakan Pasien</h2>
         </div>
@@ -385,7 +459,7 @@
     </div>
 
     <div id="slide4" class="page">
-        <div class="section-title">
+        <div class="section-title main-title main-bed">
             <div class="icon-box">🛏️</div>
             <h2>Laporan Bed Kosong</h2>
         </div>
