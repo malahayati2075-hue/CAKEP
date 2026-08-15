@@ -611,6 +611,9 @@ const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbwpWv-Wj5Vb5
 async function fetchSheetData() {
     try {
         const response = await fetch(SHEET_API_URL);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
         const result = await response.json();
         if(result.data && result.data.length > 0) {
             let html = '';
@@ -627,7 +630,8 @@ async function fetchSheetData() {
             document.getElementById('sheetHeaderData').innerHTML = 'Belum ada data tersimpan di baris Spreadsheet';
         }
     } catch (e) {
-        document.getElementById('sheetHeaderData').innerHTML = '<span style="color:#ffcccc;">Gagal memuat data spreadsheet</span>';
+        // Menampilkan pesan error sebenarnya untuk debugging
+        document.getElementById('sheetHeaderData').innerHTML = `<span style="color:#ffcccc;">Gagal memuat: ${e.message}</span>`;
     }
 }
 fetchSheetData();
