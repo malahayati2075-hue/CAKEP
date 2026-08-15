@@ -7,23 +7,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #0d9488;
-            --primary-light: #14b8a6;
-            --secondary: #0284c7;
-            --accent: #f43f5e;
+            --primary: #0d9488; --primary-light: #14b8a6; --secondary: #0284c7; --accent: #f43f5e;
             --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 50%, #fef2f2 100%);
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --input-bg: #f8fafc;
-            --wa-dark: #075E54;
-            --wa-green: #25D366;
-            --ri-red: #c62828;
-            --ri-white: #ffffff;
-            --arema-blue: #0d47a1;
+            --card-bg: #ffffff; --text-main: #0f172a; --text-muted: #64748b; --border-color: #e2e8f0; --input-bg: #f8fafc;
+            --wa-dark: #075E54; --wa-green: #25D366; --ri-red: #c62828; --ri-white: #ffffff; --arema-blue: #0d47a1;
         }
-
         * { box-sizing: border-box; font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; padding: 0; background: var(--bg-gradient); min-height: 100vh; color: var(--text-main); padding-bottom: 40px; }
         .container { max-width: 750px; margin: 20px auto; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); min-height: 95vh; box-shadow: 0 15px 50px rgba(0,0,0,0.08); border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.8); }
@@ -272,7 +260,7 @@
             <div class="stat-loading"><i class="fa-solid fa-spinner fa-spin"></i> Memuat data statistik...</div>
         </div>
         
-               <div class="section-title">
+        <div class="section-title">
             <div class="icon-box">📋</div>
             <h2>Data Rekap Spreadsheet (DATA 1)</h2>
         </div>
@@ -280,7 +268,6 @@
             <pre id="statistikTextData" style="white-space:pre-wrap; font-family:inherit; font-size:0.9rem; color:var(--text-main); margin:0;">Memuat data...</pre>
         </div>
 
-        <!-- TAMBAHAN TEXTBOX NAMA PENGIRIM -->
         <label style="margin-top: 20px;">Nama Pengirim (Wajib diisi untuk WA & PDF)</label>
         <input type="text" id="pengirimStatistik" placeholder="Masukkan Nama Anda">
 
@@ -298,6 +285,7 @@
 </div>
 
 <script>
+// PENTING: Ganti URL ini dengan URL Deployment Baru Anda dari Apps Script!
 const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzcANOCVxHhn2FtHMS_3GrJM1HbWF1461bLxWGbIj7J-uPUgtE9murlM54MHsmwRURF/exec";
 const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbwpWv-Wj5Vb5Dn9QiRG3Z14eAaar1uEHEoCcn1dnSp-XXuo8DFPPk4LEBQyfko_wEGrAA/exec";
 
@@ -352,53 +340,6 @@ async function fetchSheetData() {
         }
     } catch (e) {
         el.innerText = `Gagal memuat: ${e.message}`;
-    }
-}
-
-// Fungsi kirim WA Statistik memakai textbox pengirimStatistik
-function kirimWAStatistik() {
-    let pengirim = getVal('pengirimStatistik');
-    if(pengirim === "") {
-        alert("❌ Nama Pengirim wajib diisi terlebih dahulu!");
-        document.getElementById('pengirimStatistik').focus();
-        return;
-    }
-    let txt = document.getElementById('statistikTextData').innerText;
-    txt += `\n═══════════════════\nDikirim oleh: *${pengirim}*\n`;
-    const waUrl = "https://wa.me/?text=" + encodeURIComponent(txt);
-    window.open(waUrl, '_blank');
-}
-
-// Fungsi simpan ke Drive memakai textbox pengirimStatistik
-async function simpanDriveStatistik() {
-    let pengirim = getVal('pengirimStatistik');
-    if(pengirim === "") {
-        alert("❌ Nama Pengirim wajib diisi terlebih dahulu!");
-        document.getElementById('pengirimStatistik').focus();
-        return;
-    }
-    
-    let filename = prompt("Masukkan nama file PDF:", "Statistik_Pasien_" + new Date().toLocaleDateString('id-ID').replace(/\//g, '-'));
-    if(!filename) return;
-    
-    let txt = document.getElementById('statistikTextData').innerText;
-    txt += `\n═══════════════════\nDikirim oleh: *${pengirim}*\n`;
-    
-    try {
-        const response = await fetch(SHEET_API_URL, { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
-            body: JSON.stringify({ action: 'savePDFToDrive', filename: filename, content: txt }) 
-        });
-        const result = await response.json();
-        if(result.status === 'success') { 
-            alert("✅ Berhasil disimpan ke Google Drive!\nLink: " + result.url); 
-            window.open(result.url, '_blank'); 
-        } else {
-            throw new Error(result.message);
-        }
-    } catch(e) { 
-        alert("❌ Gagal menyimpan ke Drive: " + e.message); 
     }
 }
 
@@ -472,7 +413,7 @@ function toggleJobDesk() {
         btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Tampilkan';
     }
 }
-tambahJobDesk(); // Init 1 card
+tambahJobDesk();
 
 // Pasien Ruangan
 let ruanganCount = 0;
@@ -732,20 +673,51 @@ async function simpanDriveLaporan() {
     } catch(e) { alert("❌ Gagal menyimpan ke Drive: " + e.message); }
 }
 
-async function simpanDriveStatistik() {
-    let filename = prompt("Masukkan nama file PDF:", "Statistik_Pasien_" + new Date().toLocaleDateString('id-ID').replace(/\//g, '-'));
-    if(!filename) return;
-    try {
-        const response = await fetch(SHEET_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'savePDFToDrive', filename: filename, content: document.getElementById('statistikTextData').innerText }) });
-        const result = await response.json();
-        if(result.status === 'success') { alert("✅ Berhasil disimpan ke Google Drive!\nLink: " + result.url); window.open(result.url, '_blank'); }
-        else throw new Error(result.message);
-    } catch(e) { alert("❌ Gagal menyimpan ke Drive: " + e.message); }
+// Fungsi kirim WA Statistik memakai textbox pengirimStatistik
+function kirimWAStatistik() {
+    let pengirim = getVal('pengirimStatistik');
+    if(pengirim === "") {
+        alert("❌ Nama Pengirim wajib diisi terlebih dahulu!");
+        document.getElementById('pengirimStatistik').focus();
+        return;
+    }
+    let txt = document.getElementById('statistikTextData').innerText;
+    txt += `\n═══════════════════\nDikirim oleh: *${pengirim}*\n`;
+    const waUrl = "https://wa.me/?text=" + encodeURIComponent(txt);
+    window.open(waUrl, '_blank');
 }
 
-function kirimWAStatistik() {
-    const waUrl = "https://wa.me/?text=" + encodeURIComponent(document.getElementById('statistikTextData').innerText);
-    window.open(waUrl, '_blank');
+// Fungsi simpan ke Drive memakai textbox pengirimStatistik
+async function simpanDriveStatistik() {
+    let pengirim = getVal('pengirimStatistik');
+    if(pengirim === "") {
+        alert("❌ Nama Pengirim wajib diisi terlebih dahulu!");
+        document.getElementById('pengirimStatistik').focus();
+        return;
+    }
+    
+    let filename = prompt("Masukkan nama file PDF:", "Statistik_Pasien_" + new Date().toLocaleDateString('id-ID').replace(/\//g, '-'));
+    if(!filename) return;
+    
+    let txt = document.getElementById('statistikTextData').innerText;
+    txt += `\n═══════════════════\nDikirim oleh: *${pengirim}*\n`;
+    
+    try {
+        const response = await fetch(SHEET_API_URL, { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+            body: JSON.stringify({ action: 'savePDFToDrive', filename: filename, content: txt }) 
+        });
+        const result = await response.json();
+        if(result.status === 'success') { 
+            alert("✅ Berhasil disimpan ke Google Drive!\nLink: " + result.url); 
+            window.open(result.url, '_blank'); 
+        } else {
+            throw new Error(result.message);
+        }
+    } catch(e) { 
+        alert("❌ Gagal menyimpan ke Drive: " + e.message); 
+    }
 }
 
 function resetData() {
