@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GALA-W++ - Laporan Harian Hemodialisis</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
     <style>
         :root {
             --primary: #0d9488;
@@ -1223,48 +1224,41 @@ function uploadToDrive() {
         document.getElementById('pengirim1').focus(); return;
     }
     
-    const pass = prompt("Masukkan Password Drive:");
-    if(pass !== DRIVE_PASS) {
-        alert("❌ Password salah! Akses ditolak.");
-        return;
-    }
-    
     const txt = buildReport();
-    const fileName = `Laporan_HD_${formatDate(getVal('tanggal1'))}_Shift${getVal('shift1')}`;
+    const fileName = `Laporan_HD_${formatDate(getVal('tanggal1'))}_Shift${getVal('shift1')}.pdf`;
     
+    // Buat elemen sementara untuk menampung teks lalu diubah ke PDF
+    const tempDiv = document.createElement('div');
+    tempDiv.style.position = 'absolute';
+    tempDiv.style.left = '-9999px';
+    tempDiv.style.width = '800px';
+    tempDiv.style.padding = '40px';
+    tempDiv.style.fontFamily = 'monospace';
+    tempDiv.style.whiteSpace = 'pre-wrap';
+    tempDiv.style.fontSize = '14px';
+    tempDiv.innerText = txt;
+    document.body.appendChild(tempDiv);
+
     let btn = event.target;
     let originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Membuat PDF...';
     btn.disabled = true;
-    
-    // Mengirim Data ke Google Apps Script (Kode.gs savePDFToDrive)
-    fetch(SHEET_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-            action: 'savePDFToDrive',
-            filename: fileName,
-            content: txt
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if(data.status === 'success') {
-            alert("✅ Berhasil! File PDF telah dibuat & disimpan ke Google Drive.");
-            window.open(data.url, '_blank'); // Buka file PDF yang baru dibuat
-        } else {
-            throw new Error(data.message || 'Gagal menyimpan ke Drive');
-        }
-    })
-    .catch(err => {
-        alert("❌ Error: " + err.message);
-    })
-    .finally(() => {
+
+    const opt = {
+        margin:       10,
+        filename:     fileName,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(tempDiv).save().then(() => {
+        document.body.removeChild(tempDiv);
+        alert("✅ File PDF telah dibuat dan terunduh ke perangkat Anda. Silakan bagikan file tersebut.");
         btn.innerHTML = originalText;
         btn.disabled = false;
     });
 }
-
 function cetakPDF() {
     if(getVal('pengirim1') === "") {
         alert("❌ Nama Pengirim wajib diisi!"); switchTab(1); return;
