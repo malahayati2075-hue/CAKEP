@@ -346,6 +346,12 @@ async function fetchSheetData() {
                 if(dataObj[k] !== undefined) text += `- ${k}: ${dataObj[k]}\n`;
             });
             
+            // Menambahkan Nama Pengirim di bawah
+            let pengirim = getVal('pengirim1');
+            if(pengirim) {
+                text += `\n═══════════════════\nDikirim oleh: *${pengirim}*\n`;
+            }
+            
             el.innerText = text;
         } else {
             el.innerText = "Belum ada data tersimpan di baris Spreadsheet";
