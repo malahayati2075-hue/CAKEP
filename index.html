@@ -272,13 +272,17 @@
             <div class="stat-loading"><i class="fa-solid fa-spinner fa-spin"></i> Memuat data statistik...</div>
         </div>
         
-        <div class="section-title">
+               <div class="section-title">
             <div class="icon-box">📋</div>
             <h2>Data Rekap Spreadsheet (DATA 1)</h2>
         </div>
         <div class="table-container" style="min-width:100%; padding: 20px;">
             <pre id="statistikTextData" style="white-space:pre-wrap; font-family:inherit; font-size:0.9rem; color:var(--text-main); margin:0;">Memuat data...</pre>
         </div>
+
+        <!-- TAMBAHAN TEXTBOX NAMA PENGIRIM -->
+        <label style="margin-top: 20px;">Nama Pengirim (Wajib diisi untuk WA & PDF)</label>
+        <input type="text" id="pengirimStatistik" placeholder="Masukkan Nama Anda">
 
         <div class="btn-group">
             <button class="btn btn-wa" onclick="kirimWAStatistik()"><i class="fa-brands fa-whatsapp"></i> Kirim WA</button>
@@ -297,7 +301,6 @@
 const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzcANOCVxHhn2FtHMS_3GrJM1HbWF1461bLxWGbIj7J-uPUgtE9murlM54MHsmwRURF/exec";
 const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbwpWv-Wj5Vb5Dn9QiRG3Z14eAaar1uEHEoCcn1dnSp-XXuo8DFPPk4LEBQyfko_wEGrAA/exec";
 
-// === FETCH DATA DARI SPREADSHEET KE STATISTIK ===
 // === FETCH DATA DARI SPREADSHEET KE STATISTIK DENGAN FORMAT RAPI ===
 async function fetchSheetData() {
     const el = document.getElementById('statistikTextData');
@@ -307,19 +310,16 @@ async function fetchSheetData() {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const result = await response.json();
         if(result.data && result.data.length > 0) {
-            // Parsing data string menjadi object
             let dataObj = {};
             result.data.forEach(item => {
                 let parts = item.split(": ");
                 if(parts.length >= 2) {
-                    // Bersihkan key dari enter/spasi berlebih
                     let key = parts[0].replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
                     let val = parts.slice(1).join(": ").trim();
                     dataObj[key] = val;
                 }
             });
             
-            // Susun format laporan
             let text = `*REKAPITULASI DATA PASIEN BERDASARKAN FREKUENSI HD, AKSES VASKULAR, DIALYZER, DAN JENIS KELAMIN*\n\n`;
             
             if(dataObj["JUMLAH_PASIEN"] !== undefined) {
@@ -346,18 +346,59 @@ async function fetchSheetData() {
                 if(dataObj[k] !== undefined) text += `- ${k}: ${dataObj[k]}\n`;
             });
             
-            // Menambahkan Nama Pengirim di bawah
-            let pengirim = getVal('pengirim1');
-            if(pengirim) {
-                text += `\n═══════════════════\nDikirim oleh: *${pengirim}*\n`;
-            }
-            
             el.innerText = text;
         } else {
             el.innerText = "Belum ada data tersimpan di baris Spreadsheet";
         }
     } catch (e) {
         el.innerText = `Gagal memuat: ${e.message}`;
+    }
+}
+
+// Fungsi kirim WA Statistik memakai textbox pengirimStatistik
+function kirimWAStatistik() {
+    let pengirim = getVal('pengirimStatistik');
+    if(pengirim === "") {
+        alert("❌ Nama Pengirim wajib diisi terlebih dahulu!");
+        document.getElementById('pengirimStatistik').focus();
+        return;
+    }
+    let txt = document.getElementById('statistikTextData').innerText;
+    txt += `\n═══════════════════\nDikirim oleh: *${pengirim}*\n`;
+    const waUrl = "https://wa.me/?text=" + encodeURIComponent(txt);
+    window.open(waUrl, '_blank');
+}
+
+// Fungsi simpan ke Drive memakai textbox pengirimStatistik
+async function simpanDriveStatistik() {
+    let pengirim = getVal('pengirimStatistik');
+    if(pengirim === "") {
+        alert("❌ Nama Pengirim wajib diisi terlebih dahulu!");
+        document.getElementById('pengirimStatistik').focus();
+        return;
+    }
+    
+    let filename = prompt("Masukkan nama file PDF:", "Statistik_Pasien_" + new Date().toLocaleDateString('id-ID').replace(/\//g, '-'));
+    if(!filename) return;
+    
+    let txt = document.getElementById('statistikTextData').innerText;
+    txt += `\n═══════════════════\nDikirim oleh: *${pengirim}*\n`;
+    
+    try {
+        const response = await fetch(SHEET_API_URL, { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+            body: JSON.stringify({ action: 'savePDFToDrive', filename: filename, content: txt }) 
+        });
+        const result = await response.json();
+        if(result.status === 'success') { 
+            alert("✅ Berhasil disimpan ke Google Drive!\nLink: " + result.url); 
+            window.open(result.url, '_blank'); 
+        } else {
+            throw new Error(result.message);
+        }
+    } catch(e) { 
+        alert("❌ Gagal menyimpan ke Drive: " + e.message); 
     }
 }
 
