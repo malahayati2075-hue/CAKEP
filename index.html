@@ -338,7 +338,8 @@
 
     <div class="nav-header">
         <button class="tab-btn active" onclick="switchTab(1)"><i>📝</i><span>Laporan Harian</span></button>
-        <button class="tab-btn" onclick="switchTab(2)"><i>📊</i><span>Statistik Pasien</span></button>
+        <button class="tab-btn" onclick="switchTab(2)"><i>⚡</i><span>Fast Track</span></button>
+        <button class="tab-btn" onclick="switchTab(3)"><i>🔍</i><span>Pencarian Pasien</span></button>
     </div>
 
     <div id="slide1" class="page active">
@@ -448,17 +449,45 @@
     <div id="slide2" class="page">
         <div class="section-title main-title-3d">
             <div class="waving-flag"><span>81</span></div>
-            <div class="icon-box">📊</div>
-            <h2>Statistik Pasien Malahayati</h2>
+            <div class="icon-box">⚡</div>
+            <h2>FAST TRACK Data Pasien</h2>
         </div>
         <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">
-            Data ini diambil secara real-time berdasarkan rekap data pasien dari database.
+            Mesin pencarian data pasien dari sheet REKAP_HARIAN berdasarkan Tanggal dan Nama.
         </p>
-        <div class="stat-grid" id="statistikContainer">
-            <div class="stat-loading"><i class="fa-solid fa-spinner fa-spin"></i> Memuat data statistik...</div>
+        
+        <div class="grid-2" style="margin-top: 20px;">
+            <div>
+                <label>Tanggal (Timestamp)</label>
+                <input type="date" id="ft_date">
+            </div>
+            <div>
+                <label>Nama Pasien</label>
+                <input type="text" id="ft_name" placeholder="Nama Pasien">
+            </div>
         </div>
-        <div class="btn-group">
-            <button class="btn btn-pdf" onclick="fetchStatistikPasien()" style="grid-column: 1/-1;"><i class="fa-solid fa-rotate"></i> Refresh Data Statistik</button>
+        <button class="btn btn-wa" onclick="searchFastTrack()" style="width: 100%; margin-top: 15px;">
+            <i class="fa-solid fa-search"></i> Cari Data Pasien
+        </button>
+        
+        <div id="fastTrackResult" style="margin-top: 25px;">
+            <div class="stat-loading">Hasil pencarian akan muncul di sini.</div>
+        </div>
+    </div>
+
+    <div id="slide3" class="page">
+        <div class="section-title main-title-3d">
+            <div class="waving-flag"><span>81</span></div>
+            <div class="icon-box">🔍</div>
+            <h2>Pencarian Pasien</h2>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 1rem;">
+                Klik tombol di bawah untuk membuka halaman pencarian pasien Hemodialisa.
+            </p>
+            <a href="https://bumimadinahdb26-cloud.github.io/pencarianHD/" target="_blank" class="btn btn-wa" style="display: inline-flex; text-decoration: none; padding: 15px 35px; font-size: 1.1rem;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Halaman Pencarian
+            </a>
         </div>
     </div>
 </div>
@@ -470,8 +499,8 @@
 
 <script>
 const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzcANOCVxHhn2FtHMS_3GrJM1HbWF1461bLxWGbIj7J-uPUgtE9murlM54MHsmwRURF/exec";
-const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbwpWv-Wj5Vb5Dn9QiRG3Z14eAaar1uEHEoCcn1dnSp-XXuo8DFPPk4LEBQyfko_wEGrAA.exec";
-
+const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbxleO1hK9X7XutXOqvQHjdTZPR0jGkokyZQSTYw347prxPMwd-Pb-6PoNoH-dvfrkMGRg/exec";
+// REKAP_SHEET_GVIZ sudah tidak digunakan lagi
 async function fetchSheetData() {
     try {
         const response = await fetch(SHEET_API_URL);
@@ -625,22 +654,101 @@ function setupAutocomplete(inputId) {
 }
 fetchPatientNames();
 
-async function fetchStatistikPasien() {
-    const container = document.getElementById('statistikContainer');
-    container.innerHTML = '<div class="stat-loading"><i class="fa-solid fa-spinner fa-spin"></i> Memuat data statistik...</div>';
+searchFastTrack()
+    resultDiv.innerHTML = '<div class="stat-loading"><i class="fa-solid fa-spinner fa-spin"></i> Mencari data dari Spreadsheet...</div>';
+
     try {
-        const response = await fetch(MONITORING_API_URL + "?action=getStatistik");
-        const result = await response.json(); let html = '';
-        if(result && result.status === 'success' && result.data) {
-            const data = result.data;
-            if (Array.isArray(data) && data.length > 0) { data.forEach(item => { if (typeof item === 'object') { for(let key in item) { html += `<div class="stat-card"><div class="stat-value">${item[key]}</div><div class="stat-label">${key.replace(/_/g, ' ').toUpperCase()}</div></div>`; } } }); } 
-            else if (typeof data === 'object') { for(let key in data) { html += `<div class="stat-card"><div class="stat-value">${data[key]}</div><div class="stat-label">${key.replace(/_/g, ' ').toUpperCase()}</div></div>`; } }
+        const response = await fetch(REKAP_SHEET_GVIZ);
+        const text = await response.text();
+        
+        // Parse Google Visualization API response
+        const jsonText = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+        const data = JSON.parse(jsonText);
+        
+        const rows = data.table.rows;
+        const headers = data.table.cols.map(c => (c.label || "").trim() || "Kolom");
+        
+        let found = [];
+        
+        // Prepare search date formats
+        let searchDates = [];
+        if (dateVal) {
+            const d = new Date(dateVal);
+            const dd = String(d.getDate()).padStart(2, '0');
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const yyyy = d.getFullYear();
+            searchDates.push(dateVal); // YYYY-MM-DD
+            searchDates.push(`${dd}/${mm}/${yyyy}`);
+            searchDates.push(`${mm}/${dd}/${yyyy}`);
+            searchDates.push(`${dd}-${mm}-${yyyy}`);
         }
-        if(html === '') html = '<div class="stat-loading">Data statistik belum tersedia.</div>';
-        container.innerHTML = html;
-    } catch(e) { container.innerHTML = '<div class="stat-loading" style="color: var(--accent);">Gagal memuat data statistik pasien.</div>'; }
+
+        rows.forEach(row => {
+            if (!row.c) return;
+            
+            // Handle Column A (Timestamp)
+            const valA = row.c[0] ? row.c[0].v : "";
+            let colA = "";
+            if (valA instanceof Date) {
+                const dd = String(valA.getDate()).padStart(2, '0');
+                const mm = String(valA.getMonth() + 1).padStart(2, '0');
+                const yyyy = valA.getFullYear();
+                colA = `${dd}/${mm}/${yyyy}`;
+            } else {
+                colA = valA ? valA.toString() : "";
+            }
+
+            // Handle Column B (Name)
+            const colB = row.c[1] ? (row.c[1].v || "").toString() : "";
+
+            let matchDate = true;
+            if (dateVal) {
+                matchDate = searchDates.some(sd => colA.includes(sd));
+            }
+
+            let matchName = true;
+            if (nameVal) {
+                matchName = colB.toLowerCase().includes(nameVal.toLowerCase());
+            }
+
+            if (matchDate && matchName) {
+                // Extract columns A to M (index 0 to 12)
+                let rowData = [];
+                for(let i=0; i<=12; i++) {
+                    if(row.c[i]) {
+                        let v = row.c[i].v;
+                        if (v instanceof Date) {
+                            rowData.push(`${String(v.getDate()).padStart(2, '0')}/${String(v.getMonth() + 1).padStart(2, '0')}/${v.getFullYear()}`);
+                        } else {
+                            rowData.push(v || "");
+                        }
+                    } else {
+                        rowData.push("");
+                    }
+                }
+                found.push(rowData);
+            }
+        });
+
+        if (found.length > 0) {
+            let html = '<div class="table-container"><table class="monitoring-table"><thead><tr>';
+            headers.forEach((h, idx) => { if(idx <= 12) html += `<th>${h}</th>`; });
+            html += '</tr></thead><tbody>';
+            found.forEach(rowData => {
+                html += '<tr>';
+                rowData.forEach(cell => html += `<td style="text-align:center; padding:8px; background:#fff;">${cell}</td>`);
+                html += '</tr>';
+            });
+            html += '</tbody></table></div>';
+            resultDiv.innerHTML = `<p style="color: var(--primary); font-weight: 700; margin-bottom: 15px;">Ditemukan ${found.length} data:</p>` + html;
+        } else {
+            resultDiv.innerHTML = '<div class="stat-loading">Data tidak ditemukan. Coba ubah kata kunci pencarian.</div>';
+        }
+    } catch (e) {
+        console.error(e);
+        resultDiv.innerHTML = '<div class="stat-loading" style="color: var(--accent);">Gagal mengambil data. Pastikan spreadsheet dapat diakses publik (Anyone with the link).</div>';
+    }
 }
-fetchStatistikPasien();
 
 async function submitMonitoringSheet() {
     if(getVal('pengirim1') === "") { alert("❌ Nama Pengirim wajib diisi sebelum menyimpan monitoring!"); switchTab(1); document.getElementById('pengirim1').focus(); return; }
@@ -662,7 +770,6 @@ function switchTab(tab) {
     document.getElementById('slide' + tab).classList.add('active');
     document.querySelectorAll('.tab-btn')[tab - 1].classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    if(tab === 2) fetchStatistikPasien();
 }
 
 function adjustVal(id, delta) { let el = document.getElementById(id); let newVal = (parseInt(el.value) || 0) + delta; if (newVal < 0) newVal = 0; el.value = newVal; }
