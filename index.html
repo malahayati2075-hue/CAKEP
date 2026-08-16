@@ -682,7 +682,8 @@ function setupAutocomplete(inputId) {
     }
     
     input.addEventListener('input', checkAndFill);
-    input.addEventListener('change', checkAndFill); // Tambahan event change untuk klik datalist
+    input.addEventListener('change', checkAndFill); 
+    input.addEventListener('blur', checkAndFill); // Tambahan event blur untuk mobile device
 }
 
 let analitikData = null;
