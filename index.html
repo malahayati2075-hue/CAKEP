@@ -506,7 +506,7 @@
 
 <script>
 // GANTI URL INI JIKA MEMBUAT DEPLOYMENT BARU
-const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbwWCP7nMRpslFuxeV8bkYFDmI5OK-fIR4yhvBJp45kRq9Om9RFMMJUHdB35PbDn8z9Fyw/exec";
+const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbxleO1hK9X7XutXOqvQHjdTZPR0jGkokyZQSTYw347prxPMwd-Pb-6PoNoH-dvfrkMGRg/exec";
 
 function updateClock() {
     const now = new Date();
@@ -672,12 +672,14 @@ function setupAutocomplete(inputId) {
             }
         }
         
-        // Jika ketemu, otomatis isi Jenis Kelamin dan Golongan Darah
+               // Jika ketemu, otomatis isi Jenis Kelamin, Golongan Darah, dan TB
         if (found) {
             let jkInput = document.getElementById(`mon_jk_${rowId}`);
             let goldarInput = document.getElementById(`mon_goldar_${rowId}`);
+            let tbInput = document.getElementById(`mon_tb_${rowId}`);
             if (jkInput) jkInput.value = found.jk;
             if (goldarInput) goldarInput.value = found.goldar;
+            if (tbInput) tbInput.value = found.tb; // Mengisi TB secara otomatis
         }
     }
     
