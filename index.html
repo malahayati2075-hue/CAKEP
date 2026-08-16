@@ -327,7 +327,7 @@
         </div>
         
         <div class="sheet-header-data" id="sheetHeaderData">
-            <span>Memuat data spreadsheet...</span>
+            <span>Sistem siap digunakan</span>
         </div>
 
         <div class="header-content">
@@ -498,26 +498,7 @@
 </div>
 
 <script>
-const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzcANOCVxHhn2FtHMS_3GrJM1HbWF1461bLxWGbIj7J-uPUgtE9murlM54MHsmwRURF/exec";
-const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbwpWv-Wj5Vb5Dn9QiRG3Z14eAaar1uEHEoCcn1dnSp-XXuo8DFPPk4LEBQyfko_wEGrAA.exec";
-const REKAP_SHEET_GVIZ = "https://docs.google.com/spreadsheets/d/1gD_mYqo5x30zYfQQWb5dm8woKgwsV5aqjBXVNpUyf0c/gviz/tq?tqx=out:json&gid=652284391";
-
-async function fetchSheetData() {
-    try {
-        const response = await fetch(SHEET_API_URL);
-        const result = await response.json();
-        if(result.data && result.data.length > 0) {
-            let html = '';
-            result.data.forEach(item => {
-                let parts = item.split(": ");
-                if(parts.length === 2) html += `<span>${parts[0]}: <b>${parts[1]}</b></span>`;
-                else html += `<span>${item}</span>`;
-            });
-            document.getElementById('sheetHeaderData').innerHTML = html;
-        }
-    } catch (e) { document.getElementById('sheetHeaderData').innerHTML = `<span>Gagal memuat</span>`; }
-}
-fetchSheetData();
+const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbxleO1hK9X7XutXOqvQHjdTZPR0jGkokyZQSTYw347prxPMwd-Pb-6PoNoH-dvfrkMGRg/exec";
 
 function updateClock() {
     const now = new Date();
@@ -628,32 +609,54 @@ function addMonitorRow() {
 function removeMonitorRow(id) { document.getElementById(`mon_row_${id}`).remove(); }
 for(let i=0; i<5; i++) { addMonitorRow(); }
 
-let patientNames = [];
-async function fetchPatientNames() { try { const response = await fetch(MONITORING_API_URL); const result = await response.json(); if(result.status === 'success' && result.data) patientNames = result.data; } catch(e) {} }
+let patientData = [];
+async function fetchPatientNames() { 
+    try { 
+        const response = await fetch(MONITORING_API_URL + "?action=getPatients"); 
+        const result = await response.json(); 
+        if(result.status === 'success' && result.data) patientData = result.data; 
+    } catch(e) {} 
+}
+fetchPatientNames();
+
 function setupAutocomplete(inputId) {
     const input = document.getElementById(inputId); if (!input) return;
     const list = document.createElement('div');
     list.style.cssText = 'position:absolute;left:0;top:100%;width:100%;maxHeight:150px;overflowY:auto;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 8px 16px rgba(0,0,0,0.15);z-index:1000;display:none;';
     input.parentNode.appendChild(list);
+    
     input.addEventListener('input', function() {
         let val = this.value; list.innerHTML = ''; if (!val) { list.style.display = 'none'; return; }
         let count = 0;
-        for (let i = 0; i < patientNames.length; i++) {
-            if (patientNames[i] && patientNames[i].toUpperCase().includes(val.toUpperCase())) {
+        let rowId = inputId.split('_')[2]; 
+        
+        for (let i = 0; i < patientData.length; i++) {
+            let pName = patientData[i].nama;
+            if (pName && pName.toUpperCase().includes(val.toUpperCase())) {
                 let item = document.createElement('div');
-                let nameStr = patientNames[i];
-                let matchStart = nameStr.toUpperCase().indexOf(val.toUpperCase());
-                item.innerHTML = nameStr.substring(0, matchStart) + "<strong style='color:var(--primary);'>" + nameStr.substring(matchStart, matchStart + val.length) + "</strong>" + nameStr.substring(matchStart + val.length);
+                let matchStart = pName.toUpperCase().indexOf(val.toUpperCase());
+                item.innerHTML = pName.substring(0, matchStart) + "<strong style='color:var(--primary);'>" + pName.substring(matchStart, matchStart + val.length) + "</strong>" + pName.substring(matchStart + val.length);
                 item.style.cssText = 'padding:10px 12px;cursor:pointer;font-size:0.8rem;border-bottom:1px solid #f1f5f9;';
-                item.addEventListener('mousedown', function(e) { e.preventDefault(); input.value = nameStr; list.style.display = 'none'; });
-                list.appendChild(item); count++; if (count >= 10) break;
+                
+                item.addEventListener('mousedown', function(e) { 
+                    e.preventDefault(); 
+                    input.value = pName; 
+                    list.style.display = 'none'; 
+                    
+                    let jkInput = document.getElementById(`mon_jk_${rowId}`);
+                    let goldarInput = document.getElementById(`mon_goldar_${rowId}`);
+                    if (jkInput) jkInput.value = patientData[i].jk;
+                    if (goldarInput) goldarInput.value = patientData[i].goldar;
+                });
+                list.appendChild(item); 
+                count++; 
+                if (count >= 10) break;
             }
         }
         list.style.display = count > 0 ? 'block' : 'none';
     });
     input.addEventListener('blur', function() { setTimeout(() => { list.style.display = 'none'; }, 150); });
 }
-fetchPatientNames();
 
 async function searchFastTrack() {
     const dateVal = document.getElementById('ft_date').value;
@@ -665,98 +668,57 @@ async function searchFastTrack() {
         return;
     }
 
-    resultDiv.innerHTML = '<div class="stat-loading"><i class="fa-solid fa-spinner fa-spin"></i> Mencari data dari Spreadsheet...</div>';
+    resultDiv.innerHTML = '<div class="stat-loading"><i class="fa-solid fa-spinner fa-spin"></i> Menghitung data dari Spreadsheet...</div>';
 
     try {
-        const response = await fetch(REKAP_SHEET_GVIZ);
-        const text = await response.text();
-        
-        // Parse Google Visualization API response
-        const jsonText = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
-        const data = JSON.parse(jsonText);
-        
-        const rows = data.table.rows;
-        const headers = data.table.cols.map(c => (c.label || "").trim() || "Kolom");
-        
-        let found = [];
-        
-        // Prepare search date formats
-        let searchDates = [];
-        if (dateVal) {
-            const d = new Date(dateVal);
-            const dd = String(d.getDate()).padStart(2, '0');
-            const mm = String(d.getMonth() + 1).padStart(2, '0');
-            const yyyy = d.getFullYear();
-            searchDates.push(dateVal); // YYYY-MM-DD
-            searchDates.push(`${dd}/${mm}/${yyyy}`);
-            searchDates.push(`${mm}/${dd}/${yyyy}`);
-            searchDates.push(`${dd}-${mm}-${yyyy}`);
-        }
+        let url = MONITORING_API_URL + "?action=searchFastTrack";
+        if (dateVal) url += "&date=" + encodeURIComponent(dateVal);
+        if (nameVal) url += "&name=" + encodeURIComponent(nameVal);
 
-        rows.forEach(row => {
-            if (!row.c) return;
+        const response = await fetch(url);
+        const result = await response.json();
+        
+        if (result.status === 'success' && result.data) {
+            const d = result.data;
             
-            // Handle Column A (Timestamp)
-            const valA = row.c[0] ? row.c[0].v : "";
-            let colA = "";
-            if (valA instanceof Date) {
-                const dd = String(valA.getDate()).padStart(2, '0');
-                const mm = String(valA.getMonth() + 1).padStart(2, '0');
-                const yyyy = valA.getFullYear();
-                colA = `${dd}/${mm}/${yyyy}`;
-            } else {
-                colA = valA ? valA.toString() : "";
+            if (d.totalPasien === 0) {
+                resultDiv.innerHTML = '<div class="stat-loading">Data tidak ditemukan. Coba ubah kata kunci pencarian.</div>';
+                return;
             }
-
-            // Handle Column B (Name)
-            const colB = row.c[1] ? (row.c[1].v || "").toString() : "";
-
-            let matchDate = true;
-            if (dateVal) {
-                matchDate = searchDates.some(sd => colA.includes(sd));
-            }
-
-            let matchName = true;
+            
+            let html = `<p style="color: var(--primary); font-weight: 700; margin-bottom: 15px;">Total Data Ditemukan: ${d.totalPasien}</p>`;
+            
             if (nameVal) {
-                matchName = colB.toLowerCase().includes(nameVal.toLowerCase());
+                html += `<h3 style="margin-bottom: 10px;">Riwayat Tindakan ${nameVal}</h3>`;
+                html += '<div class="table-container"><table class="monitoring-table"><thead><tr><th>Tanggal</th><th>TD</th><th>UFG</th><th>Heparin</th><th>EPO/FE</th><th>Kt/V</th><th>Transfusi</th></tr></thead><tbody>';
+                d.riwayatTindakan.forEach(r => {
+                    html += `<tr><td style="text-align:center; background:#fff;">${r.tanggal}</td><td style="text-align:center; background:#fff;">${r.td}</td><td style="text-align:center; background:#fff;">${r.ufg}</td><td style="text-align:center; background:#fff;">${r.heparin}</td><td style="text-align:center; background:#fff;">${r.epo}</td><td style="text-align:center; background:#fff;">${r.ktv}</td><td style="text-align:center; background:#fff;">${r.transfusi}</td></tr>`;
+                });
+                html += '</tbody></table></div>';
+            } else {
+                html += '<div class="stat-grid">';
+                html += `<div class="stat-card"><div class="stat-value">${d.jk_L}</div><div class="stat-label">LAKI-LAKI</div></div>`;
+                html += `<div class="stat-card"><div class="stat-value">${d.jk_P}</div><div class="stat-label">PEREMPUAN</div></div>`;
+                html += `<div class="stat-card"><div class="stat-value">${d.goldar_A}</div><div class="stat-label">GOL. A</div></div>`;
+                html += `<div class="stat-card"><div class="stat-value">${d.goldar_B}</div><div class="stat-label">GOL. B</div></div>`;
+                html += `<div class="stat-card"><div class="stat-value">${d.goldar_AB}</div><div class="stat-label">GOL. AB</div></div>`;
+                html += `<div class="stat-card"><div class="stat-value">${d.goldar_O}</div><div class="stat-label">GOL. O</div></div>`;
+                html += `<div class="stat-card"><div class="stat-value">${d.transfusi_Ada}</div><div class="stat-label">TRANSFUSI ADA</div></div>`;
+                html += `<div class="stat-card"><div class="stat-value">${d.transfusi_Tidak}</div><div class="stat-label">TRANSFUSI TIDAK</div></div>`;
+                html += '</div>';
+                
+                html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table"><thead><tr><th>Total TB (cm)</th><th>Total BB (kg)</th><th>Total UFG (cc)</th><th>Total Heparin (iu)</th></tr></thead><tbody>';
+                html += `<tr><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_TB}</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_BB}</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_UFG}</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_Heparin}</td></tr>`;
+                html += '</tbody></table></div>';
             }
-
-            if (matchDate && matchName) {
-                // Extract columns A to M (index 0 to 12)
-                let rowData = [];
-                for(let i=0; i<=12; i++) {
-                    if(row.c[i]) {
-                        let v = row.c[i].v;
-                        if (v instanceof Date) {
-                            rowData.push(`${String(v.getDate()).padStart(2, '0')}/${String(v.getMonth() + 1).padStart(2, '0')}/${v.getFullYear()}`);
-                        } else {
-                            rowData.push(v || "");
-                        }
-                    } else {
-                        rowData.push("");
-                    }
-                }
-                found.push(rowData);
-            }
-        });
-
-        if (found.length > 0) {
-            let html = '<div class="table-container"><table class="monitoring-table"><thead><tr>';
-            headers.forEach((h, idx) => { if(idx <= 12) html += `<th>${h}</th>`; });
-            html += '</tr></thead><tbody>';
-            found.forEach(rowData => {
-                html += '<tr>';
-                rowData.forEach(cell => html += `<td style="text-align:center; padding:8px; background:#fff;">${cell}</td>`);
-                html += '</tr>';
-            });
-            html += '</tbody></table></div>';
-            resultDiv.innerHTML = `<p style="color: var(--primary); font-weight: 700; margin-bottom: 15px;">Ditemukan ${found.length} data:</p>` + html;
+            
+            resultDiv.innerHTML = html;
         } else {
-            resultDiv.innerHTML = '<div class="stat-loading">Data tidak ditemukan. Coba ubah kata kunci pencarian.</div>';
+            resultDiv.innerHTML = '<div class="stat-loading">Data tidak ditemukan.</div>';
         }
     } catch (e) {
         console.error(e);
-        resultDiv.innerHTML = '<div class="stat-loading" style="color: var(--accent);">Gagal mengambil data. Pastikan spreadsheet dapat diakses publik (Anyone with the link).</div>';
+        resultDiv.innerHTML = '<div class="stat-loading" style="color: var(--accent);">Gagal mengambil data. Periksa koneksi atau konfigurasi script.</div>';
     }
 }
 
