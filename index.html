@@ -208,6 +208,70 @@
             box-shadow: 8px 8px 16px rgba(13, 148, 136, 0.1), -4px -4px 10px rgba(255,255,255,0.9);
         }
         
+        /* Styling Wrapper Background Jobdesk */
+        .job-desk-wrapper {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            background-image: url('jobdesk.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 8px 8px 16px rgba(0,0,0,0.1), -4px -4px 10px rgba(255,255,255,0.8);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .job-desk-overlay {
+            position: relative;
+            padding: 30px 25px;
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 24px;
+        }
+
+        .job-desk-overlay .section-title { margin-top: 0; margin-bottom: 20px; }
+        .job-desk-overlay .section-title h2 { color: #0f172a; text-shadow: 0 1px 2px rgba(255,255,255,0.8); }
+        
+        .job-desk-overlay .job-box,
+        .job-desk-overlay #padatkaryaBox {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.05), -4px -4px 10px rgba(255,255,255,0.6);
+        }
+
+        .job-desk-overlay input[type="text"],
+        .job-desk-overlay input[type="number"] {
+            background: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+            color: #0f172a;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.03), inset -2px -2px 5px rgba(255,255,255,0.5);
+        }
+        
+        .job-desk-overlay .small-stepper {
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid #e2e8f0;
+        }
+
+        .job-desk-overlay .check-item {
+            background: rgba(248, 250, 252, 0.95);
+            border: 1px solid #e2e8f0;
+            font-weight: 600;
+        }
+
+        .job-desk-overlay .btn-add {
+            background: rgba(240, 249, 255, 0.95);
+            border: 1.5px dashed var(--secondary);
+            color: var(--secondary);
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.03), inset -2px -2px 5px rgba(255,255,255,0.5);
+        }
+        .job-desk-overlay .btn-add:hover {
+            background: #e0f2fe;
+            border-style: solid;
+        }
+
         .bed-range { display: flex; justify-content: space-between; gap: 15px; margin-top: 10px; }
         .small-stepper {
             flex: 1; display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.7); 
@@ -362,21 +426,27 @@
         <div id="memberContainer"></div>
         <button class="btn-add" onclick="tambahAnggota(true)"><i class="fa-solid fa-circle-plus"></i> Tambah Anggota (Tekan Enter)</button>
 
-        <div class="section-title">
-            <div class="icon-box">📌</div>
-            <h2>Job Desk Petugas</h2>
-        </div>
-        <div id="perawatContainer"></div>
-        <button class="btn-add" onclick="tambahPerawat()"><i class="fa-solid fa-circle-plus"></i> Tambah Baris Job Desk</button>
+        <!-- Modifikasi wrapper Job Desk -->
+        <div class="job-desk-wrapper">
+            <div class="job-desk-overlay">
+                <div class="section-title">
+                    <div class="icon-box">📌</div>
+                    <h2>Job Desk Petugas</h2>
+                </div>
+                <div id="perawatContainer"></div>
+                <button class="btn-add" onclick="tambahPerawat()"><i class="fa-solid fa-circle-plus"></i> Tambah Baris Job Desk</button>
 
-        <div class="job-box" id="padatkaryaBox" style="margin-top: 15px;">
-            <input type="text" id="namaPadatkarya" placeholder="Nama Padatkarya">
-            <div class="checkbox-group">
-                <label class="check-item"><input type="checkbox" value="menyalakan AC 16 derajat"> Menyalakan AC 16 derajat</label>
-                <label class="check-item"><input type="checkbox" value="restock bahan habis pakai"> Restock bahan habis pakai</label>
-                <label class="check-item"><input type="checkbox" value="verbed tim 1&2"> Verbed tim 1&2</label>
+                <div class="job-box" id="padatkaryaBox" style="margin-top: 15px;">
+                    <input type="text" id="namaPadatkarya" placeholder="Nama Padatkarya">
+                    <div class="checkbox-group">
+                        <label class="check-item"><input type="checkbox" value="menyalakan AC 16 derajat"> Menyalakan AC 16 derajat</label>
+                        <label class="check-item"><input type="checkbox" value="restock bahan habis pakai"> Restock bahan habis pakai</label>
+                        <label class="check-item"><input type="checkbox" value="verbed tim 1&2"> Verbed tim 1&2</label>
+                    </div>
+                </div>
             </div>
         </div>
+
         <label>Rencana Tindakan Umum</label>
         <textarea id="rencanaTindakan" placeholder="Tulis rencana tindakan global di sini..."></textarea>
 
