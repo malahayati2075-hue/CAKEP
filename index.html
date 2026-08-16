@@ -314,6 +314,7 @@
 <body>
 
 <div class="container">
+    <datalist id="patientList"></datalist>
     <div class="app-header">
         <div class="header-top-bar">
             <div class="realtime-clock">
@@ -623,7 +624,8 @@ function addMonitorRow() {
     const monitorBody = document.getElementById('monitoringBody');
     const tr = document.createElement('tr');
     tr.id = `mon_row_${monRowCount}`;
-    tr.innerHTML = `<td><div style="position: relative;"><input type="text" id="mon_nama_${monRowCount}" placeholder="Nama Pasien" autocomplete="off"></div></td><td><select id="mon_jk_${monRowCount}"><option value="">-</option><option value="L">L</option><option value="P">P</option></select></td><td><select id="mon_goldar_${monRowCount}"><option value="">-</option><option>A</option><option>B</option><option>AB</option><option>O</option></select></td><td><input type="text" id="mon_tb_${monRowCount}" placeholder="cm"></td><td><input type="text" id="mon_bb_${monRowCount}" placeholder="kg"></td><td><input type="text" id="mon_td_${monRowCount}" placeholder="120/80"></td><td><input type="text" id="mon_ufg_${monRowCount}" placeholder="cc"></td><td><input type="text" id="mon_heparin_${monRowCount}" placeholder="iu"></td><td><input type="text" id="mon_epo_${monRowCount}" placeholder="-"></td><td><input type="text" id="mon_ktv_${monRowCount}" placeholder="-" value="1,5"></td><td><select id="mon_transfusi_${monRowCount}"><option value="Tidak">Tidak</option><option value="Ada">Ada</option></select></td><td style="display: flex; align-items: center; justify-content: center; gap: 5px;"><input type="text" id="mon_ket_${monRowCount}" placeholder="Ket" style="flex:1;"><button class="delete-pasien" onclick="removeMonitorRow(${monRowCount})" style="border:none; background:transparent; cursor:pointer;"><i class="fa-solid fa-circle-xmark"></i></button></td>`;
+    // Tambahan list="patientList" pada input Nama Pasien
+    tr.innerHTML = `<td><div style="position: relative;"><input type="text" id="mon_nama_${monRowCount}" placeholder="Ketik Nama" list="patientList" autocomplete="off"></div></td><td><select id="mon_jk_${monRowCount}"><option value="">-</option><option value="L">L</option><option value="P">P</option></select></td><td><select id="mon_goldar_${monRowCount}"><option value="">-</option><option>A</option><option>B</option><option>AB</option><option>O</option></select></td><td><input type="text" id="mon_tb_${monRowCount}" placeholder="cm"></td><td><input type="text" id="mon_bb_${monRowCount}" placeholder="kg"></td><td><input type="text" id="mon_td_${monRowCount}" placeholder="120/80"></td><td><input type="text" id="mon_ufg_${monRowCount}" placeholder="cc"></td><td><input type="text" id="mon_heparin_${monRowCount}" placeholder="iu"></td><td><input type="text" id="mon_epo_${monRowCount}" placeholder="-"></td><td><input type="text" id="mon_ktv_${monRowCount}" placeholder="-" value="1,5"></td><td><select id="mon_transfusi_${monRowCount}"><option value="Tidak">Tidak</option><option value="Ada">Ada</option></select></td><td style="display: flex; align-items: center; justify-content: center; gap: 5px;"><input type="text" id="mon_ket_${monRowCount}" placeholder="Ket" style="flex:1;"><button class="delete-pasien" onclick="removeMonitorRow(${monRowCount})" style="border:none; background:transparent; cursor:pointer;"><i class="fa-solid fa-circle-xmark"></i></button></td>`;
     monitorBody.appendChild(tr);
     setupAutocomplete(`mon_nama_${monRowCount}`);
 }
@@ -635,10 +637,51 @@ async function fetchPatientNames() {
     try { 
         const response = await fetch(MONITORING_API_URL + "?action=getPatients"); 
         const result = await response.json(); 
-        if(result.status === 'success' && result.data) patientData = result.data; 
+        if(result.status === 'success' && result.data) {
+            patientData = result.data;
+            // Isi datalist bawaan HTML5 agar bisa muncul sugesti tanpa terpotong CSS tabel
+            const datalist = document.getElementById('patientList');
+            if(datalist) {
+                let opts = '';
+                patientData.forEach(p => {
+                    opts += `<option value="${p.nama}">`;
+                });
+                datalist.innerHTML = opts;
+            }
+        }
     } catch(e) {} 
 }
 fetchPatientNames();
+
+function setupAutocomplete(inputId) {
+    const input = document.getElementById(inputId); 
+    if (!input) return;
+    
+    // Saat user mengetik atau memilih dari sugesti, cek apakah namanya ada di database
+    input.addEventListener('input', function() {
+        let val = this.value.trim();
+        if (!val) return;
+        
+        let rowId = inputId.split('_')[2]; 
+        
+        // Cari pasien yang namanya persis sama (case-insensitive)
+        let found = null;
+        for (let i = 0; i < patientData.length; i++) {
+            if (patientData[i].nama && patientData[i].nama.toUpperCase() === val.toUpperCase()) {
+                found = patientData[i];
+                break;
+            }
+        }
+        
+        // Jika ketemu, otomatis isi Jenis Kelamin dan Golongan Darah
+        if (found) {
+            let jkInput = document.getElementById(`mon_jk_${rowId}`);
+            let goldarInput = document.getElementById(`mon_goldar_${rowId}`);
+            if (jkInput) jkInput.value = found.jk;
+            if (goldarInput) goldarInput.value = found.goldar;
+        }
+    });
+}fetchPatientNames();
 
 function setupAutocomplete(inputId) {
     const input = document.getElementById(inputId); if (!input) return;
