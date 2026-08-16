@@ -498,8 +498,8 @@
 </div>
 
 <script>
-// JIKA ANDA MEMBUAT DEPLOYMENT BARU, GANTI URL DI BAWAH INI DENGAN URL BARU ANDA
-const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbykHo4YOrAtD5JKfAAVHxihcu_Mar6SSIxugyTqR10nLAZ2_GvCbdYqiGPrh14NDkuN_Q/exec";
+// GANTI URL INI JIKA MEMBUAT DEPLOYMENT BARU
+const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbxleO1hK9X7XutXOqvQHjdTZPR0jGkokyZQSTYw347prxPMwd-Pb-6PoNoH-dvfrkMGRg/exec";
 
 function updateClock() {
     const now = new Date();
@@ -521,6 +521,20 @@ async function fetchPrayerTimes() {
     } catch (e) {}
 }
 fetchPrayerTimes();
+
+// Fungsi Fetch Header (Pembaruan info Header)
+async function fetchHeaderData() {
+    try {
+        const response = await fetch(MONITORING_API_URL);
+        const result = await response.json();
+        if(result.status === 'success') {
+            document.getElementById('sheetHeaderData').innerHTML = `<span>Server Terhubung <b>✓</b></span><span>Status: <b>Online</b></span>`;
+        }
+    } catch(e) {
+        document.getElementById('sheetHeaderData').innerHTML = `<span>Gagal terhubung ke server <b>✗</b></span>`;
+    }
+}
+fetchHeaderData();
 
 let memberCount = 0;
 function tambahAnggota(focusNew = true) {
@@ -715,11 +729,11 @@ async function searchFastTrack() {
             
             resultDiv.innerHTML = html;
         } else {
-            resultDiv.innerHTML = '<div class="stat-loading">Data tidak ditemukan.</div>';
+            resultDiv.innerHTML = `<div class="stat-loading" style="color:var(--accent);">Error: ${result.message || 'Data tidak ditemukan.'}</div>`;
         }
     } catch (e) {
         console.error(e);
-        resultDiv.innerHTML = '<div class="stat-loading" style="color: var(--accent);">Gagal mengambil data. Periksa koneksi atau konfigurasi script.</div>';
+        resultDiv.innerHTML = '<div class="stat-loading" style="color: var(--accent);">Gagal mengambil data. Periksa koneksi atau URL Macro.</div>';
     }
 }
 
