@@ -453,25 +453,31 @@
             <h2>ANALITIK Data Pasien</h2>
         </div>
         <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">
-            Analisis data pasien dari sheet REKAP_HARIAN berdasarkan Tanggal dan Nama.
+            Analisis seluruh data pasien dari sheet REKAP_HARIAN berdasarkan rentang waktu (Tanggal Awal & Akhir).
         </p>
         
         <div class="grid-2" style="margin-top: 20px;">
             <div>
-                <label>Tanggal (Timestamp)</label>
-                <input type="date" id="ft_date">
+                <label>Tanggal Awal</label>
+                <input type="date" id="ft_start_date">
             </div>
             <div>
-                <label>Nama Pasien</label>
-                <input type="text" id="ft_name" placeholder="Nama Pasien">
+                <label>Tanggal Akhir</label>
+                <input type="date" id="ft_end_date">
             </div>
         </div>
         <button class="btn btn-wa" onclick="searchFastTrack()" style="width: 100%; margin-top: 15px;">
-            <i class="fa-solid fa-search"></i> Cari Data Pasien
+            <i class="fa-solid fa-search"></i> Cari & Analisis Data
         </button>
         
         <div id="fastTrackResult" style="margin-top: 25px;">
             <div class="stat-loading">Hasil pencarian akan muncul di sini.</div>
+        </div>
+
+        <div class="btn-group-3" style="margin-top: 25px; display: none;" id="analitikActions">
+            <button class="btn btn-wa" onclick="shareAnalitikWA()"><i class="fa-brands fa-whatsapp"></i> Share WA</button>
+            <button class="btn btn-drive" onclick="saveAnalitikPDF()"><i class="fa-solid fa-file-pdf"></i> Simpan PDF</button>
+            <button class="btn btn-pdf" onclick="printAnalitik()"><i class="fa-solid fa-print"></i> Cetak PDF</button>
         </div>
     </div>
 
@@ -673,61 +679,57 @@ function setupAutocomplete(inputId) {
     input.addEventListener('blur', function() { setTimeout(() => { list.style.display = 'none'; }, 150); });
 }
 
+let analitikData = null;
 async function searchFastTrack() {
-    const dateVal = document.getElementById('ft_date').value;
-    const nameVal = document.getElementById('ft_name').value.trim();
+    const startDate = document.getElementById('ft_start_date').value;
+    const endDate = document.getElementById('ft_end_date').value;
     const resultDiv = document.getElementById('fastTrackResult');
+    const actionsDiv = document.getElementById('analitikActions');
 
-    if (!dateVal && !nameVal) {
-        alert("Mohon isi Tanggal atau Nama Pasien untuk mencari!");
+    if (!startDate && !endDate) {
+        alert("Mohon isi Tanggal Awal dan/atau Tanggal Akhir untuk mencari!");
         return;
     }
 
     resultDiv.innerHTML = '<div class="stat-loading"><i class="fa-solid fa-spinner fa-spin"></i> Menghitung data dari Spreadsheet...</div>';
+    actionsDiv.style.display = 'none';
 
     try {
         let url = MONITORING_API_URL + "?action=searchFastTrack";
-        if (dateVal) url += "&date=" + encodeURIComponent(dateVal);
-        if (nameVal) url += "&name=" + encodeURIComponent(nameVal);
+        if (startDate) url += "&startDate=" + encodeURIComponent(startDate);
+        if (endDate) url += "&endDate=" + encodeURIComponent(endDate);
 
         const response = await fetch(url);
         const result = await response.json();
         
         if (result.status === 'success' && result.data) {
             const d = result.data;
+            analitikData = d;
             
             if (d.totalPasien === 0) {
-                resultDiv.innerHTML = '<div class="stat-loading">Data tidak ditemukan. Coba ubah kata kunci pencarian.</div>';
+                resultDiv.innerHTML = '<div class="stat-loading">Data tidak ditemukan. Coba ubah rentang tanggal pencarian.</div>';
                 return;
             }
             
-            let html = `<p style="color: var(--primary); font-weight: 700; margin-bottom: 15px;">Total Data Ditemukan: ${d.totalPasien}</p>`;
+            let html = `<p style="color: var(--primary); font-weight: 700; margin-bottom: 15px;">Total Data Ditemukan: ${d.totalPasien} pasien</p>`;
             
-            if (nameVal) {
-                html += `<h3 style="margin-bottom: 10px;">Riwayat Tindakan ${nameVal}</h3>`;
-                html += '<div class="table-container"><table class="monitoring-table"><thead><tr><th>Tanggal</th><th>TD</th><th>UFG</th><th>Heparin</th><th>EPO/FE</th><th>Kt/V</th><th>Transfusi</th></tr></thead><tbody>';
-                d.riwayatTindakan.forEach(r => {
-                    html += `<tr><td style="text-align:center; background:#fff;">${r.tanggal}</td><td style="text-align:center; background:#fff;">${r.td}</td><td style="text-align:center; background:#fff;">${r.ufg}</td><td style="text-align:center; background:#fff;">${r.heparin}</td><td style="text-align:center; background:#fff;">${r.epo}</td><td style="text-align:center; background:#fff;">${r.ktv}</td><td style="text-align:center; background:#fff;">${r.transfusi}</td></tr>`;
-                });
-                html += '</tbody></table></div>';
-            } else {
-                html += '<div class="stat-grid">';
-                html += `<div class="stat-card"><div class="stat-value">${d.jk_L}</div><div class="stat-label">LAKI-LAKI</div></div>`;
-                html += `<div class="stat-card"><div class="stat-value">${d.jk_P}</div><div class="stat-label">PEREMPUAN</div></div>`;
-                html += `<div class="stat-card"><div class="stat-value">${d.goldar_A}</div><div class="stat-label">GOL. A</div></div>`;
-                html += `<div class="stat-card"><div class="stat-value">${d.goldar_B}</div><div class="stat-label">GOL. B</div></div>`;
-                html += `<div class="stat-card"><div class="stat-value">${d.goldar_AB}</div><div class="stat-label">GOL. AB</div></div>`;
-                html += `<div class="stat-card"><div class="stat-value">${d.goldar_O}</div><div class="stat-label">GOL. O</div></div>`;
-                html += `<div class="stat-card"><div class="stat-value">${d.transfusi_Ada}</div><div class="stat-label">TRANSFUSI ADA</div></div>`;
-                html += `<div class="stat-card"><div class="stat-value">${d.transfusi_Tidak}</div><div class="stat-label">TRANSFUSI TIDAK</div></div>`;
-                html += '</div>';
-                
-                html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table"><thead><tr><th>Total TB (cm)</th><th>Total BB (kg)</th><th>Total UFG (cc)</th><th>Total Heparin (iu)</th></tr></thead><tbody>';
-                html += `<tr><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_TB}</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_BB}</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_UFG}</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_Heparin}</td></tr>`;
-                html += '</tbody></table></div>';
-            }
+            html += '<div class="stat-grid">';
+            html += `<div class="stat-card"><div class="stat-value">${d.jk_L}</div><div class="stat-label">LAKI-LAKI</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${d.jk_P}</div><div class="stat-label">PEREMPUAN</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${d.goldar_A}</div><div class="stat-label">GOL. A</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${d.goldar_B}</div><div class="stat-label">GOL. B</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${d.goldar_AB}</div><div class="stat-label">GOL. AB</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${d.goldar_O}</div><div class="stat-label">GOL. O</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${d.transfusi_Ada}</div><div class="stat-label">TRANSFUSI ADA</div></div>`;
+            html += `<div class="stat-card"><div class="stat-value">${d.transfusi_Tidak}</div><div class="stat-label">TRANSFUSI TIDAK</div></div>`;
+            html += '</div>';
+            
+            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table"><thead><tr><th>Total TB (cm)</th><th>Total BB (kg)</th><th>Total UFG (cc)</th><th>Total Heparin (iu)</th></tr></thead><tbody>';
+            html += `<tr><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_TB}</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_BB}</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_UFG}</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_Heparin}</td></tr>`;
+            html += '</tbody></table></div>';
             
             resultDiv.innerHTML = html;
+            actionsDiv.style.display = 'grid'; // Tampilkan tombol WA, PDF, Cetak
         } else {
             resultDiv.innerHTML = `<div class="stat-loading" style="color:var(--accent);">Error: ${result.message || 'Data tidak ditemukan.'}</div>`;
         }
@@ -735,6 +737,51 @@ async function searchFastTrack() {
         console.error(e);
         resultDiv.innerHTML = '<div class="stat-loading" style="color: var(--accent);">Gagal mengambil data. Periksa koneksi atau URL Macro.</div>';
     }
+}
+
+function buildAnalitikText() {
+    if (!analitikData || analitikData.totalPasien === 0) return "Tidak ada data.";
+    const d = analitikData;
+    let txt = `*ANALITIK DATA PASIEN HD*\n`; 
+    txt += `Rentang: ${document.getElementById('ft_start_date').value || 'Awal'} s/d ${document.getElementById('ft_end_date').value || 'Akhir'}\n`; 
+    txt += `═══════════════════\n\n`;
+    txt += `*Total Pasien Dianalisis:* ${d.totalPasien}\n\n`;
+    txt += `*DISTRIBUSI PASIEN:*\n`;
+    txt += `- Laki-laki: ${d.jk_L} | Perempuan: ${d.jk_P}\n`;
+    txt += `- Gol. A: ${d.goldar_A} | Gol. B: ${d.goldar_B}\n`;
+    txt += `- Gol. AB: ${d.goldar_AB} | Gol. O: ${d.goldar_O}\n`;
+    txt += `- Transfusi Ada: ${d.transfusi_Ada} | Tidak: ${d.transfusi_Tidak}\n\n`;
+    txt += `*TOTAL AGREGAT:*\n`;
+    txt += `- Total TB: ${d.sum_TB} cm\n`;
+    txt += `- Total BB: ${d.sum_BB} kg\n`;
+    txt += `- Total UFG: ${d.sum_UFG} cc\n`;
+    txt += `- Total Heparin: ${d.sum_Heparin} iu\n`;
+    txt += `═══════════════════\n`;
+    return txt;
+}
+
+function shareAnalitikWA() {
+    if (!analitikData) { alert("Cari data terlebih dahulu!"); return; }
+    const txt = buildAnalitikText();
+    const waUrl = "https://wa.me/?text=" + encodeURIComponent(txt);
+    window.open(waUrl, '_blank');
+}
+
+function saveAnalitikPDF() {
+    if (!analitikData) { alert("Cari data terlebih dahulu!"); return; }
+    const txt = buildAnalitikText();
+    const fileName = `Analitik_HD_${document.getElementById('ft_start_date').value || 'awal'}_sd_${document.getElementById('ft_end_date').value || 'akhir'}.pdf`;
+    const tempDiv = document.createElement('div');
+    tempDiv.style.cssText = 'position:absolute;left:-9999px;top:0;width:800px;padding:40px;font-family:monospace;white-space:pre-wrap;font-size:14px;';
+    tempDiv.innerText = txt; document.body.appendChild(tempDiv);
+    const opt = { margin: 10, filename: fileName, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+    html2pdf().set(opt).from(tempDiv).save().then(() => { document.body.removeChild(tempDiv); alert("✅ File PDF Analitik telah dibuat dan terunduh."); });
+}
+
+function printAnalitik() {
+    if (!analitikData) { alert("Cari data terlebih dahulu!"); return; }
+    document.getElementById('printContent').innerText = buildAnalitikText(); 
+    window.print();
 }
 
 async function submitMonitoringSheet() {
