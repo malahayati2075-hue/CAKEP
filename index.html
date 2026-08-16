@@ -506,7 +506,7 @@
 
 <script>
 // GANTI URL INI JIKA MEMBUAT DEPLOYMENT BARU
-const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbzuaArP2FnyyWej8tuSZUVVNXX_Vy3bMOQ-FIWuxjEVI9kzhO2txVZmXsn3kkKe9zkY5w/exec";
+const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbxleO1hK9X7XutXOqvQHjdTZPR0jGkokyZQSTYw347prxPMwd-Pb-6PoNoH-dvfrkMGRg/exec";
 
 function updateClock() {
     const now = new Date();
@@ -729,13 +729,28 @@ async function searchFastTrack() {
             html += `<div class="stat-card"><div class="stat-value">${d.transfusi_Ada}</div><div class="stat-label">TRANSFUSI ADA</div></div>`;
             html += `<div class="stat-card"><div class="stat-value">${d.transfusi_Tidak}</div><div class="stat-label">TRANSFUSI TIDAK</div></div>`;
             html += '</div>';
+
+            // Tabel Kategori Kt/V dan UFG
+            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table"><thead><tr><th>Kategori Kt/V</th><th>Jumlah Pasien</th></tr></thead><tbody>';
+            html += `<tr><td style="text-align:left; padding-left:10px;">Kt/V &lt; 1,4</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ktv_lt_1_4}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">Kt/V 1,4 - 1,5</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ktv_1_4_1_5}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">Kt/V &gt; 1,5</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ktv_gt_1_5}</td></tr>`;
+            html += '</tbody></table></div>';
+
+            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table"><thead><tr><th>Kategori UFG (cc)</th><th>Jumlah Pasien</th></tr></thead><tbody>';
+            html += `<tr><td style="text-align:left; padding-left:10px;">UFG &le; 500 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_lt_500}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">UFG 501 - 1000 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_500_1000}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">UFG 1001 - 2000 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_1001_2000}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">UFG 2001 - 3000 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_2001_3000}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">UFG &gt; 3000 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_gt_3000}</td></tr>`;
+            html += '</tbody></table></div>';
             
-            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table"><thead><tr><th>Total TB (cm)</th><th>Total BB (kg)</th><th>Total UFG (cc)</th><th>Total Heparin (iu)</th></tr></thead><tbody>';
-            html += `<tr><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_TB}</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_BB}</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_UFG}</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_Heparin}</td></tr>`;
+            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table"><thead><tr><th>Total Heparin (iu)</th></tr></thead><tbody>';
+            html += `<tr><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_Heparin}</td></tr>`;
             html += '</tbody></table></div>';
             
             resultDiv.innerHTML = html;
-            actionsDiv.style.display = 'grid'; // Tampilkan tombol WA, PDF, Cetak
+            actionsDiv.style.display = 'grid'; 
         } else {
             resultDiv.innerHTML = `<div class="stat-loading" style="color:var(--accent);">Error: ${result.message || 'Data tidak ditemukan.'}</div>`;
         }
@@ -757,10 +772,20 @@ function buildAnalitikText() {
     txt += `- Gol. A: ${d.goldar_A} | Gol. B: ${d.goldar_B}\n`;
     txt += `- Gol. AB: ${d.goldar_AB} | Gol. O: ${d.goldar_O}\n`;
     txt += `- Transfusi Ada: ${d.transfusi_Ada} | Tidak: ${d.transfusi_Tidak}\n\n`;
+    
+    txt += `*KATEGORI Kt/V:*\n`;
+    txt += `- Kt/V < 1,4 : ${d.ktv_lt_1_4} pasien\n`;
+    txt += `- Kt/V 1,4 - 1,5 : ${d.ktv_1_4_1_5} pasien\n`;
+    txt += `- Kt/V > 1,5 : ${d.ktv_gt_1_5} pasien\n\n`;
+    
+    txt += `*KATEGORI UFG:*\n`;
+    txt += `- <= 500 cc : ${d.ufg_lt_500} pasien\n`;
+    txt += `- 501 - 1000 cc : ${d.ufg_500_1000} pasien\n`;
+    txt += `- 1001 - 2000 cc : ${d.ufg_1001_2000} pasien\n`;
+    txt += `- 2001 - 3000 cc : ${d.ufg_2001_3000} pasien\n`;
+    txt += `- > 3000 cc : ${d.ufg_gt_3000} pasien\n\n`;
+    
     txt += `*TOTAL AGREGAT:*\n`;
-    txt += `- Total TB: ${d.sum_TB} cm\n`;
-    txt += `- Total BB: ${d.sum_BB} kg\n`;
-    txt += `- Total UFG: ${d.sum_UFG} cc\n`;
     txt += `- Total Heparin: ${d.sum_Heparin} iu\n`;
     txt += `═══════════════════\n`;
     return txt;
