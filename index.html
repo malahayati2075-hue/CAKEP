@@ -499,11 +499,23 @@
 
 <script>
 const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzcANOCVxHhn2FtHMS_3GrJM1HbWF1461bLxWGbIj7J-uPUgtE9murlM54MHsmwRURF/exec";
-const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbxleO1hK9X7XutXOqvQHjdTZPR0jGkokyZQSTYw347prxPMwd-Pb-6PoNoH-dvfrkMGRg/exec";
-// REKAP_SHEET_GVIZ sudah tidak digunakan lagi
+const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbwpWv-Wj5Vb5Dn9QiRG3Z14eAaar1uEHEoCcn1dnSp-XXuo8DFPPk4LEBQyfko_wEGrAA.exec";
+const REKAP_SHEET_GVIZ = "https://docs.google.com/spreadsheets/d/1gD_mYqo5x30zYfQQWb5dm8woKgwsV5aqjBXVNpUyf0c/gviz/tq?tqx=out:json&gid=652284391";
+
 async function fetchSheetData() {
-    // Nonaktifkan pemanggilan API lama agar tidak ada error "Gagal memuat"
-    document.getElementById('sheetHeaderData').innerHTML = `<span>Sistem siap digunakan</span>`;
+    try {
+        const response = await fetch(SHEET_API_URL);
+        const result = await response.json();
+        if(result.data && result.data.length > 0) {
+            let html = '';
+            result.data.forEach(item => {
+                let parts = item.split(": ");
+                if(parts.length === 2) html += `<span>${parts[0]}: <b>${parts[1]}</b></span>`;
+                else html += `<span>${item}</span>`;
+            });
+            document.getElementById('sheetHeaderData').innerHTML = html;
+        }
+    } catch (e) { document.getElementById('sheetHeaderData').innerHTML = `<span>Gagal memuat</span>`; }
 }
 fetchSheetData();
 
@@ -656,35 +668,31 @@ async function searchFastTrack() {
     resultDiv.innerHTML = '<div class="stat-loading"><i class="fa-solid fa-spinner fa-spin"></i> Mencari data dari Spreadsheet...</div>';
 
     try {
-        let url = MONITORING_API_URL + "?action=searchFastTrack";
-        if (dateVal) url += "&date=" + encodeURIComponent(dateVal);
-        if (nameVal) url += "&name=" + encodeURIComponent(nameVal);
-
-        const response = await fetch(url);
-        const result = await response.json();
+        const response = await fetch(REKAP_SHEET_GVIZ);
+        const text = await response.text();
         
-        if (result.status === 'success' && result.data.length > 0) {
-            const headers = ["Timestamp", "Nama", "Jenis Kelamin", "Gol Darah", "TB", "BB", "Tekanan Darah", "UFG", "Heparin", "EPO/FE", "Kt/V", "Transfusi", "Keterangan"];
-            let html = '<div class="table-container"><table class="monitoring-table"><thead><tr>';
-            headers.forEach(h => html += `<th>${h}</th>`);
-            html += '</tr></thead><tbody>';
-            
-            result.data.forEach(rowData => {
-                html += '<tr>';
-                rowData.forEach(cell => html += `<td style="text-align:center; padding:8px; background:#fff;">${cell}</td>`);
-                html += '</tr>';
-            });
-            
-            html += '</tbody></table></div>';
-            resultDiv.innerHTML = `<p style="color: var(--primary); font-weight: 700; margin-bottom: 15px;">Ditemukan ${result.data.length} data:</p>` + html;
-        } else {
-            resultDiv.innerHTML = '<div class="stat-loading">Data tidak ditemukan. Coba ubah kata kunci pencarian.</div>';
+        // Parse Google Visualization API response
+        const jsonText = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+        const data = JSON.parse(jsonText);
+        
+        const rows = data.table.rows;
+        const headers = data.table.cols.map(c => (c.label || "").trim() || "Kolom");
+        
+        let found = [];
+        
+        // Prepare search date formats
+        let searchDates = [];
+        if (dateVal) {
+            const d = new Date(dateVal);
+            const dd = String(d.getDate()).padStart(2, '0');
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const yyyy = d.getFullYear();
+            searchDates.push(dateVal); // YYYY-MM-DD
+            searchDates.push(`${dd}/${mm}/${yyyy}`);
+            searchDates.push(`${mm}/${dd}/${yyyy}`);
+            searchDates.push(`${dd}-${mm}-${yyyy}`);
         }
-    } catch (e) {
-        console.error(e);
-        resultDiv.innerHTML = '<div class="stat-loading" style="color: var(--accent);">Gagal mengambil data. Periksa koneksi atau konfigurasi script.</div>';
-    }
-}
+
         rows.forEach(row => {
             if (!row.c) return;
             
