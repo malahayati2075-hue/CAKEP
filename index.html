@@ -338,7 +338,7 @@
 
     <div class="nav-header">
         <button class="tab-btn active" onclick="switchTab(1)"><i>📝</i><span>Laporan Harian</span></button>
-        <button class="tab-btn" onclick="switchTab(2)"><i>⚡</i><span>Fast Track</span></button>
+        <button class="tab-btn" onclick="switchTab(2)"><i>📊</i><span>ANALITIK</span></button>
         <button class="tab-btn" onclick="switchTab(3)"><i>🔍</i><span>Pencarian Pasien</span></button>
     </div>
 
@@ -449,11 +449,11 @@
     <div id="slide2" class="page">
         <div class="section-title main-title-3d">
             <div class="waving-flag"><span>81</span></div>
-            <div class="icon-box">⚡</div>
-            <h2>FAST TRACK Data Pasien</h2>
+            <div class="icon-box">📊</div>
+            <h2>ANALITIK Data Pasien</h2>
         </div>
         <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">
-            Mesin pencarian data pasien dari sheet REKAP_HARIAN berdasarkan Tanggal dan Nama.
+            Analisis data pasien dari sheet REKAP_HARIAN berdasarkan Tanggal dan Nama.
         </p>
         
         <div class="grid-2" style="margin-top: 20px;">
@@ -498,7 +498,8 @@
 </div>
 
 <script>
-const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbxleO1hK9X7XutXOqvQHjdTZPR0jGkokyZQSTYw347prxPMwd-Pb-6PoNoH-dvfrkMGRg/exec";
+// JIKA ANDA MEMBUAT DEPLOYMENT BARU, GANTI URL DI BAWAH INI DENGAN URL BARU ANDA
+const MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbykHo4YOrAtD5JKfAAVHxihcu_Mar6SSIxugyTqR10nLAZ2_GvCbdYqiGPrh14NDkuN_Q/exec";
 
 function updateClock() {
     const now = new Date();
@@ -602,7 +603,7 @@ function addMonitorRow() {
     const monitorBody = document.getElementById('monitoringBody');
     const tr = document.createElement('tr');
     tr.id = `mon_row_${monRowCount}`;
-    tr.innerHTML = `<td><div style="position: relative;"><input type="text" id="mon_nama_${monRowCount}" placeholder="Nama Pasien" autocomplete="off"></div></td><td><select id="mon_jk_${monRowCount}"><option value="">-</option><option value="L">L</option><option value="P">P</option></select></td><td><select id="mon_goldar_${monRowCount}"><option value="">-</option><option>A</option><option>B</option><option>AB</option><option>O</option></select></td><td><input type="text" id="mon_tb_${monRowCount}" placeholder="cm"></td><td><input type="text" id="mon_bb_${monRowCount}" placeholder="kg"></td><td><input type="text" id="mon_td_${monRowCount}" placeholder="120/80"></td><td><input type="text" id="mon_ufg_${monRowCount}" placeholder="cc"></td><td><input type="text" id="mon_heparin_${monRowCount}" placeholder="iu"></td><td><input type="text" id="mon_epo_${monRowCount}" placeholder="-"></td><td><input type="text" id="mon_ktv_${monRowCount}" placeholder="-"></td><td><select id="mon_transfusi_${monRowCount}"><option value="Tidak">Tidak</option><option value="Ada">Ada</option></select></td><td style="display: flex; align-items: center; justify-content: center; gap: 5px;"><input type="text" id="mon_ket_${monRowCount}" placeholder="Ket" style="flex:1;"><button class="delete-pasien" onclick="removeMonitorRow(${monRowCount})" style="border:none; background:transparent; cursor:pointer;"><i class="fa-solid fa-circle-xmark"></i></button></td>`;
+    tr.innerHTML = `<td><div style="position: relative;"><input type="text" id="mon_nama_${monRowCount}" placeholder="Nama Pasien" autocomplete="off"></div></td><td><select id="mon_jk_${monRowCount}"><option value="">-</option><option value="L">L</option><option value="P">P</option></select></td><td><select id="mon_goldar_${monRowCount}"><option value="">-</option><option>A</option><option>B</option><option>AB</option><option>O</option></select></td><td><input type="text" id="mon_tb_${monRowCount}" placeholder="cm"></td><td><input type="text" id="mon_bb_${monRowCount}" placeholder="kg"></td><td><input type="text" id="mon_td_${monRowCount}" placeholder="120/80"></td><td><input type="text" id="mon_ufg_${monRowCount}" placeholder="cc"></td><td><input type="text" id="mon_heparin_${monRowCount}" placeholder="iu"></td><td><input type="text" id="mon_epo_${monRowCount}" placeholder="-"></td><td><input type="text" id="mon_ktv_${monRowCount}" placeholder="-" value="1,5"></td><td><select id="mon_transfusi_${monRowCount}"><option value="Tidak">Tidak</option><option value="Ada">Ada</option></select></td><td style="display: flex; align-items: center; justify-content: center; gap: 5px;"><input type="text" id="mon_ket_${monRowCount}" placeholder="Ket" style="flex:1;"><button class="delete-pasien" onclick="removeMonitorRow(${monRowCount})" style="border:none; background:transparent; cursor:pointer;"><i class="fa-solid fa-circle-xmark"></i></button></td>`;
     monitorBody.appendChild(tr);
     setupAutocomplete(`mon_nama_${monRowCount}`);
 }
@@ -737,6 +738,14 @@ async function submitMonitoringSheet() {
 }
 
 function switchTab(tab) {
+    if (tab === 2) {
+        let pwd = prompt("Masukkan password untuk mengakses menu ANALITIK:");
+        if (pwd !== "HDmalahayat!2075") {
+            if (pwd !== null) alert("❌ Password salah! Akses ditolak.");
+            return; 
+        }
+    }
+    
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('slide' + tab).classList.add('active');
