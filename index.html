@@ -658,10 +658,9 @@ function setupAutocomplete(inputId) {
     if (!input) return;
     
     // Saat user mengetik atau memilih dari sugesti, cek apakah namanya ada di database
-    input.addEventListener('input', function() {
-        let val = this.value.trim();
+    function checkAndFill() {
+        let val = input.value.trim();
         if (!val) return;
-        
         let rowId = inputId.split('_')[2]; 
         
         // Cari pasien yang namanya persis sama (case-insensitive)
@@ -680,46 +679,10 @@ function setupAutocomplete(inputId) {
             if (jkInput) jkInput.value = found.jk;
             if (goldarInput) goldarInput.value = found.goldar;
         }
-    });
-}fetchPatientNames();
-
-function setupAutocomplete(inputId) {
-    const input = document.getElementById(inputId); if (!input) return;
-    const list = document.createElement('div');
-    list.style.cssText = 'position:absolute;left:0;top:100%;width:100%;maxHeight:150px;overflowY:auto;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 8px 16px rgba(0,0,0,0.15);z-index:1000;display:none;';
-    input.parentNode.appendChild(list);
+    }
     
-    input.addEventListener('input', function() {
-        let val = this.value; list.innerHTML = ''; if (!val) { list.style.display = 'none'; return; }
-        let count = 0;
-        let rowId = inputId.split('_')[2]; 
-        
-        for (let i = 0; i < patientData.length; i++) {
-            let pName = patientData[i].nama;
-            if (pName && pName.toUpperCase().includes(val.toUpperCase())) {
-                let item = document.createElement('div');
-                let matchStart = pName.toUpperCase().indexOf(val.toUpperCase());
-                item.innerHTML = pName.substring(0, matchStart) + "<strong style='color:var(--primary);'>" + pName.substring(matchStart, matchStart + val.length) + "</strong>" + pName.substring(matchStart + val.length);
-                item.style.cssText = 'padding:10px 12px;cursor:pointer;font-size:0.8rem;border-bottom:1px solid #f1f5f9;';
-                
-                item.addEventListener('mousedown', function(e) { 
-                    e.preventDefault(); 
-                    input.value = pName; 
-                    list.style.display = 'none'; 
-                    
-                    let jkInput = document.getElementById(`mon_jk_${rowId}`);
-                    let goldarInput = document.getElementById(`mon_goldar_${rowId}`);
-                    if (jkInput) jkInput.value = patientData[i].jk;
-                    if (goldarInput) goldarInput.value = patientData[i].goldar;
-                });
-                list.appendChild(item); 
-                count++; 
-                if (count >= 10) break;
-            }
-        }
-        list.style.display = count > 0 ? 'block' : 'none';
-    });
-    input.addEventListener('blur', function() { setTimeout(() => { list.style.display = 'none'; }, 150); });
+    input.addEventListener('input', checkAndFill);
+    input.addEventListener('change', checkAndFill); // Tambahan event change untuk klik datalist
 }
 
 let analitikData = null;
