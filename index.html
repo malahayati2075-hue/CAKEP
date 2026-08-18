@@ -155,6 +155,7 @@
             box-shadow: 6px 6px 12px rgba(13, 148, 136, 0.15), -4px -4px 10px rgba(255,255,255,0.8);
         }
         .section-title h2 { font-size: 1.1rem; margin: 0; color: var(--text-main); font-weight: 800; }
+        .section-title.no-icon h2 { font-size: 0.95rem; color: var(--text-muted); margin-top: 15px; text-transform: uppercase; letter-spacing: 1px; }
 
         .main-title-3d {
             background: linear-gradient(135deg, var(--ri-red) 0%, #e53935 15%, var(--ri-white) 25%, var(--ri-white) 30%, var(--arema-blue) 35%, #1976d2 100%);
@@ -208,7 +209,6 @@
             box-shadow: 8px 8px 16px rgba(13, 148, 136, 0.1), -4px -4px 10px rgba(255,255,255,0.9);
         }
         
-        /* ===== JOB DESK BOX - Responsive Desktop & Mobile ===== */
         .job-desk-wrapper {
             position: relative;
             border-radius: 24px;
@@ -293,14 +293,6 @@
         .stepper-btn:active { transform: translateY(3px); box-shadow: 0 0 0 #0f766e; }
         .stepper-input { width: 45px; text-align: center; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 0; font-size: 0.95rem; font-weight: 600; background: #fff; }
 
-        .stepper-item {
-            display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.7);
-            border: 1px solid rgba(226, 232, 240, 0.5); padding: 12px; border-radius: 14px; transition: all 0.2s;
-        }
-        .stepper-item:hover { border-color: var(--secondary); box-shadow: 0 5px 15px rgba(2, 132, 199, 0.1); }
-        .stepper-item .stepper-btn { background: var(--secondary); width: 32px; height: 32px; font-size: 1rem; box-shadow: 0 3px 0 #075985; }
-        .stepper-item .stepper-btn:hover { background: #0284c7; }
-
         .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
         .check-item {
             display: flex; align-items: center; background: rgba(248, 250, 252, 0.8); border: 1px solid var(--border-color);
@@ -309,55 +301,24 @@
         .check-item:hover { background: #e0f2fe; border-color: var(--secondary); color: var(--secondary); }
         .check-item input { width: auto; margin-right: 6px; accent-color: var(--primary); }
 
-        /* ===== RESPONSIVE JOB DESK - Mobile 7 inch ===== */
         @media (max-width: 768px) {
-            .job-desk-overlay {
-                padding: 20px 15px;
-            }
-            .job-desk-overlay .job-box,
-            .job-desk-overlay #padatkaryaBox {
-                padding: 12px;
-            }
-            .bed-range {
-                gap: 10px;
-            }
-            .small-stepper {
-                padding: 6px;
-            }
-            .small-stepper .stepper-label {
-                font-size: 0.7rem;
-            }
-            .stepper-btn {
-                width: 28px; height: 28px; font-size: 0.85rem;
-            }
-            .stepper-input {
-                width: 40px; font-size: 0.85rem; padding: 4px 0;
-            }
-            .check-item {
-                font-size: 0.75rem; padding: 5px 10px;
-            }
+            .job-desk-overlay { padding: 20px 15px; }
+            .job-desk-overlay .job-box, .job-desk-overlay #padatkaryaBox { padding: 12px; }
+            .bed-range { gap: 10px; }
+            .small-stepper { padding: 6px; }
+            .small-stepper .stepper-label { font-size: 0.7rem; }
+            .stepper-btn { width: 28px; height: 28px; font-size: 0.85rem; }
+            .stepper-input { width: 40px; font-size: 0.85rem; padding: 4px 0; }
+            .check-item { font-size: 0.75rem; padding: 5px 10px; }
         }
 
         @media (max-width: 480px) {
-            .job-desk-overlay {
-                padding: 15px 12px;
-            }
-            .job-desk-overlay .job-box,
-            .job-desk-overlay #padatkaryaBox {
-                padding: 10px;
-            }
-            .bed-range {
-                flex-direction: column; gap: 8px;
-            }
-            .checkbox-group {
-                gap: 6px;
-            }
-            .check-item {
-                font-size: 0.7rem; padding: 4px 8px;
-            }
-            .small-stepper .stepper-controls {
-                gap: 6px;
-            }
+            .job-desk-overlay { padding: 15px 12px; }
+            .job-desk-overlay .job-box, .job-desk-overlay #padatkaryaBox { padding: 10px; }
+            .bed-range { flex-direction: column; gap: 8px; }
+            .checkbox-group { gap: 6px; }
+            .check-item { font-size: 0.7rem; padding: 4px 8px; }
+            .small-stepper .stepper-controls { gap: 6px; }
         }
 
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 35px; }
@@ -407,7 +368,6 @@
         .rencana-tools { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
         .btn-clear-rencana { background: #fff1f2; color: var(--accent); border: 1px solid #fecdd3; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
 
-        /* ===== MONITORING TABLE - 15 Kolom ===== */
         .table-container {
             overflow-x: auto; margin-top: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.6); border-radius: 14px;
             background: rgba(255,255,255,0.6); box-shadow: 6px 6px 12px rgba(0,0,0,0.04), -4px -4px 10px rgba(255,255,255,0.8);
@@ -417,6 +377,42 @@
         .monitoring-table td { border: 1px solid var(--border-color); padding: 0; background: rgba(255,255,255,0.5); }
         .monitoring-table input, .monitoring-table select { width: 100%; border: none; background: transparent; padding: 8px 5px; font-size: 0.8rem; text-align: center; font-family: inherit; color: var(--text-main); }
         .monitoring-table input:focus, .monitoring-table select:focus { outline: 2px solid var(--primary-light); background: #f0fdfa; }
+
+        /* ===== INVENTARIS GRID - Kompak ===== */
+        .dialyzer-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .dialyzer-item {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 8px 5px;
+            text-align: center;
+        }
+        .dialyzer-item label {
+            display: block;
+            font-size: 0.75rem; font-weight: 700; color: var(--text-main);
+            margin: 0 0 5px 0;
+        }
+        .dialyzer-item .controls {
+            display: flex; align-items: center; justify-content: center; gap: 4px;
+        }
+        .dialyzer-item button {
+            width: 22px; height: 22px; border: none; background: var(--secondary); color: #fff; 
+            border-radius: 5px; cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 0 #075985;
+        }
+        .dialyzer-item button:active { transform: translateY(2px); box-shadow: none; }
+        .dialyzer-item input {
+            width: 35px; text-align: center; border: 1px solid #cbd5e1; border-radius: 5px; 
+            font-size: 0.8rem; padding: 2px 0; background: #fff;
+        }
+        @media (max-width: 480px) {
+            .dialyzer-grid { grid-template-columns: repeat(3, 1fr); }
+        }
 
         .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-top: 20px; }
         .stat-card {
@@ -466,7 +462,7 @@
 
     <div class="nav-header">
         <button class="tab-btn active" onclick="switchTab(1)"><i>📝</i><span>Laporan Harian</span></button>
-        <button class="tab-btn" onclick="switchTab(2)"><i>📊</i><span>ANALITIK</span></button>
+        <button class="tab-btn" onclick="switchTab(2)"><i>📊</i><span>MUTU</span></button>
         <button class="tab-btn" onclick="switchTab(3)"><i>🔍</i><span>Pencarian Pasien</span></button>
     </div>
 
@@ -520,19 +516,7 @@
         <label>Pasien Rawat Jalan (Bisa Paste dari Excel)</label>
         <textarea id="pasienRJ" placeholder="Nama Pasien 1&#10;Nama Pasien 2"></textarea>
         
-        <label>Pasien Ruangan (Rawat Inap)</label>
-        <div id="ruanganContainer" style="margin-top: 15px;"></div>
-        <button class="btn-add" onclick="tambahPasienRuang()"><i class="fa-solid fa-circle-plus"></i> Tambah Pasien Ruangan</button>
-
-        <div class="section-title">
-            <div class="icon-box">🗓️</div>
-            <h2>Perencanaan Tindakan Pasien</h2>
-        </div>
-        <div id="patientPlanContainer" style="margin-top: 20px;"></div>
-        <button class="btn-add" onclick="tambahPasien()"><i class="fa-solid fa-circle-plus"></i> Tambah Kartu Pasien</button>
-
-        <div class="section-title">
-            <div class="icon-box">📊</div>
+        <div class="section-title no-icon">
             <h2>Monitoring Pasien HD</h2>
         </div>
         <button class="btn-add" onclick="addMonitorRow()" style="margin-bottom: 15px;"><i class="fa-solid fa-circle-plus"></i> Tambah Baris Pasien</button>
@@ -547,10 +531,22 @@
                 <tbody id="monitoringBody"></tbody>
             </table>
         </div>
-        <div class="btn-group" style="margin-top: 12px;">
-            <button class="btn btn-pdf" onclick="submitMonitoringSheet()"><i class="fa-solid fa-cloud-arrow-up"></i> Simpan Monitoring ke Sheet</button>
-            <a href="https://docs.google.com/spreadsheets/d/1gD_mYqo5x30zYfQQWb5dm8woKgwsV5aqjBXVNpUyf0c/edit?gid=652284391#gid=652284391" target="_blank" class="btn btn-pdf" style="text-decoration: none;"><i class="fa-solid fa-table"></i> Buka Spreadsheet</a>
+        <div class="btn-group" style="margin-top: 12px; margin-bottom: 20px;">
+            <button class="btn btn-pdf" onclick="submitMonitoringSheet()"><i class="fa-solid fa-cloud-arrow-up"></i> Simpan ke Sheet</button>
+            <button class="btn btn-wa" onclick="shareMonitoringWA()"><i class="fa-brands fa-whatsapp"></i> Share WA Monitoring</button>
         </div>
+        <a href="https://docs.google.com/spreadsheets/d/1gD_mYqo5x30zYfQQWb5dm8woKgwsV5aqjBXVNpUyf0c/edit?gid=652284391#gid=652284391" target="_blank" class="btn btn-pdf" style="display:block; text-decoration: none; margin-bottom: 20px;"><i class="fa-solid fa-table"></i> Buka Spreadsheet</a>
+
+        <label>Pasien Ruangan (Rawat Inap)</label>
+        <div id="ruanganContainer" style="margin-top: 15px;"></div>
+        <button class="btn-add" onclick="tambahPasienRuang()"><i class="fa-solid fa-circle-plus"></i> Tambah Pasien Ruangan</button>
+
+        <div class="section-title">
+            <div class="icon-box">🗓️</div>
+            <h2>Perencanaan Tindakan Pasien</h2>
+        </div>
+        <div id="patientPlanContainer" style="margin-top: 20px;"></div>
+        <button class="btn-add" onclick="tambahPasien()"><i class="fa-solid fa-circle-plus"></i> Tambah Kartu Pasien</button>
 
         <div class="section-title">
             <div class="icon-box" style="color:var(--accent);">⚠️</div>
@@ -560,8 +556,11 @@
             <div><label>Masalah Pasien</label><textarea id="masalahPasien" style="min-height: 80px;"></textarea></div>
             <div><label>Masalah Mesin / Alat</label><textarea id="masalahMesin" style="min-height: 80px;"></textarea></div>
         </div>
-        <div class="grid-2" id="dialyzerContainer"></div>
-        <div class="grid-2">
+        
+        <label>Sisa Dialyzer (HF)</label>
+        <div class="dialyzer-grid" id="dialyzerContainer"></div>
+        
+        <div class="grid-2" style="margin-top: 15px;">
             <div><label>Sisa GD Stick</label><input type="text" id="gdStick" placeholder="Contoh: 12 pcs"></div>
             <div><label>BOR / Sisa Bed Kosong</label><input type="text" id="sisaBed" placeholder="Contoh: 1 bed (44)"></div>
         </div>
@@ -570,7 +569,7 @@
             <div class="icon-box">🪪</div>
             <h2>Identitas Pengirim</h2>
         </div>
-        <input type="text" id="pengirim1" placeholder="Nama Anda (Wajib diisi)">
+        <input type="text" id="pengirim1" placeholder="Nama Anda (Wajib diisi untuk Laporan)">
 
         <div class="btn-group-3">
             <button class="btn btn-wa" onclick="kirimWA()"><i class="fa-brands fa-whatsapp"></i> Kirim WA</button>
@@ -584,7 +583,7 @@
         <div class="section-title main-title-3d">
             <div class="waving-flag"><span>81</span></div>
             <div class="icon-box">📊</div>
-            <h2>ANALITIK Data Pasien</h2>
+            <h2>MUTU</h2>
         </div>
         <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">
             Analisis seluruh data pasien dari sheet REKAP_HARIAN berdasarkan rentang waktu (Tanggal Awal & Akhir).
@@ -750,7 +749,7 @@ tambahAnggota(false);
 const dialyzerContainer = document.getElementById('dialyzerContainer');
 let dialyzerHTML = '';
 [70, 90, 110, 130, 150, 170].forEach(size => {
-    dialyzerHTML += `<div class="stepper-item"><span class="stepper-label" style="font-size:0.9rem; font-weight:700; margin-bottom:8px;">HF ${size}</span><div class="stepper-controls"><button class="stepper-btn" onclick="adjustVal('hf${size}', -1)">-</button><input type="number" id="hf${size}" value="0" class="stepper-input"><button class="stepper-btn" onclick="adjustVal('hf${size}', 1)">+</button></div></div>`;
+    dialyzerHTML += `<div class="dialyzer-item"><label>HF ${size}</label><div class="controls"><button onclick="adjustVal('hf${size}', -1)">-</button><input type="number" id="hf${size}" value="0"><button onclick="adjustVal('hf${size}', 1)">+</button></div></div>`;
 });
 dialyzerContainer.innerHTML = dialyzerHTML;
 
@@ -806,7 +805,6 @@ function clearRencana(id) { document.getElementById(`rencanaPasien-${id}`).value
 function hapusPasien(id) { document.getElementById(`patientCard-${id}`).remove(); }
 tambahPasien();
 
-// ===== MONITORING TABLE - 15 KOLOM (Nama|JK|Goldar|TB|BB|TD|Akses|UFG|QB|QD|Heparin|EPO/FE|Kt/V|Transfusi|Keterangan) =====
 let monRowCount = 0;
 function addMonitorRow() {
     monRowCount++;
@@ -950,28 +948,30 @@ async function searchFastTrack() {
             html += `<tr><td style="text-align:left; padding-left:10px;">Kt/V &gt; 1,5</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ktv_gt_1_5}</td></tr>`;
             html += '</tbody></table></div>';
 
-            // Tabel Kategori UFG
-            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table" style="min-width: 400px;"><thead><tr><th>Kategori UFG (cc)</th><th>Jumlah Pasien</th></tr></thead><tbody>';
-            html += `<tr><td style="text-align:left; padding-left:10px;">UFG &le; 500 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_lt_500}</td></tr>`;
-            html += `<tr><td style="text-align:left; padding-left:10px;">UFG 501 - 1000 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_500_1000}</td></tr>`;
-            html += `<tr><td style="text-align:left; padding-left:10px;">UFG 1001 - 2000 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_1001_2000}</td></tr>`;
-            html += `<tr><td style="text-align:left; padding-left:10px;">UFG 2001 - 3000 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_2001_3000}</td></tr>`;
-            html += `<tr><td style="text-align:left; padding-left:10px;">UFG &gt; 3000 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_gt_3000}</td></tr>`;
+            // Tabel Kategori UFG (Liter)
+            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table" style="min-width: 400px;"><thead><tr><th>Kategori UFG (Liter)</th><th>Jumlah Pasien</th></tr></thead><tbody>';
+            html += `<tr><td style="text-align:left; padding-left:10px;">0L - 0,5L</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_0_05}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">0,6L - 1L</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_06_1}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">1,5L - 2L</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_15_2}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">2,5L - 3L</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_25_3}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">&gt; 3L</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_gt_3}</td></tr>`;
             html += '</tbody></table></div>';
 
-            // Tabel QB & QD
-            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table" style="min-width: 400px;"><thead><tr><th>QB &amp; QD Summary</th><th>Nilai</th></tr></thead><tbody>';
-            html += `<tr><td style="text-align:left; padding-left:10px;">Rata-rata QB (ml/jam)</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.totalPasien > 0 ? Math.round(d.sum_QB / d.totalPasien) : 0}</td></tr>`;
+            // Tabel QB (ml/jam)
+            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table" style="min-width: 400px;"><thead><tr><th>QB (ml/jam)</th><th>Jumlah Pasien</th></tr></thead><tbody>';
+            html += `<tr><td style="text-align:left; padding-left:10px;">&lt; 150</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qb_lt_150}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">160 - 200</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qb_160_200}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">210 - 250</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qb_210_250}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">&gt; 250</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qb_gt_250}</td></tr>`;
+            html += '</tbody></table></div>';
+
+            // Tabel QD
+            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table" style="min-width: 400px;"><thead><tr><th>QD</th><th>Jumlah Pasien</th></tr></thead><tbody>';
             html += `<tr><td style="text-align:left; padding-left:10px;">QD 300</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qd_300}</td></tr>`;
             html += `<tr><td style="text-align:left; padding-left:10px;">QD 350</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qd_350}</td></tr>`;
             html += `<tr><td style="text-align:left; padding-left:10px;">QD 400</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qd_400}</td></tr>`;
             html += `<tr><td style="text-align:left; padding-left:10px;">QD 450</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qd_450}</td></tr>`;
             html += `<tr><td style="text-align:left; padding-left:10px;">QD 500</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qd_500}</td></tr>`;
-            html += '</tbody></table></div>';
-            
-            // Total Heparin
-            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table" style="min-width: 400px;"><thead><tr><th>Total Heparin (iu)</th></tr></thead><tbody>';
-            html += `<tr><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_Heparin}</td></tr>`;
             html += '</tbody></table></div>';
             
             resultDiv.innerHTML = html;
@@ -988,7 +988,7 @@ async function searchFastTrack() {
 function buildAnalitikText() {
     if (!analitikData || analitikData.totalPasien === 0) return "Tidak ada data.";
     const d = analitikData;
-    let txt = `*ANALITIK DATA PASIEN HD*\n`; 
+    let txt = `*MUTU DATA PASIEN HD*\n`; 
     txt += `Rentang: ${document.getElementById('ft_start_date').value || 'Awal'} s/d ${document.getElementById('ft_end_date').value || 'Akhir'}\n`; 
     txt += `═══════════════════\n\n`;
     txt += `*Total Pasien Dianalisis:* ${d.totalPasien}\n\n`;
@@ -1009,19 +1009,22 @@ function buildAnalitikText() {
     txt += `- Kt/V 1,4 - 1,5 : ${d.ktv_1_4_1_5} pasien\n`;
     txt += `- Kt/V > 1,5 : ${d.ktv_gt_1_5} pasien\n\n`;
     
-    txt += `*KATEGORI UFG:*\n`;
-    txt += `- <= 500 cc : ${d.ufg_lt_500} pasien\n`;
-    txt += `- 501 - 1000 cc : ${d.ufg_500_1000} pasien\n`;
-    txt += `- 1001 - 2000 cc : ${d.ufg_1001_2000} pasien\n`;
-    txt += `- 2001 - 3000 cc : ${d.ufg_2001_3000} pasien\n`;
-    txt += `- > 3000 cc : ${d.ufg_gt_3000} pasien\n\n`;
+    txt += `*KATEGORI UFG (Liter):*\n`;
+    txt += `- 0L - 0,5L : ${d.ufg_0_05} pasien\n`;
+    txt += `- 0,6L - 1L : ${d.ufg_06_1} pasien\n`;
+    txt += `- 1,5L - 2L : ${d.ufg_15_2} pasien\n`;
+    txt += `- 2,5L - 3L : ${d.ufg_25_3} pasien\n`;
+    txt += `- > 3L : ${d.ufg_gt_3} pasien\n\n`;
     
-    txt += `*QB & QD:*\n`;
-    txt += `- Rata-rata QB: ${d.totalPasien > 0 ? Math.round(d.sum_QB / d.totalPasien) : 0} ml/jam\n`;
+    txt += `*QB (ml/jam):*\n`;
+    txt += `- < 150 : ${d.qb_lt_150} pasien\n`;
+    txt += `- 160 - 200 : ${d.qb_160_200} pasien\n`;
+    txt += `- 210 - 250 : ${d.qb_210_250} pasien\n`;
+    txt += `- > 250 : ${d.qb_gt_250} pasien\n\n`;
+    
+    txt += `*QD:*\n`;
     txt += `- QD 300: ${d.qd_300} | QD 350: ${d.qd_350} | QD 400: ${d.qd_400} | QD 450: ${d.qd_450} | QD 500: ${d.qd_500}\n\n`;
     
-    txt += `*TOTAL AGREGAT:*\n`;
-    txt += `- Total Heparin: ${d.sum_Heparin} iu\n`;
     txt += `═══════════════════\n`;
     
     let pengirim = getVal('pengirim1') || getVal('pengirim2');
@@ -1044,12 +1047,12 @@ function saveAnalitikPDF() {
     let pengirim = getVal('pengirim1') || getVal('pengirim2');
     if(!pengirim) { alert("❌ Nama Pengirim wajib diisi!"); document.getElementById('pengirim2').focus(); return; }
     const txt = buildAnalitikText();
-    const fileName = `Analitik_HD_${document.getElementById('ft_start_date').value || 'awal'}_sd_${document.getElementById('ft_end_date').value || 'akhir'}.pdf`;
+    const fileName = `MUTU_HD_${document.getElementById('ft_start_date').value || 'awal'}_sd_${document.getElementById('ft_end_date').value || 'akhir'}.pdf`;
     const tempDiv = document.createElement('div');
     tempDiv.style.cssText = 'position:absolute;left:-9999px;top:0;width:800px;padding:40px;font-family:monospace;white-space:pre-wrap;font-size:14px;';
     tempDiv.innerText = txt; document.body.appendChild(tempDiv);
     const opt = { margin: 10, filename: fileName, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-    html2pdf().set(opt).from(tempDiv).save().then(() => { document.body.removeChild(tempDiv); alert("✅ File PDF Analitik telah dibuat dan terunduh."); });
+    html2pdf().set(opt).from(tempDiv).save().then(() => { document.body.removeChild(tempDiv); alert("✅ File PDF MUTU telah dibuat dan terunduh."); });
 }
 
 function printAnalitik() {
@@ -1060,32 +1063,19 @@ function printAnalitik() {
     window.print();
 }
 
-// ===== SUBMIT MONITORING - 15 KOLOM DATA =====
 async function submitMonitoringSheet() {
-    if(getVal('pengirim1') === "") { alert("❌ Nama Pengirim wajib diisi sebelum menyimpan monitoring!"); switchTab(1); document.getElementById('pengirim1').focus(); return; }
     let dataRows = [];
-    // Susunan data: Nama, JK, Goldar, TB, BB, TD, Akses, UFG, QB, QD, Heparin, EPO/FE, Kt/V, Transfusi, Keterangan
     for(let i=1; i<=monRowCount; i++) { 
         let row = document.getElementById(`mon_row_${i}`); 
         if(row) { 
             let nama = getVal(`mon_nama_${i}`); 
             if(nama) { 
                 dataRows.push([
-                    nama, 
-                    getVal(`mon_jk_${i}`), 
-                    getVal(`mon_goldar_${i}`), 
-                    getVal(`mon_tb_${i}`), 
-                    getVal(`mon_bb_${i}`), 
-                    getVal(`mon_td_${i}`), 
-                    getVal(`mon_akses_${i}`), 
-                    getVal(`mon_ufg_${i}`), 
-                    getVal(`mon_qb_${i}`), 
-                    getVal(`mon_qd_${i}`), 
-                    getVal(`mon_heparin_${i}`), 
-                    getVal(`mon_epo_${i}`), 
-                    getVal(`mon_ktv_${i}`), 
-                    getVal(`mon_transfusi_${i}`), 
-                    getVal(`mon_ket_${i}`)
+                    nama, getVal(`mon_jk_${i}`), getVal(`mon_goldar_${i}`), getVal(`mon_tb_${i}`), 
+                    getVal(`mon_bb_${i}`), getVal(`mon_td_${i}`), getVal(`mon_akses_${i}`), 
+                    getVal(`mon_ufg_${i}`), getVal(`mon_qb_${i}`), getVal(`mon_qd_${i}`), 
+                    getVal(`mon_heparin_${i}`), getVal(`mon_epo_${i}`), getVal(`mon_ktv_${i}`), 
+                    getVal(`mon_transfusi_${i}`), getVal(`mon_ket_${i}`)
                 ]); 
             } 
         } 
@@ -1100,9 +1090,35 @@ async function submitMonitoringSheet() {
     } catch (e) { alert("❌ Gagal mengirim data: " + e.message); } finally { btn.innerHTML = originalText; btn.disabled = false; }
 }
 
+function shareMonitoringWA() {
+    let txt = `*MONITORING PASIEN HD*\n`;
+    txt += `Tanggal: ${formatDate(getVal('tanggal1'))} | Shift ${getVal('shift1')} | Tim ${getVal('tim1')}\n`;
+    txt += `═══════════════════\n`;
+    let mCount = 0;
+    for(let i=1; i<=monRowCount; i++) { 
+        let row = document.getElementById(`mon_row_${i}`); 
+        if(row) { 
+            let nama = getVal(`mon_nama_${i}`); 
+            if(nama) { 
+                mCount++; 
+                txt += `\n${mCount}. *${nama}* (${getVal(`mon_jk_${i}`)}, ${getVal(`mon_goldar_${i}`)})\n`; 
+                txt += `   TD: ${getVal(`mon_td_${i}`)} | TB: ${getVal(`mon_tb_${i}`)} | BB: ${getVal(`mon_bb_${i}`)}\n`; 
+                txt += `   Akses: ${getVal(`mon_akses_${i}`)} | UFG: ${getVal(`mon_ufg_${i}`)}\n`; 
+                txt += `   QB: ${getVal(`mon_qb_${i}`)} | QD: ${getVal(`mon_qd_${i}`)}\n`; 
+                txt += `   Heparin: ${getVal(`mon_heparin_${i}`)} | Kt/V: ${getVal(`mon_ktv_${i}`)} | Transfusi: ${getVal(`mon_transfusi_${i}`)}\n`; 
+                if(getVal(`mon_ket_${i}`)) txt += `   Ket: ${getVal(`mon_ket_${i}`)}\n`; 
+            } 
+        } 
+    }
+    if(mCount === 0) txt += "Tidak ada data monitoring terinput.\n";
+    
+    const waUrl = "https://wa.me/?text=" + encodeURIComponent(txt);
+    window.open(waUrl, '_blank');
+}
+
 function switchTab(tab) {
     if (tab === 2) {
-        let pwd = prompt("Masukkan password untuk mengakses menu ANALITIK:");
+        let pwd = prompt("Masukkan password untuk mengakses menu MUTU:");
         if (pwd !== "HDmalahayat!2075") {
             if (pwd !== null) alert("❌ Password salah! Akses ditolak.");
             return; 
@@ -1133,30 +1149,15 @@ function buildReport() {
     if(namaPadat) { jobStaffCount++; txt += `${jobStaffCount}. *${namaPadat}* : \n`; let jobsPadat = Array.from(document.querySelectorAll('#padatkaryaBox .check-item input:checked')).map(c => c.value); if(jobsPadat.length > 0) jobsPadat.forEach(job => txt += `   - ${job}\n`); else txt += `   - -\n`; }
     if(getVal('rencanaTindakan')) { txt += `\n*Rencana Tindakan Umum:*\n${formatPaste(getVal('rencanaTindakan'))}\n`; }
     txt += `\n───────────────────\n\n`; txt += `*DAFTAR PASIEN*\n`; let rjText = formatPatientList(getVal('pasienRJ')); let rjCount = (getVal('pasienRJ') ? getVal('pasienRJ').split('\n').filter(l => l.trim().length > 0).length : 0); txt += `*Rawat Jalan:*\n${rjText}\n\n`;
+    
     let ruangCount = 0, ruangIdx = 1, ruangText = "";
     for(let i=1; i<=ruanganCount; i++) { let card = document.getElementById(`ruanganCard-${i}`); if(card) { let nama = getVal(`namaPasienRuang-${i}`); let detail = getVal(`detailPasienRuang-${i}`); if(nama) { ruangCount++; ruangText += `${ruangIdx}. *${nama}*\n`; if(detail) { detail.split('\n').filter(l => l.trim().length > 0).forEach(l => { ruangText += `   > ${l.trim().replace(/^\s*\d+[\.\)\-\,]\s*/, '')}\n`; }); } else { ruangText += `   > -\n`; } ruangText += `\n`; ruangIdx++; } } }
     if(ruangCount === 0) ruangText = "-\n"; txt += `*Ruangan:*\n${ruangText}`; txt += `└ _Total Pasien: ${rjCount + ruangCount}_\n\n`; txt += `───────────────────\n\n`;
+    
     txt += `*PERENCANAAN TINDAKAN PASIEN*\n`; let adaPasien = false; let pidx = 1;
     for(let i=1; i<=patientCount; i++) { let card = document.getElementById(`patientCard-${i}`); if(card) { let nama = getVal(`namaPasienPlan-${i}`); let rencana = getVal(`rencanaPasien-${i}`); if(nama) { adaPasien = true; txt += `${pidx}. *${nama}*\n`; txt += `   Rencana: \n`; if(rencana) { rencana.split(',').map(r => r.trim()).filter(r => r.length > 0).forEach(r => { txt += `   - ${r}\n`; }); } else { txt += `   - -\n`; } txt += `\n`; pidx++; } } }
     if(!adaPasien) txt += "Tidak ada pasien yang diinput.\n"; txt += `\n───────────────────\n\n`;
-    // ===== MONITORING SECTION dengan QB & QD =====
-    txt += `*MONITORING PASIEN HD*\n`; let mCount = 0;
-    for(let i=1; i<=monRowCount; i++) { 
-        let row = document.getElementById(`mon_row_${i}`); 
-        if(row) { 
-            let nama = getVal(`mon_nama_${i}`); 
-            if(nama) { 
-                mCount++; 
-                txt += `${mCount}. *${nama}* (${getVal(`mon_jk_${i}`)}, ${getVal(`mon_goldar_${i}`)})\n`; 
-                txt += `   TD: ${getVal(`mon_td_${i}`)} | TB: ${getVal(`mon_tb_${i}`)} | BB: ${getVal(`mon_bb_${i}`)}\n`; 
-                txt += `   Akses: ${getVal(`mon_akses_${i}`)} | UFG: ${getVal(`mon_ufg_${i}`)} | QB: ${getVal(`mon_qb_${i}`)} ml/jam | QD: ${getVal(`mon_qd_${i}`)}\n`; 
-                txt += `   Heparin: ${getVal(`mon_heparin_${i}`)} | EPO/FE: ${getVal(`mon_epo_${i}`)} | Kt/V: ${getVal(`mon_ktv_${i}`)} | Transfusi: ${getVal(`mon_transfusi_${i}`)}\n`; 
-                if(getVal(`mon_ket_${i}`)) txt += `   Ket: ${getVal(`mon_ket_${i}`)}\n`; 
-                txt += `\n`; 
-            } 
-        } 
-    }
-    if(mCount === 0) txt += "Tidak ada data monitoring terinput.\n"; txt += `\n───────────────────\n\n`;
+    
     txt += `*MASALAH & INVENTARIS*\n`; let mPasien = getVal('masalahPasien'); txt += `- Pasien: \n`; if(mPasien) mPasien.split('\n').filter(l => l.trim().length > 0).forEach(l => txt += `   > ${l.trim()}\n`); else txt += `   > -\n`; let mMesin = getVal('masalahMesin'); txt += `- Mesin/Alat: \n`; if(mMesin) mMesin.split('\n').filter(l => l.trim().length > 0).forEach(l => txt += `   > ${l.trim()}\n`); else txt += `   > -\n`; txt += `\n`;
     txt += `*SISA ALAT:*\n`; txt += `- HF 70: ${getVal('hf70') || '0'} | HF 90: ${getVal('hf90') || '0'} | HF 110: ${getVal('hf110') || '0'}\n`; txt += `- HF 130: ${getVal('hf130') || '0'} | HF 150: ${getVal('hf150') || '0'} | HF 170: ${getVal('hf170') || '0'}\n`; txt += `- GD Stick: ${getVal('gdStick') || '-'} | Sisa Bed: ${getVal('sisaBed') || '-'}\n`; txt += `\n═══════════════════\n`;
     txt += `Dikirim oleh: *${getVal('pengirim1')}*\n\n\n`; txt += `Mengetahui,\n\n\n\n( ${getVal('pengirim1')} )\n`; txt += `Pelapor Harian`; return txt;
