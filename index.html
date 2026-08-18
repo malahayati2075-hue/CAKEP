@@ -183,7 +183,7 @@
 
         label { display: block; font-weight: 600; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
 
-        input[type="text"], input[type="date"], textarea, select {
+        input[type="text"], input[type="date"], input[type="number"], textarea, select {
             width: 100%; padding: 14px; border: 1.5px solid rgba(226, 232, 240, 0.8); border-radius: 14px; font-size: 0.95rem;
             background: rgba(248, 250, 252, 0.8); transition: all 0.2s ease-in-out; font-family: inherit; color: var(--text-main);
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.03), inset -2px -2px 5px rgba(255,255,255,0.5);
@@ -208,6 +208,7 @@
             box-shadow: 8px 8px 16px rgba(13, 148, 136, 0.1), -4px -4px 10px rgba(255,255,255,0.9);
         }
         
+        /* ===== JOB DESK BOX - Responsive Desktop & Mobile ===== */
         .job-desk-wrapper {
             position: relative;
             border-radius: 24px;
@@ -224,10 +225,10 @@
 
         .job-desk-overlay {
             position: relative;
-            padding: 30px 25px;
-            background: rgba(255, 255, 255, 0.82);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            padding: 25px 20px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             border-radius: 24px;
         }
 
@@ -239,16 +240,21 @@
             background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.8);
             box-shadow: 6px 6px 12px rgba(0,0,0,0.05), -4px -4px 10px rgba(255,255,255,0.6);
+            padding: 15px;
         }
 
-        .job-desk-overlay input[type="text"],
-        .job-desk-overlay input[type="number"] {
+        .job-desk-overlay .job-box input[type="text"],
+        .job-desk-overlay input[type="text"] {
             background: rgba(255, 255, 255, 0.95);
             font-weight: 600;
             color: #0f172a;
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.03), inset -2px -2px 5px rgba(255,255,255,0.5);
         }
         
+        .job-desk-overlay #padatkaryaBox input[type="text"] {
+            margin-bottom: 10px;
+        }
+
         .job-desk-overlay .small-stepper {
             background: rgba(248, 250, 252, 0.9);
             border: 1px solid #e2e8f0;
@@ -303,6 +309,57 @@
         .check-item:hover { background: #e0f2fe; border-color: var(--secondary); color: var(--secondary); }
         .check-item input { width: auto; margin-right: 6px; accent-color: var(--primary); }
 
+        /* ===== RESPONSIVE JOB DESK - Mobile 7 inch ===== */
+        @media (max-width: 768px) {
+            .job-desk-overlay {
+                padding: 20px 15px;
+            }
+            .job-desk-overlay .job-box,
+            .job-desk-overlay #padatkaryaBox {
+                padding: 12px;
+            }
+            .bed-range {
+                gap: 10px;
+            }
+            .small-stepper {
+                padding: 6px;
+            }
+            .small-stepper .stepper-label {
+                font-size: 0.7rem;
+            }
+            .stepper-btn {
+                width: 28px; height: 28px; font-size: 0.85rem;
+            }
+            .stepper-input {
+                width: 40px; font-size: 0.85rem; padding: 4px 0;
+            }
+            .check-item {
+                font-size: 0.75rem; padding: 5px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .job-desk-overlay {
+                padding: 15px 12px;
+            }
+            .job-desk-overlay .job-box,
+            .job-desk-overlay #padatkaryaBox {
+                padding: 10px;
+            }
+            .bed-range {
+                flex-direction: column; gap: 8px;
+            }
+            .checkbox-group {
+                gap: 6px;
+            }
+            .check-item {
+                font-size: 0.7rem; padding: 4px 8px;
+            }
+            .small-stepper .stepper-controls {
+                gap: 6px;
+            }
+        }
+
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 35px; }
         .btn-group-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 35px; }
         @media (max-width: 480px) { .btn-group-3 { grid-template-columns: 1fr; } }
@@ -350,12 +407,13 @@
         .rencana-tools { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
         .btn-clear-rencana { background: #fff1f2; color: var(--accent); border: 1px solid #fecdd3; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
 
+        /* ===== MONITORING TABLE - 15 Kolom ===== */
         .table-container {
             overflow-x: auto; margin-top: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.6); border-radius: 14px;
             background: rgba(255,255,255,0.6); box-shadow: 6px 6px 12px rgba(0,0,0,0.04), -4px -4px 10px rgba(255,255,255,0.8);
         }
-        .monitoring-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 1100px; }
-        .monitoring-table th { background: var(--primary); color: #fff; padding: 10px 5px; font-weight: 700; border: 1px solid #0f766e; text-align: center; white-space: nowrap; position: sticky; top: 0; }
+        .monitoring-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 1600px; }
+        .monitoring-table th { background: var(--primary); color: #fff; padding: 10px 5px; font-weight: 700; border: 1px solid #0f766e; text-align: center; white-space: nowrap; position: sticky; top: 0; z-index: 5; }
         .monitoring-table td { border: 1px solid var(--border-color); padding: 0; background: rgba(255,255,255,0.5); }
         .monitoring-table input, .monitoring-table select { width: 100%; border: none; background: transparent; padding: 8px 5px; font-size: 0.8rem; text-align: center; font-family: inherit; color: var(--text-main); }
         .monitoring-table input:focus, .monitoring-table select:focus { outline: 2px solid var(--primary-light); background: #f0fdfa; }
@@ -441,6 +499,7 @@
                 <button class="btn-add" onclick="tambahPerawat()"><i class="fa-solid fa-circle-plus"></i> Tambah Baris Job Desk</button>
 
                 <div class="job-box" id="padatkaryaBox" style="margin-top: 15px;">
+                    <label style="margin-top: 0; margin-bottom: 8px; font-size: 0.85rem;">Nama Padatkarya</label>
                     <input type="text" id="namaPadatkarya" placeholder="Nama Padatkarya">
                     <div class="checkbox-group">
                         <label class="check-item"><input type="checkbox" value="menyalakan AC 16 derajat"> Menyalakan AC 16 derajat</label>
@@ -482,7 +541,7 @@
                 <thead>
                     <tr>
                         <th>Nama</th><th>Jenis Kelamin</th><th>Gol Darah</th><th>TB</th><th>BB</th><th>Tekanan Darah</th>
-                        <th>Akses</th><th>UFG</th><th>Heparin</th><th>EPO/FE</th><th>Kt/V</th><th>Transfusi</th><th>Keterangan</th>
+                        <th>Akses</th><th>UFG</th><th>QB (ml/jam)</th><th>QD</th><th>Heparin</th><th>EPO/FE</th><th>Kt/V</th><th>Transfusi</th><th>Keterangan</th>
                     </tr>
                 </thead>
                 <tbody id="monitoringBody"></tbody>
@@ -747,14 +806,30 @@ function clearRencana(id) { document.getElementById(`rencanaPasien-${id}`).value
 function hapusPasien(id) { document.getElementById(`patientCard-${id}`).remove(); }
 tambahPasien();
 
+// ===== MONITORING TABLE - 15 KOLOM (Nama|JK|Goldar|TB|BB|TD|Akses|UFG|QB|QD|Heparin|EPO/FE|Kt/V|Transfusi|Keterangan) =====
 let monRowCount = 0;
 function addMonitorRow() {
     monRowCount++;
     const monitorBody = document.getElementById('monitoringBody');
     const tr = document.createElement('tr');
     tr.id = `mon_row_${monRowCount}`;
-    // Susunan kolom: Nama | JK | Goldar | TB | BB | TD | Akses | UFG | Heparin | EPO/FE | Kt/V | Transfusi | Keterangan
-    tr.innerHTML = `<td><div style="position: relative;"><input type="text" id="mon_nama_${monRowCount}" placeholder="Ketik Nama" list="patientList" autocomplete="off"></div></td><td><select id="mon_jk_${monRowCount}"><option value="">-</option><option value="L">L</option><option value="P">P</option></select></td><td><select id="mon_goldar_${monRowCount}"><option value="">-</option><option>A</option><option>B</option><option>AB</option><option>O</option></select></td><td><input type="text" id="mon_tb_${monRowCount}" placeholder="cm"></td><td><input type="text" id="mon_bb_${monRowCount}" placeholder="kg"></td><td><input type="text" id="mon_td_${monRowCount}" placeholder="120/80"></td><td><input type="text" id="mon_akses_${monRowCount}" placeholder="-" list="aksesList" autocomplete="off"></td><td><input type="text" id="mon_ufg_${monRowCount}" placeholder="cc"></td><td><input type="text" id="mon_heparin_${monRowCount}" placeholder="iu"></td><td><input type="text" id="mon_epo_${monRowCount}" placeholder="-"></td><td><input type="text" id="mon_ktv_${monRowCount}" placeholder="-" value="1,5"></td><td><select id="mon_transfusi_${monRowCount}"><option value="Tidak">Tidak</option><option value="Ada">Ada</option></select></td><td style="display: flex; align-items: center; justify-content: center; gap: 5px;"><input type="text" id="mon_ket_${monRowCount}" placeholder="Ket" style="flex:1;"><button class="delete-pasien" onclick="removeMonitorRow(${monRowCount})" style="border:none; background:transparent; cursor:pointer;"><i class="fa-solid fa-circle-xmark"></i></button></td>`;
+    tr.innerHTML = `
+        <td><div style="position: relative;"><input type="text" id="mon_nama_${monRowCount}" placeholder="Ketik Nama" list="patientList" autocomplete="off"></div></td>
+        <td><select id="mon_jk_${monRowCount}"><option value="">-</option><option value="L">L</option><option value="P">P</option></select></td>
+        <td><select id="mon_goldar_${monRowCount}"><option value="">-</option><option>A</option><option>B</option><option>AB</option><option>O</option></select></td>
+        <td><input type="text" id="mon_tb_${monRowCount}" placeholder="cm"></td>
+        <td><input type="text" id="mon_bb_${monRowCount}" placeholder="kg"></td>
+        <td><input type="text" id="mon_td_${monRowCount}" placeholder="120/80"></td>
+        <td><input type="text" id="mon_akses_${monRowCount}" placeholder="-" list="aksesList" autocomplete="off"></td>
+        <td><input type="text" id="mon_ufg_${monRowCount}" placeholder="cc"></td>
+        <td><input type="number" id="mon_qb_${monRowCount}" placeholder="ml/jam" min="0" max="300" step="5" value="250"></td>
+        <td><select id="mon_qd_${monRowCount}"><option value="300">300</option><option value="350">350</option><option value="400">400</option><option value="450">450</option><option value="500" selected>500</option></select></td>
+        <td><input type="text" id="mon_heparin_${monRowCount}" placeholder="iu"></td>
+        <td><input type="text" id="mon_epo_${monRowCount}" placeholder="-"></td>
+        <td><input type="text" id="mon_ktv_${monRowCount}" placeholder="-" value="1,5"></td>
+        <td><select id="mon_transfusi_${monRowCount}"><option value="Tidak">Tidak</option><option value="Ada">Ada</option></select></td>
+        <td style="display: flex; align-items: center; justify-content: center; gap: 5px;"><input type="text" id="mon_ket_${monRowCount}" placeholder="Ket" style="flex:1;"><button class="delete-pasien" onclick="removeMonitorRow(${monRowCount})" style="border:none; background:transparent; cursor:pointer;"><i class="fa-solid fa-circle-xmark"></i></button></td>
+    `;
     monitorBody.appendChild(tr);
     setupAutocomplete(`mon_nama_${monRowCount}`);
 }
@@ -861,7 +936,7 @@ async function searchFastTrack() {
             html += '</div>';
 
             // Tabel Akses Vaskuler
-            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table"><thead><tr><th>Akses Vaskuler</th><th>Jumlah Pasien</th></tr></thead><tbody>';
+            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table" style="min-width: 400px;"><thead><tr><th>Akses Vaskuler</th><th>Jumlah Pasien</th></tr></thead><tbody>';
             html += `<tr><td style="text-align:left; padding-left:10px;">AV-SHUNT</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.akses_av_shunt}</td></tr>`;
             html += `<tr><td style="text-align:left; padding-left:10px;">MANUAL</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.akses_manual}</td></tr>`;
             html += `<tr><td style="text-align:left; padding-left:10px;">CVC TEMPORER</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.akses_cvc_temporer}</td></tr>`;
@@ -869,23 +944,33 @@ async function searchFastTrack() {
             html += '</tbody></table></div>';
 
             // Tabel Kategori Kt/V
-            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table"><thead><tr><th>Kategori Kt/V</th><th>Jumlah Pasien</th></tr></thead><tbody>';
+            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table" style="min-width: 400px;"><thead><tr><th>Kategori Kt/V</th><th>Jumlah Pasien</th></tr></thead><tbody>';
             html += `<tr><td style="text-align:left; padding-left:10px;">Kt/V &lt; 1,4</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ktv_lt_1_4}</td></tr>`;
             html += `<tr><td style="text-align:left; padding-left:10px;">Kt/V 1,4 - 1,5</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ktv_1_4_1_5}</td></tr>`;
             html += `<tr><td style="text-align:left; padding-left:10px;">Kt/V &gt; 1,5</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ktv_gt_1_5}</td></tr>`;
             html += '</tbody></table></div>';
 
             // Tabel Kategori UFG
-            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table"><thead><tr><th>Kategori UFG (cc)</th><th>Jumlah Pasien</th></tr></thead><tbody>';
+            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table" style="min-width: 400px;"><thead><tr><th>Kategori UFG (cc)</th><th>Jumlah Pasien</th></tr></thead><tbody>';
             html += `<tr><td style="text-align:left; padding-left:10px;">UFG &le; 500 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_lt_500}</td></tr>`;
             html += `<tr><td style="text-align:left; padding-left:10px;">UFG 501 - 1000 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_500_1000}</td></tr>`;
             html += `<tr><td style="text-align:left; padding-left:10px;">UFG 1001 - 2000 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_1001_2000}</td></tr>`;
             html += `<tr><td style="text-align:left; padding-left:10px;">UFG 2001 - 3000 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_2001_3000}</td></tr>`;
             html += `<tr><td style="text-align:left; padding-left:10px;">UFG &gt; 3000 cc</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.ufg_gt_3000}</td></tr>`;
             html += '</tbody></table></div>';
+
+            // Tabel QB & QD
+            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table" style="min-width: 400px;"><thead><tr><th>QB &amp; QD Summary</th><th>Nilai</th></tr></thead><tbody>';
+            html += `<tr><td style="text-align:left; padding-left:10px;">Rata-rata QB (ml/jam)</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.totalPasien > 0 ? Math.round(d.sum_QB / d.totalPasien) : 0}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">QD 300</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qd_300}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">QD 350</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qd_350}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">QD 400</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qd_400}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">QD 450</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qd_450}</td></tr>`;
+            html += `<tr><td style="text-align:left; padding-left:10px;">QD 500</td><td style="text-align:center; background:#fff; font-weight:bold;">${d.qd_500}</td></tr>`;
+            html += '</tbody></table></div>';
             
             // Total Heparin
-            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table"><thead><tr><th>Total Heparin (iu)</th></tr></thead><tbody>';
+            html += '<div class="table-container" style="margin-top: 20px;"><table class="monitoring-table" style="min-width: 400px;"><thead><tr><th>Total Heparin (iu)</th></tr></thead><tbody>';
             html += `<tr><td style="text-align:center; background:#fff; font-weight:bold;">${d.sum_Heparin}</td></tr>`;
             html += '</tbody></table></div>';
             
@@ -931,6 +1016,10 @@ function buildAnalitikText() {
     txt += `- 2001 - 3000 cc : ${d.ufg_2001_3000} pasien\n`;
     txt += `- > 3000 cc : ${d.ufg_gt_3000} pasien\n\n`;
     
+    txt += `*QB & QD:*\n`;
+    txt += `- Rata-rata QB: ${d.totalPasien > 0 ? Math.round(d.sum_QB / d.totalPasien) : 0} ml/jam\n`;
+    txt += `- QD 300: ${d.qd_300} | QD 350: ${d.qd_350} | QD 400: ${d.qd_400} | QD 450: ${d.qd_450} | QD 500: ${d.qd_500}\n\n`;
+    
     txt += `*TOTAL AGREGAT:*\n`;
     txt += `- Total Heparin: ${d.sum_Heparin} iu\n`;
     txt += `═══════════════════\n`;
@@ -971,11 +1060,36 @@ function printAnalitik() {
     window.print();
 }
 
+// ===== SUBMIT MONITORING - 15 KOLOM DATA =====
 async function submitMonitoringSheet() {
     if(getVal('pengirim1') === "") { alert("❌ Nama Pengirim wajib diisi sebelum menyimpan monitoring!"); switchTab(1); document.getElementById('pengirim1').focus(); return; }
     let dataRows = [];
-    // Susunan data: Nama, JK, Goldar, TB, BB, TD, Akses, UFG, Heparin, EPO/FE, Kt/V, Transfusi, Keterangan
-    for(let i=1; i<=monRowCount; i++) { let row = document.getElementById(`mon_row_${i}`); if(row) { let nama = getVal(`mon_nama_${i}`); if(nama) { dataRows.push([nama, getVal(`mon_jk_${i}`), getVal(`mon_goldar_${i}`), getVal(`mon_tb_${i}`), getVal(`mon_bb_${i}`), getVal(`mon_td_${i}`), getVal(`mon_akses_${i}`), getVal(`mon_ufg_${i}`), getVal(`mon_heparin_${i}`), getVal(`mon_epo_${i}`), getVal(`mon_ktv_${i}`), getVal(`mon_transfusi_${i}`), getVal(`mon_ket_${i}`)]); } } }
+    // Susunan data: Nama, JK, Goldar, TB, BB, TD, Akses, UFG, QB, QD, Heparin, EPO/FE, Kt/V, Transfusi, Keterangan
+    for(let i=1; i<=monRowCount; i++) { 
+        let row = document.getElementById(`mon_row_${i}`); 
+        if(row) { 
+            let nama = getVal(`mon_nama_${i}`); 
+            if(nama) { 
+                dataRows.push([
+                    nama, 
+                    getVal(`mon_jk_${i}`), 
+                    getVal(`mon_goldar_${i}`), 
+                    getVal(`mon_tb_${i}`), 
+                    getVal(`mon_bb_${i}`), 
+                    getVal(`mon_td_${i}`), 
+                    getVal(`mon_akses_${i}`), 
+                    getVal(`mon_ufg_${i}`), 
+                    getVal(`mon_qb_${i}`), 
+                    getVal(`mon_qd_${i}`), 
+                    getVal(`mon_heparin_${i}`), 
+                    getVal(`mon_epo_${i}`), 
+                    getVal(`mon_ktv_${i}`), 
+                    getVal(`mon_transfusi_${i}`), 
+                    getVal(`mon_ket_${i}`)
+                ]); 
+            } 
+        } 
+    }
     if(dataRows.length === 0) { alert("❌ Tidak ada data monitoring terisi!"); return; }
     let btn = event.target; let originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...'; btn.disabled = true;
     try {
@@ -1025,9 +1139,23 @@ function buildReport() {
     txt += `*PERENCANAAN TINDAKAN PASIEN*\n`; let adaPasien = false; let pidx = 1;
     for(let i=1; i<=patientCount; i++) { let card = document.getElementById(`patientCard-${i}`); if(card) { let nama = getVal(`namaPasienPlan-${i}`); let rencana = getVal(`rencanaPasien-${i}`); if(nama) { adaPasien = true; txt += `${pidx}. *${nama}*\n`; txt += `   Rencana: \n`; if(rencana) { rencana.split(',').map(r => r.trim()).filter(r => r.length > 0).forEach(r => { txt += `   - ${r}\n`; }); } else { txt += `   - -\n`; } txt += `\n`; pidx++; } } }
     if(!adaPasien) txt += "Tidak ada pasien yang diinput.\n"; txt += `\n───────────────────\n\n`;
-    // Monitoring section dengan Akses
+    // ===== MONITORING SECTION dengan QB & QD =====
     txt += `*MONITORING PASIEN HD*\n`; let mCount = 0;
-    for(let i=1; i<=monRowCount; i++) { let row = document.getElementById(`mon_row_${i}`); if(row) { let nama = getVal(`mon_nama_${i}`); if(nama) { mCount++; txt += `${mCount}. *${nama}* (${getVal(`mon_jk_${i}`)}, ${getVal(`mon_goldar_${i}`)})\n`; txt += `   TD: ${getVal(`mon_td_${i}`)} | TB: ${getVal(`mon_tb_${i}`)} | BB: ${getVal(`mon_bb_${i}`)}\n`; txt += `   Akses: ${getVal(`mon_akses_${i}`)} | UFG: ${getVal(`mon_ufg_${i}`)} | Heparin: ${getVal(`mon_heparin_${i}`)} | Kt/V: ${getVal(`mon_ktv_${i}`)}\n`; txt += `   EPO/FE: ${getVal(`mon_epo_${i}`)} | Transfusi: ${getVal(`mon_transfusi_${i}`)}\n`; if(getVal(`mon_ket_${i}`)) txt += `   Ket: ${getVal(`mon_ket_${i}`)}\n`; txt += `\n`; } } }
+    for(let i=1; i<=monRowCount; i++) { 
+        let row = document.getElementById(`mon_row_${i}`); 
+        if(row) { 
+            let nama = getVal(`mon_nama_${i}`); 
+            if(nama) { 
+                mCount++; 
+                txt += `${mCount}. *${nama}* (${getVal(`mon_jk_${i}`)}, ${getVal(`mon_goldar_${i}`)})\n`; 
+                txt += `   TD: ${getVal(`mon_td_${i}`)} | TB: ${getVal(`mon_tb_${i}`)} | BB: ${getVal(`mon_bb_${i}`)}\n`; 
+                txt += `   Akses: ${getVal(`mon_akses_${i}`)} | UFG: ${getVal(`mon_ufg_${i}`)} | QB: ${getVal(`mon_qb_${i}`)} ml/jam | QD: ${getVal(`mon_qd_${i}`)}\n`; 
+                txt += `   Heparin: ${getVal(`mon_heparin_${i}`)} | EPO/FE: ${getVal(`mon_epo_${i}`)} | Kt/V: ${getVal(`mon_ktv_${i}`)} | Transfusi: ${getVal(`mon_transfusi_${i}`)}\n`; 
+                if(getVal(`mon_ket_${i}`)) txt += `   Ket: ${getVal(`mon_ket_${i}`)}\n`; 
+                txt += `\n`; 
+            } 
+        } 
+    }
     if(mCount === 0) txt += "Tidak ada data monitoring terinput.\n"; txt += `\n───────────────────\n\n`;
     txt += `*MASALAH & INVENTARIS*\n`; let mPasien = getVal('masalahPasien'); txt += `- Pasien: \n`; if(mPasien) mPasien.split('\n').filter(l => l.trim().length > 0).forEach(l => txt += `   > ${l.trim()}\n`); else txt += `   > -\n`; let mMesin = getVal('masalahMesin'); txt += `- Mesin/Alat: \n`; if(mMesin) mMesin.split('\n').filter(l => l.trim().length > 0).forEach(l => txt += `   > ${l.trim()}\n`); else txt += `   > -\n`; txt += `\n`;
     txt += `*SISA ALAT:*\n`; txt += `- HF 70: ${getVal('hf70') || '0'} | HF 90: ${getVal('hf90') || '0'} | HF 110: ${getVal('hf110') || '0'}\n`; txt += `- HF 130: ${getVal('hf130') || '0'} | HF 150: ${getVal('hf150') || '0'} | HF 170: ${getVal('hf170') || '0'}\n`; txt += `- GD Stick: ${getVal('gdStick') || '-'} | Sisa Bed: ${getVal('sisaBed') || '-'}\n`; txt += `\n═══════════════════\n`;
