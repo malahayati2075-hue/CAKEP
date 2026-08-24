@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GALA-W++ - Laporan Harian Hemodialisis</title>
+    <title>E-REPORTASE - Laporan Harian Hemodialisis</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -110,18 +110,17 @@
         .header-content { position: relative; z-index: 2; text-align: center; padding: 20px; margin-bottom: 10px; }
         
         .app-header h1 {
-            margin: 0; font-size: 3rem; font-weight: 900; letter-spacing: 3px; color: #ffffff;
-            display: inline-block; animation: floatGALA 3s ease-in-out infinite, glowGALA 4s ease-in-out infinite;
-        }
+    margin: 0; font-size: 3rem; font-weight: 900; letter-spacing: 3px; color: #ffffff;
+    display: inline-block; animation: floatGALA 3s ease-in-out infinite, glowGALA 4s ease-in-out infinite;
+}
 
-        @keyframes floatGALA { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        @keyframes glowGALA {
-            0%, 100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 4px 15px rgba(0,0,0,0.5); }
-            50% { text-shadow: 0 0 25px rgba(20, 184, 166, 0.9), 0 0 10px rgba(255, 255, 255, 0.8), 0 4px 15px rgba(0,0,0,0.5); }
-        }
+@keyframes floatGALA { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes glowGALA {
+    0%, 100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 4px 15px rgba(0,0,0,0.5); }
+    50% { text-shadow: 0 0 25px rgba(20, 184, 166, 0.9), 0 0 10px rgba(255, 255, 255, 0.8), 0 4px 15px rgba(0,0,0,0.5); }
+}
 
-        .app-header p { margin: 10px 0 0 0; font-size: 0.9rem; opacity: 0.95; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-
+.app-header p { margin: 10px 0 0 0; font-size: 0.9rem; opacity: 0.95; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
         .nav-header {
             display: flex; background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); padding: 12px; gap: 10px;
             border-bottom: 1px solid rgba(255,255,255,0.4); position: sticky; top: 0; z-index: 10;
@@ -483,6 +482,31 @@
 
         .print-area { display: none; padding: 40px; }
         @media print { body { background: #fff; } .container { display: none; } .print-area { display: block; } .print-area pre { white-space: pre-wrap; font-family: monospace; } }
+/* ===== SLIDE 4 : EMBED JADWAL PASIEN ===== */
+.schedule-frame-wrap {
+    position: relative; width: 100%;
+    height: 62vh; min-height: 420px;
+    border-radius: 14px; overflow: hidden;
+    border: 1px solid rgba(59,130,246,0.35);
+    background: #fff;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+    transition: height 0.4s ease;
+}
+.schedule-frame-wrap.expanded { height: 88vh; }
+.schedule-frame-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
+.schedule-loading {
+    position: absolute; top:0; left:0; right:0; bottom:0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px; background: rgba(255,255,255,0.95); z-index: 2;
+    transition: opacity 0.4s ease;
+}
+.schedule-loading.hidden { opacity: 0; pointer-events: none; }
+.spinner {
+    width: 44px; height: 44px;
+    border: 4px solid rgba(37,99,235,0.18); border-top-color: #2563eb;
+    border-radius: 50%; animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -511,17 +535,20 @@
             <span>Memuat data sheet...</span>
         </div>
 
-        <div class="header-content">
-            <h1>GALA-W+</h1>
-            <p>Generator Laporan Hemodialisis - WhatsApp</p>
-        </div>
-    </div>
+       <div class="header-content">
+    <h1 class="ereportase-title" data-text="E-REPORTASE">E-REPORTASE</h1>
+    <p class="subtitle-rotator">
+        <span class="sub-line">Electronic Report &amp; Analysis</span>
+        <span class="sub-line">Sistem Pelaporan Elektronik Unit Dialisis</span>
+    </p>
+</div>
 
-    <div class="nav-header">
-        <button class="tab-btn active" onclick="switchTab(1)"><i>📝</i><span>Laporan Harian</span></button>
-        <button class="tab-btn" onclick="switchTab(2)"><i>📊</i><span>MUTU</span></button>
-        <button class="tab-btn" onclick="switchTab(3)"><i>🔍</i><span>Pencarian Pasien</span></button>
-    </div>
+   <div class="nav-header">
+    <button class="tab-btn active" onclick="switchTab(1)"><i>📝</i><span>Laporan Harian</span></button>
+    <button class="tab-btn" onclick="switchTab(2)"><i>📊</i><span>MUTU</span></button>
+    <button class="tab-btn" onclick="switchTab(3)"><i>🔍</i><span>Pencarian Pasien</span></button>
+    <button class="tab-btn" onclick="switchTab(4)"><i>📅</i><span>Jadwal Pasien</span></button>
+</div>
 
     <div id="slide1" class="page active">
         <div class="section-title main-title-3d">
@@ -700,6 +727,40 @@
     </div>
 </div>
 
+<div id="slide4" class="page">
+    <div class="section-title main-title-3d">
+        <div class="waving-flag"><span>81</span></div>
+        <div class="icon-box">📅</div>
+        <h2>Jadwal Pasien Hemodialisis</h2>
+    </div>
+
+    <div class="section-card section-card-blue">
+        <div class="section-title">
+            <div class="icon-box">👁️</div>
+            <h2>Pratinjau Jadwal (Langsung di Aplikasi)</h2>
+        </div>
+        <div class="schedule-frame-wrap" id="scheduleWrap">
+            <div class="schedule-loading" id="jadwalLoading">
+                <div class="spinner"></div>
+                <p style="margin:0; color:#2563eb; font-weight:600; font-size:0.85rem;">Memuat jadwal pasien...</p>
+            </div>
+            <iframe id="jadwalFrame" title="Jadwal Pasien Hemodialisis" allowfullscreen></iframe>
+        </div>
+        <p style="font-size:0.72rem; color:var(--text-muted); margin:10px 0 0; text-align:center;">
+            <i class="fa-solid fa-circle-info"></i> Jika pratinjau tidak muncul, tekan <b>Muat Ulang</b> atau buka spreadsheet lewat tombol di bawah.
+        </p>
+    </div>
+
+    <div class="btn-group-3">
+        <a href="https://docs.google.com/spreadsheets/d/1bNTq4ImrP-4bE7WPqYiWPLCGQVrM1fgGe7TI_3vv9a0/edit?gid=1100922958#gid=1100922958"
+           target="_blank" rel="noopener" class="btn btn-drive" style="text-decoration:none;">
+            <i class="fa-solid fa-table-list"></i> Buka Spreadsheet
+        </a>
+        <button class="btn btn-pdf" onclick="loadJadwal(true)"><i class="fa-solid fa-rotate-right"></i> Muat Ulang</button>
+        <button class="btn btn-wa" onclick="toggleJadwalSize(this)"><i class="fa-solid fa-expand"></i> Perbesar</button>
+    </div>
+</div>
+    
 <div class="print-area" id="printArea">
     <h1 style="text-align: center;">LAPORAN HARIAN HEMODIALISIS</h1>
     <pre id="printContent"></pre>
@@ -1187,6 +1248,9 @@ function switchTab(tab) {
     document.getElementById('slide' + tab).classList.add('active');
     document.querySelectorAll('.tab-btn')[tab - 1].classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Muat iframe jadwal pasien saat slide 4 pertama kali dibuka
+    if (Number(tab) === 4) loadJadwal(false);
 }
 
 function adjustVal(id, delta) { let el = document.getElementById(id); let newVal = (parseInt(el.value) || 0) + delta; if (newVal < 0) newVal = 0; el.value = newVal; }
