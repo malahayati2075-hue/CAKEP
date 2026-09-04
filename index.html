@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Digital</title>
+    <title>Laporan Digital - Gala-w v4.5</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -397,6 +397,63 @@
         .special-del:hover { opacity: 1; transform: scale(1.1); }
         .special-empty { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 20px; }
 
+        /* HOME SLIDE STYLES */
+        .home-banner-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-bottom: 4px solid var(--primary);
+        }
+        .home-content { padding: 20px; }
+        .home-title {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 10px 0 20px 0;
+            background: var(--sunset-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .home-card {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--primary);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.05);
+        }
+        .home-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .home-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+        .home-card.critik-box {
+            border-left-color: var(--accent);
+        }
+        .home-card.critik-box h3 {
+            color: var(--accent);
+        }
+        .version-tag {
+            display: inline-block;
+            margin-top: 5px;
+            background: var(--sore-deep);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
         @media (max-width: 991px) {
             .nav-header { display: none; }
             .hamburger { display: flex; }
@@ -464,11 +521,12 @@
                 <span class="sub-line">Electronic Report &amp; Analysis</span>
                 <span class="sub-line">Sistem Pelaporan Elektronik Unit Dialisis</span>
             </p>
-            <div class="header-page-title" id="headerPageTitle">Laporan Harian Hemodialisis</div>
+            <div class="header-page-title" id="headerPageTitle">Beranda</div>
         </div>
 
         <div class="nav-header">
-            <button class="tab-btn active" data-tab="1" onclick="switchTab(1)"><i>📝</i><span>Laporan Harian</span></button>
+            <button class="tab-btn active" data-tab="0" onclick="switchTab(0)"><i>🏠</i><span>Beranda</span></button>
+            <button class="tab-btn" data-tab="1" onclick="switchTab(1)"><i>📝</i><span>Laporan Harian</span></button>
             <button class="tab-btn" data-tab="2" onclick="switchTab(2)"><i>📊</i><span>MUTU</span></button>
             <button class="tab-btn" data-tab="3" onclick="switchTab(3)"><i>🔍</i><span>Cari Pasien</span></button>
             <button class="tab-btn" data-tab="4" onclick="switchTab(4)"><i>📅</i><span>Jadwal</span></button>
@@ -476,8 +534,56 @@
         </div>
     </div>
 
+    <!-- ================= SLIDE 0 : BERANDA / HOME ================= -->
+    <div id="slide0" class="page active">
+        <img src="header.png" alt="Header Aplikasi" class="home-banner-img">
+        
+        <div class="home-content">
+            <h1 class="home-title">Selamat Datang di Laporan Digital</h1>
+            
+            <div class="home-card">
+                <h3><i class="fa-solid fa-circle-info"></i> Tentang Aplikasi</h3>
+                <p>
+                    Aplikasi <b>Laporan Digital Hemodialisis</b> adalah sistem pelaporan elektronik yang dirancang khusus untuk mempermudah dokumentasi harian tindakan hemodialisis. Dibangun dengan antarmuka yang ringan dan kompatibel di berbagai perangkat (HP maupun PC).
+                    <br><br>
+                    <span class="version-tag">Gala-w versi 4.5</span>
+                </p>
+            </div>
+
+            <div class="home-card">
+                <h3><i class="fa-solid fa-bullseye"></i> Tujuan</h3>
+                <p>
+                    Bertujuan untuk menyatukan rekapitulasi data monitoring pasien, laporan mutu, evaluasi Kt/V, hingga penjadwalan dalam satu platform yang terintegrasi dengan Google Spreadsheet secara real-time.
+                </p>
+            </div>
+
+            <div class="home-card">
+                <h3><i class="fa-solid fa-heart"></i> Manfaat untuk Perawat</h3>
+                <p>
+                    Memudahkan perawat pelaksana maupun KATIM dalam menginput data 20 kolom monitoring (Pre, Intra, Post HD). Data statik pasien (JK, TB, BB, Gol Darah, Akses, QB, QD) akan <b>terisi otomatis</b> dari database. Selain itu, laporan dapat langsung dikirim via WhatsApp atau disimpan menjadi PDF tanpa perlu mengetik manual di pesan teks.
+                </p>
+            </div>
+
+            <div class="home-card">
+                <h3><i class="fa-solid fa-star"></i> Harapan</h3>
+                <p>
+                    Semoga dengan adanya aplikasi ini, beban administratif perawat dapat berkurang, pelaporan kebijakan (MUTU) menjadi lebih cepat dan akurat, serta pelayanan ke pasien hemodialisis dapat terus meningkatkan kualitasnya.
+                </p>
+            </div>
+
+            <div class="home-card critik-box">
+                <h3><i class="fa-solid fa-comment-dots"></i> Kritik & Saran</h3>
+                <p>Punya saran untuk pengembangan aplikasi ini? Silakan ketik di bawah ini:</p>
+                <textarea id="kritikSaranInput" placeholder="Tulis kritik atau saran Anda di sini..." style="margin-top: 10px; min-height: 80px;"></textarea>
+                <button class="btn btn-wa" onclick="sendKritikWA()" style="margin-top: 10px; width: 100%;">
+                    <i class="fa-brands fa-whatsapp"></i> Kirim Kritik & Saran via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ================= SLIDE 1 : LAPORAN HARIAN ================= -->
-    <div id="slide1" class="page active">
+    <div id="slide1" class="page">
         <div class="section-title main-title-3d">
             <div class="icon-box">📝</div>
             <h2>Laporan Harian Hemodialisis</h2>
@@ -764,7 +870,7 @@
         </div>
     </div>
 
-    <div class="app-footer">Gala-w versi 4.2 · Laporan Digital</div>
+    <div class="app-footer">Gala-w versi 4.5 · Laporan Digital</div>
 </div>
 
 <!-- ===== SIDEBAR MOBILE (kiri) ===== -->
@@ -775,13 +881,14 @@
         <button class="sidebar-close" onclick="closeSidebar()" aria-label="Tutup menu"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="sidebar-menu">
-        <button class="side-item active" data-tab="1" onclick="switchTab(1)"><i>📝</i><span>Laporan Harian</span></button>
+        <button class="side-item active" data-tab="0" onclick="switchTab(0)"><i>🏠</i><span>Beranda</span></button>
+        <button class="side-item" data-tab="1" onclick="switchTab(1)"><i>📝</i><span>Laporan Harian</span></button>
         <button class="side-item" data-tab="2" onclick="switchTab(2)"><i>📊</i><span>MUTU</span></button>
         <button class="side-item" data-tab="3" onclick="switchTab(3)"><i>🔍</i><span>Cari Pasien</span></button>
         <button class="side-item" data-tab="4" onclick="switchTab(4)"><i>📅</i><span>Jadwal</span></button>
         <button class="side-item" data-tab="5" onclick="switchTab(5)"><i>📌</i><span>Laporan Khusus</span></button>
     </div>
-    <div class="sidebar-footer">Gala-w versi 4.2</div>
+    <div class="sidebar-footer">Gala-w versi 4.5</div>
 </aside>
 
 <!-- ===== POPUP PREVIEW LAPORAN ===== -->
@@ -806,7 +913,7 @@
 
 <script>
 /* =========================================================
-   LAPORAN DIGITAL — Hemodialisis · Gala-w versi 4.2
+   LAPORAN DIGITAL — Hemodialisis · Gala-w versi 4.5
    ========================================================= */
 
 var MONITORING_API_URL = "https://script.google.com/macros/s/AKfycbwWCP7nMRpslFuxeV8bkYFDmI5OK-fIR4yhvBJp45kRq9Om9RFMMJUHdB35PbDn8z9Fyw/exec";
@@ -814,16 +921,17 @@ var REKAP_SHEET_ID = "1gD_mYqo5x30zYfQQWb5dm8woKgwsV5aqjBXVNpUyf0c";
 var REKAP_GID = "652284391";
 var JADWAL_SHEET_ID = "1bNTq4ImrP-4bE7WPqYiWPLCGQVrM1fgGe7TI_3vv9a0";
 var JADWAL_GID = "1100922958";
-var WA_NUMBER = "";
+var WA_NUMBER = ""; // Nomor tujuan kritik & saran / laporan
 var DIVIDER = "━━━━━━━━━━━━━━━━━";
 
-var SPECIAL_API_URL = "https://script.google.com/macros/s/AKfycbwW4U1VoES7npwCOT0fC_9_DzjjVFgjISUzd3fExR5IWj6pQ8GsJJxcbq9TXfSDjy-c/exec"; 
+var SPECIAL_API_URL = "https://script.google.com/macros/s/AKfycbwW4U1VoES7npwCOT0fC_9_DzjjVFgjISUzd3fExR5IWj6pQ8GsJJxcbq9TXfSDjy-c.exec"; 
 
 var patientData = [];
 var specialLinks = [];
 var monitoringSheetSaved = false; // Flag untuk cek apakah monitoring sudah disimpan
 
 var PAGE_TITLES = {
+    0: 'Beranda',
     1: 'Laporan Harian Hemodialisis',
     2: 'MUTU — Analisis Kinerja',
     3: 'Pencarian Pasien',
@@ -957,6 +1065,18 @@ function closeSidebar() {
 document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') { closeSidebar(); closeReportModal(); }
 });
+
+/* ================= KIRIM KRITIK & SARAN ================= */
+function sendKritikWA() {
+    var msg = document.getElementById('kritikSaranInput').value.trim();
+    if (!msg) { alert('Harap isi kritik atau saran terlebih dahulu!'); return; }
+    
+    var pesan = '*KRITIK & SARAN APLIKASI LAPORAN DIGITAL*\n' + DIVIDER + '\n';
+    pesan += '📄 Detail:\n' + msg + '\n\n' + DIVIDER + '\n_Dikirim via Gala-w v4.5_';
+    
+    var url = WA_NUMBER ? 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(pesan) : 'https://wa.me/?text=' + encodeURIComponent(pesan);
+    window.open(url, '_blank');
+}
 
 /* ================= SISTEM PERAN ================= */
 var ROLE_SECTIONS = {
@@ -1286,7 +1406,7 @@ function buildReportMessage() {
     }
 
     msg += '\n' + DIVIDER + '\n*🪪 IDENTITAS PENGIRIM*\n👤 Nama: ' + pengirim + '\n';
-    msg += DIVIDER + '\n_Dikirim via Laporan Digital — Gala-w v4.2_';
+    msg += DIVIDER + '\n_Dikirim via Laporan Digital — Gala-w v4.5_';
     return msg;
 }
 
@@ -1674,7 +1794,7 @@ function shareAnalitikWA() {
     if (!analitikData) { alert('⚠️ Silakan analisis data terlebih dahulu!'); return; }
     var pengirim = document.getElementById('pengirim2').value.trim();
     if (!pengirim) { alert('⚠️ Nama pengirim wajib diisi!'); return; }
-    var msg = analitikData.text + '\n' + DIVIDER + '\n*🪪 PENGIRIM*\n👤 ' + pengirim + '\n' + DIVIDER + '\n_Dikirim via Laporan Digital — Gala-w v4.2_';
+    var msg = analitikData.text + '\n' + DIVIDER + '\n*🪪 PENGIRIM*\n👤 ' + pengirim + '\n' + DIVIDER + '\n_Dikirim via Laporan Digital — Gala-w v4.5_';
     window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
 }
 function isiPrintAreaAnalitik() {
