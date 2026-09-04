@@ -458,11 +458,14 @@
             overflow-x: auto; margin-top: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.6); border-radius: 14px;
             background: rgba(255,255,255,0.6); box-shadow: 6px 6px 12px rgba(0,0,0,0.04), -4px -4px 10px rgba(255,255,255,0.8);
         }
-        .monitoring-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 1600px; }
+        
+        /* Tabel Monitoring 20 Kolom */
+        .monitoring-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; min-width: 2400px; }
         .monitoring-table th { background: var(--primary); color: #fff; padding: 10px 5px; font-weight: 700; border: 1px solid #0f766e; text-align: center; white-space: nowrap; position: sticky; top: 0; z-index: 5; }
         .monitoring-table td { border: 1px solid var(--border-color); padding: 0; background: rgba(255,255,255,0.5); }
-        .monitoring-table input, .monitoring-table select { width: 100%; border: none; background: transparent; padding: 8px 5px; font-size: 0.8rem; text-align: center; font-family: inherit; color: var(--text-main); box-shadow: none; }
+        .monitoring-table input, .monitoring-table select { width: 100%; border: none; background: transparent; padding: 7px 4px; font-size: 0.78rem; text-align: center; font-family: inherit; color: var(--text-main); box-shadow: none; min-width: 70px; }
         .monitoring-table input:focus, .monitoring-table select:focus { outline: 2px solid var(--primary-light); background: #f0fdfa; }
+        .monitoring-table input[readonly] { background: #f1f5f9; color: #475569; font-weight: 600; }
 
         .row-del { border: none; background: transparent; color: var(--accent); cursor: pointer; font-size: 0.9rem; padding: 2px 4px; }
         .row-del:hover { transform: scale(1.15); }
@@ -725,19 +728,41 @@
             </div>
         </div>
 
-        <!-- ===== DAFTAR PASIEN (PERAWAT saja) ===== -->
+        <!-- ===== MONITORING (PERAWAT saja) ===== -->
         <div class="section-card section-card-purple" id="secPasien">
             <div class="section-title">
                 <div class="icon-box">🩺</div>
-                <h2>Daftar Pasien</h2>
+                <h2>Monitoring</h2>
             </div>
-            <button class="btn-add" onclick="addMonitorRow()" style="margin-bottom: 12px;"><i class="fa-solid fa-circle-plus"></i> Tambah Baris Pasien</button>
+            <p style="font-size:0.75rem;color:#7c2d12;margin:0 0 10px;">
+                <i class="fa-solid fa-circle-info"></i> Ketik nama pasien, field <b>JK, Gol Darah, TB, BB, Akses, QB, QD</b> akan terisi otomatis dari database PASIEN.
+            </p>
+            <button class="btn-add" onclick="addMonitorRow()" style="margin-bottom: 12px;"><i class="fa-solid fa-circle-plus"></i> Tambah Baris Monitoring</button>
             <div class="table-container">
                 <table class="monitoring-table" id="monitoringTable">
                     <thead>
                         <tr>
-                            <th>Nama</th><th>Jenis Kelamin</th><th>Gol Darah</th><th>TB</th><th>BB</th><th>Tekanan Darah</th>
-                            <th>Akses</th><th>UFG</th><th>QB (ml/jam)</th><th>QD</th><th>Heparin</th><th>EPO/FE</th><th>Kt/V</th><th>Transfusi</th><th>Keterangan</th>
+                            <th>Bed</th>
+                            <th>Nama</th>
+                            <th>JK</th>
+                            <th>TD PRE_HD</th>
+                            <th>TD INTRA_HD</th>
+                            <th>TD POST_HD</th>
+                            <th>Gol Darah</th>
+                            <th>TB</th>
+                            <th>BB</th>
+                            <th>AKSES</th>
+                            <th>UFG (liter)</th>
+                            <th>QB</th>
+                            <th>QD</th>
+                            <th>Heparin</th>
+                            <th>EPO/FE</th>
+                            <th>Kt/V</th>
+                            <th>Transfusi</th>
+                            <th>Keterangan</th>
+                            <th>Penyerah</th>
+                            <th>Penerima</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="monitoringBody"></tbody>
@@ -1095,7 +1120,7 @@ function applyRoleRules() {
         notice.innerHTML = '👑 <b>MODE KATIM</b> — Laporan berisi: <b>Anggota Tim, Job Desk Petugas, Perencanaan Tindakan, Identitas Pengirim</b>.<br>Judul WA: <b>LAPORAN KATIM 1 / LAPORAN KATIM 2</b> (sesuai Tim).';
     } else {
         notice.className = 'role-notice';
-        notice.innerHTML = '🩺 <b>MODE PERAWAT PELAKSANA</b> — Laporan berisi: <b>Anggota Tim, Daftar Pasien, Masalah &amp; Inventaris, Identitas Pengirim</b>.<br>Judul WA: <b>LAPORAN PERAWAT PELAKSANA TIM x SHIFT y</b>.';
+        notice.innerHTML = '🩺 <b>MODE PERAWAT PELAKSANA</b> — Laporan berisi: <b>Anggota Tim, Monitoring, Masalah &amp; Inventaris, Identitas Pengirim</b>.<br>Judul WA: <b>LAPORAN PERAWAT PELAKSANA TIM x SHIFT y</b>.';
     }
 }
 
@@ -1187,46 +1212,92 @@ function tambahPerawat() {
 }
 function hapusPerawat(id) { var el = document.getElementById('perawatBox-' + id); if (el) el.remove(); }
 
-/* ================= DAFTAR PASIEN / MONITORING (PERAWAT) ================= */
+/* ================= MONITORING (PERAWAT) — versi 20 kolom ================= */
+var patientDatabase = {};
+
+/* Fetch data PASIEN dari API untuk auto-fill */
+async function loadPatientDatabase() {
+    try {
+        var res = await fetch(MONITORING_API_URL + '?action=getPatients');
+        var data = await res.json();
+        if (data.status === 'success' && Array.isArray(data.data)) {
+            data.data.forEach(function (p) {
+                if (p.nama) patientDatabase[p.nama.toLowerCase()] = p;
+            });
+            var opts = Object.keys(patientDatabase).map(function (n) {
+                return '<option value="' + escapeHtml(patientDatabase[n].nama) + '"></option>';
+            }).join('');
+            document.getElementById('patientList').innerHTML = opts;
+        }
+    } catch (e) { console.warn('Gagal memuat database pasien:', e); }
+}
+
+/* Auto-fill field pasien dari database PASIEN */
+function autoFillPasien(input) {
+    var nama = input.value.trim().toLowerCase();
+    var tr = input.closest('tr');
+    if (!tr) return;
+    var inputs = tr.querySelectorAll('input');
+    // Urutan: 0=bed,1=nama,2=jk,3=tdpre,4=tdintra,5=tdpost,6=goldar,7=tb,8=bb,9=akses,10=ufg,11=qb,12=qd,13=heparin,14=epo,15=ktv,16=transfusi,17=ket,18=penyerah,19=penerima
+    if (patientDatabase[nama]) {
+        var p = patientDatabase[nama];
+        inputs[2].value = p.jk || '';
+        inputs[6].value = p.goldar || '';
+        inputs[7].value = p.tb || '';
+        inputs[8].value = p.bb || '';
+        inputs[9].value = p.akses || '';
+        inputs[11].value = p.qb || '';
+        inputs[12].value = p.qd || '';
+    } else {
+        inputs[2].value = ''; inputs[6].value = ''; inputs[7].value = '';
+        inputs[8].value = ''; inputs[9].value = ''; inputs[11].value = ''; inputs[12].value = '';
+    }
+}
+
 function addMonitorRow() {
     var tbody = document.getElementById('monitoringBody');
     var tr = document.createElement('tr');
     tr.innerHTML =
-        '<td><div style="display:flex; align-items:center; gap:2px;">' +
-        '<input type="text" list="patientList" placeholder="Nama Pasien">' +
-        '<button type="button" class="row-del" onclick="this.closest(\'tr\').remove()" title="Hapus baris"><i class="fa-solid fa-circle-xmark"></i></button>' +
-        '</div></td>' +
-        '<td><select><option value="">-</option><option value="L">L</option><option value="P">P</option></select></td>' +
-        '<td><select><option value="">-</option><option>A</option><option>B</option><option>AB</option><option>O</option></select></td>' +
-        '<td><input type="text" placeholder="cm"></td>' +
-        '<td><input type="text" placeholder="kg"></td>' +
-        '<td><input type="text" placeholder="mmHg"></td>' +
-        '<td><input type="text" list="aksesList" placeholder="-"></td>' +
-        '<td><input type="text" placeholder="ml"></td>' +
-        '<td><input type="text" placeholder="ml/jam"></td>' +
-        '<td><input type="text" placeholder="ml/mnt"></td>' +
-        '<td><input type="text" placeholder="IU"></td>' +
-        '<td><input type="text" placeholder="-"></td>' +
-        '<td><input type="text" placeholder="-"></td>' +
-        '<td><input type="text" placeholder="-"></td>' +
-        '<td><input type="text" placeholder="Ket..."></td>';
+        '<td><input type="text" placeholder="Bed" style="min-width:50px;"></td>' +
+        '<td><input type="text" list="patientList" placeholder="Nama Pasien" onchange="autoFillPasien(this)" onblur="autoFillPasien(this)" style="min-width:140px;text-align:left;"></td>' +
+        '<td><input type="text" placeholder="-" readonly style="min-width:40px;"></td>' +
+        '<td><input type="text" placeholder="mmHg" style="min-width:75px;"></td>' +
+        '<td><input type="text" placeholder="mmHg" style="min-width:75px;"></td>' +
+        '<td><input type="text" placeholder="mmHg" style="min-width:75px;"></td>' +
+        '<td><input type="text" placeholder="-" readonly style="min-width:55px;"></td>' +
+        '<td><input type="text" placeholder="-" readonly style="min-width:45px;"></td>' +
+        '<td><input type="text" placeholder="-" readonly style="min-width:45px;"></td>' +
+        '<td><input type="text" placeholder="-" readonly style="min-width:100px;text-align:left;"></td>' +
+        '<td><input type="text" placeholder="liter" style="min-width:55px;"></td>' +
+        '<td><input type="text" placeholder="-" readonly style="min-width:55px;"></td>' +
+        '<td><input type="text" placeholder="-" readonly style="min-width:55px;"></td>' +
+        '<td><input type="text" placeholder="IU" style="min-width:70px;"></td>' +
+        '<td><input type="text" placeholder="-" style="min-width:70px;"></td>' +
+        '<td><input type="text" placeholder="-" style="min-width:50px;"></td>' +
+        '<td><input type="text" placeholder="-" style="min-width:60px;"></td>' +
+        '<td><input type="text" placeholder="Ket..." style="min-width:120px;text-align:left;"></td>' +
+        '<td><input type="text" placeholder="Penyerah" style="min-width:90px;text-align:left;"></td>' +
+        '<td><input type="text" placeholder="Penerima" style="min-width:90px;text-align:left;"></td>' +
+        '<td style="text-align:center;"><button type="button" class="row-del" onclick="this.closest(\'tr\').remove()" title="Hapus baris"><i class="fa-solid fa-circle-xmark"></i></button></td>';
     tbody.appendChild(tr);
-    var firstInput = tr.querySelector('input[type="text"]');
-    if (firstInput) firstInput.focus();
+    var namaInput = tr.querySelectorAll('input')[1];
+    if (namaInput) namaInput.focus();
 }
 
 function getMonitoringRows() {
     var rows = [];
     document.querySelectorAll('#monitoringBody tr').forEach(function (tr) {
+        var inputs = tr.querySelectorAll('input');
         var fields = [];
-        tr.querySelectorAll('input, select').forEach(function (el) { fields.push(el.value.trim()); });
-        if (fields.length >= 15) rows.push(fields.slice(0, 15));
+        inputs.forEach(function (el) { fields.push(el.value.trim()); });
+        // 20 fields expected
+        if (fields.length >= 20) rows.push(fields.slice(0, 20));
     });
     return rows;
 }
 
 async function submitMonitoringSheet() {
-    var rows = getMonitoringRows().filter(function (r) { return r[0] !== ''; });
+    var rows = getMonitoringRows().filter(function (r) { return r[1] !== ''; }); // r[1] = Nama
     if (!rows.length) { alert('⚠️ Tidak ada baris pasien dengan nama terisi!'); return; }
     var payload = {
         action: 'saveMonitoring',
@@ -1244,7 +1315,7 @@ async function submitMonitoringSheet() {
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify(payload)
         });
-        alert('✅ Data monitoring sedang dikirim ke Spreadsheet.\n(Jika belum langsung muncul, tunggu beberapa detik lalu refresh sheet.)');
+        alert('✅ Data monitoring (20 kolom) sedang dikirim ke Spreadsheet.\n(Jika belum langsung muncul, tunggu beberapa detik lalu refresh sheet.)');
     } catch (e) {
         alert('❌ Gagal mengirim data: ' + e.message);
     }
@@ -1254,29 +1325,33 @@ function formatDaftarPasien() {
     var msg = '';
     var idx = 0;
     document.querySelectorAll('#monitoringBody tr').forEach(function (tr) {
+        var inputs = tr.querySelectorAll('input');
         var fields = [];
-        tr.querySelectorAll('input, select').forEach(function (el) { fields.push(el.value.trim()); });
-        if (fields.length < 15) return;
+        inputs.forEach(function (el) { fields.push(el.value.trim()); });
+        if (fields.length < 20) return;
         var ada = fields.some(function (f) { return f !== ''; });
         if (!ada) return;
         idx++;
-        msg += idx + '. *' + (fields[0] || '-') + '*\n';
-        msg += '   JK: ' + (fields[1] || '-') + ' | Goldar: ' + (fields[2] || '-') + ' | TB: ' + (fields[3] || '-') + ' | BB: ' + (fields[4] || '-') + ' | TD: ' + (fields[5] || '-') + '\n';
-        msg += '   Akses: ' + (fields[6] || '-') + ' | UFG: ' + (fields[7] || '-') + ' | QB: ' + (fields[8] || '-') + ' | QD: ' + (fields[9] || '-') + '\n';
-        msg += '   Heparin: ' + (fields[10] || '-') + ' | EPO/FE: ' + (fields[11] || '-') + ' | Kt/V: ' + (fields[12] || '-') + ' | Transfusi: ' + (fields[13] || '-') + '\n';
-        if (fields[14]) msg += '   Ket: ' + fields[14] + '\n';
+        // r = [bed, nama, jk, tdpre, tdintra, tdpost, goldar, tb, bb, akses, ufg, qb, qd, heparin, epo, ktv, transfusi, ket, penyerah, penerima]
+        msg += idx + '. *Bed ' + (fields[0] || '-') + ' — ' + (fields[1] || '-') + '*\n';
+        msg += '   JK: ' + (fields[2] || '-') + ' | Goldar: ' + (fields[6] || '-') + ' | TB: ' + (fields[7] || '-') + ' | BB: ' + (fields[8] || '-') + '\n';
+        msg += '   TD Pre: ' + (fields[3] || '-') + ' | TD Intra: ' + (fields[4] || '-') + ' | TD Post: ' + (fields[5] || '-') + '\n';
+        msg += '   Akses: ' + (fields[9] || '-') + ' | UFG: ' + (fields[10] || '-') + ' | QB: ' + (fields[11] || '-') + ' | QD: ' + (fields[12] || '-') + '\n';
+        msg += '   Heparin: ' + (fields[13] || '-') + ' | EPO/FE: ' + (fields[14] || '-') + ' | Kt/V: ' + (fields[15] || '-') + ' | Transfusi: ' + (fields[16] || '-') + '\n';
+        if (fields[17]) msg += '   Ket: ' + fields[17] + '\n';
+        msg += '   Penyerah: ' + (fields[18] || '-') + ' | Penerima: ' + (fields[19] || '-') + '\n';
     });
     return { text: msg, total: idx };
 }
 
 function shareMonitoringWA() {
     var dp = formatDaftarPasien();
-    if (!dp.total) { alert('⚠️ Belum ada data pasien yang terisi!'); return; }
-    var msg = '*' + getReportTitle() + ' — DAFTAR PASIEN*\n' + DIVIDER + '\n';
+    if (!dp.total) { alert('⚠️ Belum ada data monitoring yang terisi!'); return; }
+    var msg = '*' + getReportTitle() + ' — MONITORING*\n' + DIVIDER + '\n';
     msg += '📅 Tanggal: ' + formatTanggalID(document.getElementById('tanggal1').value) + '\n';
     msg += '👥 Tim: ' + document.getElementById('tim1').value + '\n';
     if (getRole() === 'PERAWAT') msg += '🕐 Shift: ' + document.getElementById('shift1').value + '\n';
-    msg += '\n' + DIVIDER + '\n*🩺 DAFTAR PASIEN*\n' + dp.text + 'Total pasien: ' + dp.total + '\n';
+    msg += '\n' + DIVIDER + '\n*🩺 MONITORING*\n' + dp.text + 'Total pasien: ' + dp.total + '\n';
     msg += DIVIDER + '\n_Dikirim via Laporan Digital_';
     window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
 }
@@ -1402,9 +1477,9 @@ function buildReportMessage() {
             msg += '- (tidak ada)\n';
         }
     } else {
-        // Daftar Pasien
+        // Monitoring
         var dp = formatDaftarPasien();
-        msg += '\n' + DIVIDER + '\n*🩺 DAFTAR PASIEN*\n';
+        msg += '\n' + DIVIDER + '\n*🩺 MONITORING*\n';
         if (dp.total) { msg += dp.text + 'Total pasien: ' + dp.total + '\n'; }
         else { msg += '- (tidak ada)\n'; }
 
@@ -1690,24 +1765,6 @@ function printAnalitik() {
     window.print();
 }
 
-/* ================= DATALIST NAMA PASIEN (dari sheet rekap) ================= */
-async function populatePatientDatalist() {
-    try {
-        var rows = await loadRekapRows();
-        var headers = rows[0] || [];
-        var cNama = findCol(headers, 'nama', 1);
-        var names = {};
-        for (var i = 1; i < rows.length; i++) {
-            var n = String(rows[i][cNama] || '').trim();
-            if (n) names[n] = true;
-        }
-        var opts = Object.keys(names).sort().map(function (n) {
-            return '<option value="' + escapeHtml(n) + '"></option>';
-        }).join('');
-        document.getElementById('patientList').innerHTML = opts;
-    } catch (e) { }
-}
-
 /* ================= JADWAL PASIEN (iframe) ================= */
 var jadwalLoaded = false;
 function loadJadwal(force) {
@@ -1734,7 +1791,7 @@ tambahAnggota(false);
 tambahPerawat();
 addMonitorRow();
 applyRoleRules();
-populatePatientDatalist();
+loadPatientDatabase(); // Muat database PASIEN untuk auto-fill
 </script>
 </body>
 </html>
